@@ -1,0 +1,43 @@
+{
+  "kind": "collectionType",
+  "collectionName": "trainers",
+  "info": {
+    "singularName": "trainer",
+    "pluralName": "trainers",
+    "displayName": "trainer",
+    "description": ""
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "firstname": {
+      "type": "string",
+      "required": true
+    },
+    "lastname": {
+      "type": "string",
+      "required": true
+    },
+    "mobile": {
+      "type": "string",
+      "maxLength": 12,
+      "minLength": 10,
+      "required": true,
+      "unique": true
+    },
+    "user": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "plugin::users-permissions.user",
+      "mappedBy": "trainer"
+    },
+    "program": {
+      "type": "relation",
+      "relation": "oneToOne",
+      "target": "api::personal-training-program.personal-training-program",
+      "mappedBy": "trainer"
+    }
+  }
+}
