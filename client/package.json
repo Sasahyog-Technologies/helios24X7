@@ -64,6 +64,7 @@
     "react-tag-input-component": "^2.0.2",
     "recharts": "^2.8.0",
     "sass": "^1.71.1",
+    "strapi-sdk-js": "^2.3.3",
     "sweetalert2": "^11.10.5",
     "sweetalert2-react-content": "^5.0.7",
     "weather-icons-react": "^1.2.0",
