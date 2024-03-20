@@ -51,6 +51,12 @@ import Tooltips from "../../views/pages/Ui_Interface/Components/Tooltip";
 import ComingSoon from "../../views/pages/Pages/ComingSoon";
 import UnderManitenance from "../../views/pages/Pages/UnderManitenance";
 
+// LOGIN
+import OwnerLogin from "../../views/pages/Authentication/Owner/Login";
+import ManagerLogin from "../../views/pages/Authentication/Manager/Login";
+import TrainerLogin from "../../views/pages/Authentication/Trainer/Login";
+import ClientLogin from "../../views/pages/Authentication/Client/Login";
+
 const ScrollToTop = () => {
   const { pathname } = useLocation();
 
@@ -72,7 +78,15 @@ const AppRouter = () => {
         <BrowserRouter basename="/react/template">
           <ScrollToTop />
           <Routes>
-            <Route path="/" element={<Login />} />
+            {/* Authetication  Start */}
+            <Route path="/" element={<ClientLogin />} />
+            <Route path="/auth/login/owner" element={<OwnerLogin />} />
+            <Route path="/auth/login/manager" element={<ManagerLogin />} />
+            <Route path="/auth/login/trainer" element={<TrainerLogin />} />
+            {/* Authentication End  */}
+
+            {/* <Route path="/" element={<Login />} /> */}
+
             <Route path="/change-password" element={<ChangePassword />} />
             <Route path="/register" element={<Register />} />
             <Route path="/otp" element={<Otp />} />
