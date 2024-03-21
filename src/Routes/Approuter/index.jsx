@@ -56,6 +56,7 @@ import OwnerLogin from "../../views/pages/Authentication/Owner/Login";
 import ManagerLogin from "../../views/pages/Authentication/Manager/Login";
 import TrainerLogin from "../../views/pages/Authentication/Trainer/Login";
 import ClientLogin from "../../views/pages/Authentication/Client/Login";
+ 
 
 const ScrollToTop = () => {
   const { pathname } = useLocation();
@@ -79,7 +80,7 @@ const AppRouter = () => {
           <ScrollToTop />
           <Routes>
             {/* Authetication  Start */}
-            <Route path="/" element={<ClientLogin />} />
+            <Route path="/" element={<Login />} /> 
             <Route path="/auth/login/owner" element={<OwnerLogin />} />
             <Route path="/auth/login/manager" element={<ManagerLogin />} />
             <Route path="/auth/login/trainer" element={<TrainerLogin />} />

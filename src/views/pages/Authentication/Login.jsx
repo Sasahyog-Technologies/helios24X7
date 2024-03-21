@@ -1,91 +1,33 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Applogo } from "../../../Routes/ImagePath";
-import { Controller, useForm } from "react-hook-form";
-import * as Yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup/dist/yup.js";
-import { useDispatch } from "react-redux";
-import { login } from "../../../user";
-import { resetFunctionwithlogin } from "../../../components/ResetFunction";
-// import { login } from "../../../user";
+import { useSession } from "../../../Hook/useSession";
+import strapi from "../../../strapi";
 
-const validationSchema = Yup.object().shape({
-  email: Yup.string()
-    .email("Please enter a valid email address")
-    .required("Email is required"),
-  password: Yup.string()
-    .min(6, "Password must be at least 6 characters")
-    .max(20, "Password must be at most 20 characters")
-    .required("Password is required"),
-});
-
-const Login = () => {
-  const details = localStorage.getItem("loginDetails");
-
-  const loginData = JSON.parse(details);
-
-  const {
-    register,
-    control,
-    setValue,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(validationSchema),
-  });
+const TestLogin = () => {
+  const [identifier, setIdentifier] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLoading, setIsloading] = useState(false);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [emailError, setEmailError] = useState(false);
+  const { setUserInfoToCookies } = useSession();
 
-  // const onSubmit = (data) => {
-  //   const currentUser = loginData?.find((item) => item?.email === data?.email);
-  //   if (!currentUser) {
-  //     setEmailError(true); // Email is not registered
-  //     navigate("/");
-  //   } else if (currentUser.password === data?.password) {
-  //     setEmailError(false); // Email is registered, and password is correct
-  //     const Value = {
-  //       email: data?.email,
-  //       password: data?.password,
-  //     };
-  //     dispatch(login(Value));
-  //     localStorage.setItem("credencial", JSON.stringify(Value));
-  //     navigate("/admin-dashboard");
-  //     resetFunctionwithlogin();
-  //   } else {
-  //     setEmailError(true); // Email is registered, but the password is incorrect
-  //     navigate("/");
-  //   }
-  // };
-
-  function refreshPage() {
-    window.location.reload(false);
-  }
-
-  const onSubmit = () => {
-    localStorage.setItem("colorschema", "orange");
-    localStorage.setItem("layout", "vertical");
-    localStorage.setItem("layoutwidth", "fixed");
-    localStorage.setItem("layoutpos", "fluid");
-    localStorage.setItem("topbartheme", "light");
-    localStorage.setItem("layoutSized", "lg");
-    localStorage.setItem("layoutStyling", "default");
-    localStorage.setItem("layoutSidebarStyle", "dark");
-
-    navigate("/admin-dashboard");
-  };
-
-  useEffect(() => {
-    setValue("email", localStorage.getItem("email"));
-    setValue("password", localStorage.getItem("password"));
-  }, []);
-
-  const [eye, seteye] = useState(true);
-
-  const onEyeClick = () => {
-    seteye(!eye);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setIsloading(true);
+      await strapi.login({
+        identifier,
+        password,
+      });
+      setUserInfoToCookies(strapi.user);
+      setIdentifier("");
+      setPassword("");
+      navigate("/admin-dashboard");
+    } catch (error) {
+      console.log("Login Error", error);
+    } finally {
+      setIsloading(false);
+    }
   };
 
   return (
@@ -106,34 +48,20 @@ const Login = () => {
               {/* /Account Logo */}
               <div className="account-box">
                 <div className="account-wrapper">
-                  <h3 className="account-title">Login</h3>
+                  <h3 className="account-title">Client Login</h3>
                   <p className="account-subtitle">Access to our dashboard</p>
                   {/* Account Form */}
                   <div>
-                    <form onSubmit={handleSubmit(onSubmit)}>
+                    <form onSubmit={handleSubmit}>
                       <div className="input-block mb-4">
-                        <label className="col-form-label">Email Address</label>
-                        <Controller
-                          name="email"
-                          control={control}
-                          render={({ field }) => (
-                            <input
-                              className={`form-control ${
-                                errors?.email ? "error-input" : ""
-                              }`}
-                              type="text"
-                              defaultValue={localStorage.getItem("email")}
-                              onChange={field.onChange}
-                              value={field.value}
-                              autoComplete="true"
-                            />
-                          )}
+                        <label className="col-form-label">Phone Number</label>
+                        <input
+                          className={`form-control`}
+                          type="text"
+                          onChange={(e) => setIdentifier(e.target.value)}
+                          value={identifier}
+                          autoComplete="true"
                         />
-
-                        <span className="text-danger">
-                          {" "}
-                          {errors.email?.message}{" "}
-                        </span>
                       </div>
                       <div className="input-block mb-4">
                         <div className="row">
@@ -147,23 +75,14 @@ const Login = () => {
                           </div>
                         </div>
                         <div style={{ position: "relative" }}>
-                          <Controller
-                            name="password"
-                            control={control}
-                            render={({ field }) => (
-                              <input
-                                className={`form-control ${
-                                  errors?.password ? "error-input" : ""
-                                }`}
-                                type={eye ? "password" : "text"}
-                                defaultValue={localStorage.getItem("password")}
-                                value={field.value}
-                                onChange={field.onChange}
-                                // autoComplete="true"
-                              />
-                            )}
+                          <input
+                            className={`form-control`}
+                            type="text"
+                            onChange={(e) => setPassword(e.target.value)}
+                            value={password}
+                            autoComplete="true"
                           />
-                          <span
+                          {/*    <span
                             style={{
                               position: "absolute",
                               right: "5%",
@@ -173,19 +92,16 @@ const Login = () => {
                             className={`fa-solid ${
                               eye ? "fa-eye-slash" : "fa-eye"
                             } `}
-                          />
+                          /> */}
                         </div>
-                        <span className="text-danger">
-                          {" "}
-                          {errors.password?.message}{" "}
-                        </span>
                       </div>
                       <div className="input-block text-center">
                         <button
                           className="btn btn-primary account-btn"
                           type="submit"
+                          disabled={isLoading}
                         >
-                          Login
+                          {isLoading ? "Login..." : "   Login"}
                         </button>
                       </div>
                     </form>
@@ -207,4 +123,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default TestLogin;

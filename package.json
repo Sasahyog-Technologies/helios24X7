@@ -41,6 +41,7 @@
     "react-bootstrap-daterangepicker": "^8.0.0",
     "react-bootstrap-range-slider": "^3.0.8",
     "react-chartjs-2": "^5.2.0",
+    "react-cookie": "^7.1.0",
     "react-country-flag": "^3.1.0",
     "react-countup": "^6.5.0",
     "react-custom-scrollbars-2": "^4.5.0",
