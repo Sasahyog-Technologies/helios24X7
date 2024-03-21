@@ -75,7 +75,7 @@ const AppRouter = () => {
   return (
     <div>
       <Provider store={store}>
-        <BrowserRouter basename="/react/template">
+        <BrowserRouter basename="/">
           <ScrollToTop />
           <Routes>
             {/* Authetication  Start */}
@@ -84,17 +84,15 @@ const AppRouter = () => {
             <Route path="/auth/login/manager" element={<ManagerLogin />} />
             <Route path="/auth/login/trainer" element={<TrainerLogin />} />
             {/* Authentication End  */}
-
             {/* <Route path="/" element={<Login />} /> */}
-
             <Route path="/change-password" element={<ChangePassword />} />
             <Route path="/register" element={<Register />} />
             <Route path="/otp" element={<Otp />} />
             <Route path="/error-404" element={<Error404 />} />
+            ``
             <Route path="/error-500" element={<Error500 />} />
             <Route path="/coming-soon" element={<ComingSoon />} />
             <Route path="/under-maintenance" element={<UnderManitenance />} />
-
             <Route path="/job-list" element={<JobList />} />
             <Route path="/job-view" element={<JobView />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
