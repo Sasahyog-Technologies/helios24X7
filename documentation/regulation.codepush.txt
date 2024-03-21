@@ -1,2 +1,0 @@
-+ Only Deepak can push the dev branch to main.
-+ Before adding the commit to the dev branch, you will have to check that it does not impact the old code structure and does not cause any errors.

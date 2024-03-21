@@ -1,7 +1,0 @@
-/project-root
-  /client     // React app
-  /server     // Strapi App
-
-
-/client - yarn install
-/server - npm i --force
