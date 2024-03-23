@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Applogo } from "../../../Routes/ImagePath";
 import { useSession } from "../../../Hook/useSession";
-import strapi from "../../../strapi";
-import { strapiAxios } from "../../../axios";
+import strapiAxios from "../../../sdk";
+ 
 
 const TestLogin = () => {
   const [identifier, setIdentifier] = useState("");
@@ -16,15 +16,16 @@ const TestLogin = () => {
     e.preventDefault();
     try {
       setIsloading(true);
-      let res = await strapiAxios.post("/api/auth/local", {
+      let res = await strapiAxios.post("/auth/local", {
         identifier,
         password,
       });
       let data = res.data;
+      console.log(data)
       setUserInfoToCookies(data);
       setIdentifier("");
       setPassword("");
-      navigate("/admin-dashboard");
+     // navigate("/admin-dashboard");
     } catch (error) {
       console.log("Login Error", error);
     } finally {

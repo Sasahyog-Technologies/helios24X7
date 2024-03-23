@@ -1,7 +1,7 @@
 import axios from "axios";
 export const BASEURL =
   "https://helios24x7backend-production.up.railway.app/api";
-const strapii = axios.create({
+const strapiAxios = axios.create({
   baseURL: BASEURL,
   headers: {
     "Content-Type": "application/json",
@@ -9,4 +9,4 @@ const strapii = axios.create({
   },
 });
 
-export default strapii;
+export default strapiAxios;
