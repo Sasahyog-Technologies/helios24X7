@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Avatar_02,
   Avatar_05,
@@ -16,8 +16,13 @@ import AllEmployeeAddPopup from "../../../components/modelpopup/AllEmployeeAddPo
 import DeleteModal from "../../../components/modelpopup/DeleteModal";
 import SearchBox from "../../../components/SearchBox";
 import ClientAddPopup from "../../../components/modelpopup/Client/ClientAddPopup";
+import strapiAxios from "../../../sdk";
+import request from "../../../sdk/functions";
+import { format } from "date-fns";
 
 const EmployeeList = () => {
+  const [clientData, setClientData] = useState([]);
+  const [loading, setLoading] = useState(false);
   const data = [
     {
       id: 1,
@@ -59,47 +64,17 @@ const EmployeeList = () => {
       mobile: "9876543210",
       joindate: "1 Apr 2014",
     },
-    {
-      id: 5,
-      image: Avatar_09,
-      name: "Wilmer Deluna",
-      role: "Team Leader",
-      employee_id: "FT-0005",
-      email: "wilmerdeluna@example.com",
-      mobile: "9876543210",
-      joindate: "22 May 2014",
-    },
-    {
-      id: 6,
-      image: Avatar_10,
-      name: "Jeffrey Warden",
-      role: "Web Developer",
-      employee_id: "FT-0006",
-      email: "jeffreywarden@example.com",
-      mobile: "9876543210",
-      joindate: "16 Jun 2023",
-    },
-    {
-      id: 7,
-      image: Avatar_13,
-      name: "Bernardo Galaviz",
-      role: "Web Developer",
-      employee_id: "FT-0007",
-      email: "bernardogalaviz@example.com",
-      mobile: "9876543210",
-      joindate: "1 Jan 2023",
-    },
   ];
 
   const columns = [
     {
       title: "Name",
-      dataIndex: "name",
+      dataIndex: "firstname",
       render: (text, record) => (
         <span className="table-avatar">
-          <Link to="/profile" className="avatar">
+          {/*    <Link to="/profile" className="avatar">
             <img alt="" src={record.image} />
-          </Link>
+          </Link> */}
           <Link to="/profile">
             {text} <span>{record.role}</span>
           </Link>
@@ -109,15 +84,15 @@ const EmployeeList = () => {
     },
     {
       title: "Employee ID",
-      dataIndex: "employee_id",
+      dataIndex: "id",
       sorter: (a, b) => a.employee_id.length - b.employee_id.length,
     },
 
-    {
+    /*    {
       title: "Email",
       dataIndex: "email",
       sorter: (a, b) => a.email.length - b.email.length,
-    },
+    }, */
 
     {
       title: "Mobile",
@@ -127,8 +102,11 @@ const EmployeeList = () => {
 
     {
       title: "Join Date",
-      dataIndex: "joindate",
+      dataIndex: "createdAt",
       sorter: (a, b) => a.joindate.length - b.joindate.length,
+      render: (text, record) => (
+        <span>{format(new Date(text), "dd/MM/yyyy")}</span>
+      ),
     },
     {
       title: "Role",
@@ -195,6 +173,25 @@ const EmployeeList = () => {
       ),
     },
   ];
+
+  useEffect(() => {
+    const fetchClients = async () => {
+      try {
+        setLoading(true);
+        let data = await request.findMany("users");
+       // console.log(data);
+        if (data && data.length > 0) {
+          setClientData(data);
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchClients();
+  }, []);
+
   return (
     <div>
       <div className="page-wrapper">
@@ -216,12 +213,24 @@ const EmployeeList = () => {
             <div className="col-md-12">
               <div className="table-responsive">
                 <SearchBox />
-                <Table
-                  className="table-striped"
-                  columns={columns}
-                  dataSource={data}
-                  rowKey={(record) => record.id}
-                />
+                {loading ? (
+                  <>Loading.....</>
+                ) : (
+                  <>
+                    {clientData.length ? (
+                      <>
+                        <Table
+                          className="table-striped"
+                          columns={columns}
+                          dataSource={clientData}
+                          rowKey={(record) => record.id}
+                        />
+                      </>
+                    ) : (
+                      <>Clients Not Available</>
+                    )}
+                  </>
+                )}
               </div>
             </div>
           </div>

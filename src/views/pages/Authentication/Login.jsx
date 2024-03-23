@@ -21,11 +21,11 @@ const TestLogin = () => {
         password,
       });
       let data = res.data;
-      console.log(data)
+     // console.log(data)
       setUserInfoToCookies(data);
       setIdentifier("");
       setPassword("");
-     // navigate("/admin-dashboard");
+      navigate("/admin-dashboard");
     } catch (error) {
       console.log("Login Error", error);
     } finally {

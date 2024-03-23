@@ -1,11 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
 // import { getBranches } from "../../../strapi/functions/braches";
 import axios from "axios";
 
 import request from "../../../sdk/functions";
+import strapiAxios from "../../../sdk";
 
 const ClientAddPopup = () => {
   const employee = [
@@ -37,40 +38,83 @@ const ClientAddPopup = () => {
   };
 
   const [selectedDate1, setSelectedDate1] = useState(null);
+  const [branchOptions, setBranchOptions] = useState([]);
+  const [planOptions, setPlanOptions] = useState([]);
+  const [loading, setLoading] = useState(false);
 
-  const { data } = useQuery({
+  const [userInfo, setUserInfo] = useState({
+    firstname: "",
+    lastname: "",
+    mobile: "",
+    password: "",
+    email: `random${Math.floor(Math.random() * 100)}@gmail.com`,
+    Branch: {
+      data: {
+        id: "",
+      },
+    },
+  });
+
+  /* 
+  const { data: branches, isFetched: isBranchesFetched } = useQuery({
     queryKey: ["arr"],
     queryFn: () => request.findMany("branch"),
   });
-
-  const { data: branches, isFetched } = useQuery({
-    queryKey: "branches",
-    queryFn: () => {
-      return axios.get("http://localhost:1337/api/branches");
-    },
-  });
-
   const { data: plans, isFetched: isPlansFetched } = useQuery({
-    queryKey: "plans",
-    queryFn: () => {
-      return axios.get("http://localhost:1337/api/plans");
-    },
+    queryKey: ["arr"],
+    queryFn: () => request.findMany("plan"),
   });
-
-  const branchOptions = isFetched
-    ? branches?.data?.data.map((branch) => ({
-        value: branch.id,
-        label: branch.attributes.name,
-      }))
-    : [];
 
   const planOptions = isPlansFetched
-    ? plans?.data?.data.map((plan) => ({
+    ? plans?.data?.map((plan) => ({
         value: plan.id,
         label: plan.attributes.title,
       }))
     : [];
 
+  const branchOptions = isBranchesFetched
+    ? branches?.data?.map((branch) => ({
+        value: branch.id,
+        label: branch.attributes.name,
+      }))
+    : []; 
+  */
+
+  const submitHandler = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      let data = await request.create("register", {
+        ...userInfo,
+        username: userInfo.mobile,
+      });
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(true);
+    }
+    console.log(userInfo);
+  };
+
+  useEffect(() => {
+    let fetchBranchPlans = async () => {
+      let branches = await request.findMany("branch");
+      let branchesArr = branches?.data?.map((branch) => ({
+        value: branch.id,
+        label: branch.attributes.name,
+      }));
+      setBranchOptions(branchesArr);
+      let plans = await request.findMany("plan");
+      let plansArr = plans?.data?.map((plan) => ({
+        value: plan.id,
+        label: plan.attributes.title,
+      }));
+      setPlanOptions(plansArr);
+    };
+    fetchBranchPlans();
+  }, []);
+  //console.log(branchOptions, planOptions);
   const handleDateChange1 = (date) => {
     setSelectedDate1(date);
   };
@@ -81,7 +125,6 @@ const ClientAddPopup = () => {
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-title">Add Client</h5>
-              {JSON.stringify(branchOptions)}
               <button
                 type="button"
                 className="btn-close"
@@ -92,20 +135,41 @@ const ClientAddPopup = () => {
               </button>
             </div>
             <div className="modal-body">
-              <form>
+              <form onSubmit={submitHandler}>
                 <div className="row">
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">
                         First Name <span className="text-danger">*</span>
                       </label>
-                      <input className="form-control" type="text" />
+                      <input
+                        className="form-control"
+                        type="text"
+                        required
+                        value={userInfo.firstname}
+                        onChange={(e) =>
+                          setUserInfo({
+                            ...userInfo,
+                            firstname: e.target.value,
+                          })
+                        }
+                      />
                     </div>
                   </div>
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
-                      <label className="col-form-label">Last Name</label>
-                      <input className="form-control" type="text" />
+                      <label className="col-form-label">
+                        Last Name <span className="text-danger">*</span>
+                      </label>
+                      <input
+                        className="form-control"
+                        type="text"
+                        required
+                        value={userInfo.lastname}
+                        onChange={(e) =>
+                          setUserInfo({ ...userInfo, lastname: e.target.value })
+                        }
+                      />
                     </div>
                   </div>
                   {/* <div className="col-sm-6">
@@ -126,16 +190,26 @@ const ClientAddPopup = () => {
                   </div> */}
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
-                      <label className="col-form-label">Password</label>
-                      <input className="form-control" type="password" />
+                      <label className="col-form-label">
+                        Password <span className="text-danger">*</span>
+                      </label>
+                      <input
+                        className="form-control"
+                        type="password"
+                        required
+                        value={userInfo.password}
+                        onChange={(e) =>
+                          setUserInfo({ ...userInfo, password: e.target.value })
+                        }
+                      />
                     </div>
                   </div>
-                  <div className="col-sm-6">
+                  {/*      <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">Confirm Password</label>
                       <input className="form-control" type="password" />
                     </div>
-                  </div>
+                  </div> */}
                   {/* <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">
@@ -162,8 +236,18 @@ const ClientAddPopup = () => {
                   </div>
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
-                      <label className="col-form-label">Phone </label>
-                      <input className="form-control" type="text" />
+                      <label className="col-form-label">
+                        Phone <span className="text-danger">*</span>{" "}
+                      </label>
+                      <input
+                        className="form-control"
+                        type="text"
+                        required
+                        value={userInfo.mobile}
+                        onChange={(e) =>
+                          setUserInfo({ ...userInfo, mobile: e.target.value })
+                        }
+                      />
                     </div>
                   </div>
                   <div className="col-sm-6">
@@ -185,6 +269,12 @@ const ClientAddPopup = () => {
                         options={branchOptions}
                         placeholder="Select"
                         styles={customStyles}
+                        onChange={(e) =>
+                          setUserInfo({
+                            ...userInfo,
+                            Branch: { data: { id: e.value } },
+                          })
+                        }
                       />
                     </div>
                   </div>
@@ -645,10 +735,11 @@ const ClientAddPopup = () => {
                   <button
                     className="btn btn-primary submit-btn"
                     data-bs-dismiss="modal"
-                    aria-label="Close"
-                    type="reset"
+                   // aria-label="Close"
+                    type="submit"
+                    disabled={loading}
                   >
-                    Submit
+                    {loading ? " Submit...." : " Submit"}
                   </button>
                 </div>
               </form>

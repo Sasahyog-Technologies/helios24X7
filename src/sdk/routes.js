@@ -1,6 +1,9 @@
 export const routes = {
     "users": "/users",
-    "branch": "/branches"
+    "branch": "/branches",
+    "plan":"/plans",
+    "register":"/auth/local/register"
+
 }
 
 

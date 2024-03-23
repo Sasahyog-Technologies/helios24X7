@@ -1,5 +1,5 @@
 import QueryString from "qs";
-import strapii from "./index";
+import strapiAxios from "./index";
 import { routes } from "./routes.js";
 
 const queryStringConfig = {
@@ -13,32 +13,32 @@ const sanitizeQuery = (query) => {
 const findOne = async (route, id, query) => {
   const routePath = routes[route];
   const sanitizedQuery = sanitizeQuery(query ?? "");
-  const response = await strapii.get(`${routePath}/${id}?${sanitizedQuery}`);
+  const response = await strapiAxios.get(`${routePath}/${id}?${sanitizedQuery}`);
   return response.data;
 };
 
 const findMany = async (route, query) => {
   const routePath = routes[route];
   const sanitizedQuery = sanitizeQuery(query ?? "");
-  const response = await strapii.get(`${routePath}?${sanitizedQuery}`);
+  const response = await strapiAxios.get(`${routePath}?${sanitizedQuery}`);
   return response.data;
 };
 
 const update = async (route, id, data) => {
   const routePath = routes[route];
-  const response = await strapii.put(`${routePath}/${id}`, data);
+  const response = await strapiAxios.put(`${routePath}/${id}`, data);
   return response.data;
 };
 
 const create = async (route, data) => {
   const routePath = routes[route];
-  const response = await strapii.post(routePath, data);
+  const response = await strapiAxios.post(routePath, data);
   return response.data;
 };
 
 const remove = async (route, id) => {
   const routePath = routes[route];
-  const response = await strapii.delete(`${routePath}/${id}`);
+  const response = await strapiAxios.delete(`${routePath}/${id}`);
   return response.data;
 };
 
