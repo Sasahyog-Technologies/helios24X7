@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Applogo } from "../../../Routes/ImagePath";
 import { useSession } from "../../../Hook/useSession";
 import strapi from "../../../strapi";
+import { strapiAxios } from "../../../axios";
 
 const TestLogin = () => {
   const [identifier, setIdentifier] = useState("");
@@ -15,11 +16,12 @@ const TestLogin = () => {
     e.preventDefault();
     try {
       setIsloading(true);
-      await strapi.login({
+      let res = await strapiAxios.post("/api/auth/local", {
         identifier,
         password,
       });
-      setUserInfoToCookies(strapi.user);
+      let data = res.data;
+      setUserInfoToCookies(data);
       setIdentifier("");
       setPassword("");
       navigate("/admin-dashboard");
@@ -29,6 +31,7 @@ const TestLogin = () => {
       setIsloading(false);
     }
   };
+  
 
   return (
     <div>
@@ -124,3 +127,29 @@ const TestLogin = () => {
 };
 
 export default TestLogin;
+
+/* 
+
+ const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      setIsloading(true);
+      await strapi.login({
+        identifier,
+        password,
+      });
+      console.log(strapi.user)
+      setUserInfoToCookies(strapi.user);
+      setIdentifier("");
+      setPassword("");
+      navigate("/admin-dashboard");
+    } catch (error) {
+      console.log("Login Error", error);
+    } finally {
+      setIsloading(false);
+    }
+  };
+
+
+
+*/

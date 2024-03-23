@@ -1,4 +1,8 @@
 /* eslint-disable no-unused-vars */
+
+// Customized
+import CustomClientList from "../../views/pages/Client/ClientList.jsx";
+
 import React, { useEffect, useState } from "react";
 import { Outlet, Route, Routes, Navigate } from "react-router-dom";
 import Header from "../../views/layout/Header";
@@ -961,8 +965,6 @@ const AppContainer = () => {
       path: "mail-view",
       element: <EmailView />,
     },
-   
-  
   ];
   const SettingsRoutingeObjects = [
     {
@@ -1152,7 +1154,7 @@ const AppContainer = () => {
       element: <Users />,
     },
   ];
- 
+
   const SidebarLayout = () => (
     <>
       <Header />
@@ -1161,11 +1163,7 @@ const AppContainer = () => {
       <Outlet />
     </>
   );
-  const AuthendicationLayout = () => (
-    <div>
-      
-    </div>
-  );
+  const AuthendicationLayout = () => <div></div>;
   const ChatSidebarLayout = () => (
     <>
       <Header />
@@ -1185,7 +1183,6 @@ const AppContainer = () => {
       <Header />
       <EmailSidebar />
       <Outlet />
-      
     </>
   );
   const SettingsSidebarLayout = () => (
@@ -1220,11 +1217,22 @@ const AppContainer = () => {
       <div className="main-wrapper" onClick={mobileResponsive}>
         <Routes>
           <Route path={"/*"} element={<SidebarLayout />}>
+            {[
+              {
+                id: 1,
+                path: "client/client-list",
+                element: <CustomClientList />,
+              },
+            ].map((item) => (
+              <Route key={item.id} path={item.path} element={item.element} />
+            ))}
+          </Route>
+
+          <Route path={"/*"} element={<SidebarLayout />}>
             {routingObjects.map((item) => (
               <Route key={item.id} path={item.path} element={item.element} />
             ))}
           </Route>
-          
 
           <Route path={"/*"} element={<ChatSidebarLayout />}>
             {ChatRoutingeObjects.map((item) => (
@@ -1267,3 +1275,5 @@ const AppContainer = () => {
 };
 
 export default AppContainer;
+
+// Customization

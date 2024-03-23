@@ -1,6 +1,6 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { Table } from "antd";
+import { Link } from "react-router-dom";
 import {
   Avatar_06,
   Avatar_07,
