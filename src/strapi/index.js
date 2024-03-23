@@ -1,6 +1,6 @@
 import Strapi from "strapi-sdk-js";
 const strapi = new Strapi({
-  url: "http://localhost:1337",
+  url: "http://helios24x7backend-production.up.railway.app",
   prefix: "/api",
   store: {
     key: "strapi_jwt",

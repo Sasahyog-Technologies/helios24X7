@@ -55,6 +55,7 @@ import UnderManitenance from "../../views/pages/Pages/UnderManitenance";
 import OwnerLogin from "../../views/pages/Authentication/Owner/Login";
 import ManagerLogin from "../../views/pages/Authentication/Manager/Login";
 import TrainerLogin from "../../views/pages/Authentication/Trainer/Login";
+import ClientLogin from "../../views/pages/Authentication/Client/Login";
 
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
@@ -93,7 +94,7 @@ const AppRouter = () => {
               <Route path="/register" element={<Register />} />
               <Route path="/otp" element={<Otp />} />
               <Route path="/error-404" element={<Error404 />} />
-              ``
+
               <Route path="/error-500" element={<Error500 />} />
               <Route path="/coming-soon" element={<ComingSoon />} />
               <Route path="/under-maintenance" element={<UnderManitenance />} />
