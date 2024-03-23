@@ -6,8 +6,8 @@ import strapiAxios from "../../../sdk";
  
 
 const TestLogin = () => {
-  const [identifier, setIdentifier] = useState("");
-  const [password, setPassword] = useState("");
+  const [identifier, setIdentifier] = useState("7617290091");
+  const [password, setPassword] = useState("123456");
   const [isLoading, setIsloading] = useState(false);
   const navigate = useNavigate();
   const { setUserInfoToCookies } = useSession();

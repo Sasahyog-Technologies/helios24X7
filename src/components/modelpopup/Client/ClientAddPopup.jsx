@@ -48,7 +48,7 @@ const ClientAddPopup = () => {
     mobile: "",
     password: "",
     email: `random${Math.floor(Math.random() * 100)}@gmail.com`,
-    Branch: {
+    branch: {
       data: {
         id: "",
       },
@@ -272,7 +272,7 @@ const ClientAddPopup = () => {
                         onChange={(e) =>
                           setUserInfo({
                             ...userInfo,
-                            Branch: { data: { id: e.value } },
+                            branch: { data: { id: e.value } },
                           })
                         }
                       />
