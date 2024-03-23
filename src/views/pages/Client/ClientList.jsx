@@ -19,6 +19,7 @@ import ClientAddPopup from "../../../components/modelpopup/Client/ClientAddPopup
 import strapiAxios from "../../../sdk";
 import request from "../../../sdk/functions";
 import { format } from "date-fns";
+import { useQuery } from "@tanstack/react-query";
 
 const EmployeeList = () => {
   const [clientData, setClientData] = useState([]);
@@ -179,7 +180,7 @@ const EmployeeList = () => {
       try {
         setLoading(true);
         let data = await request.findMany("users");
-       // console.log(data);
+        // console.log(data);
         if (data && data.length > 0) {
           setClientData(data);
         }
