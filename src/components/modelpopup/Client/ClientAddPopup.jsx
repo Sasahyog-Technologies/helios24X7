@@ -1,9 +1,6 @@
-// react-hot-toast;;
-
 import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
-// import { getBranches } from "../../../strapi/functions/braches";
 import toast from "react-hot-toast";
 import request from "../../../sdk/functions";
 import { useForm, Controller } from "react-hook-form";

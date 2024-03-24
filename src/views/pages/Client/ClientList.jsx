@@ -1,15 +1,13 @@
+import { useQuery } from "@tanstack/react-query";
+import { Table } from "antd";
+import { format } from "date-fns";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { Table } from "antd";
-import EmployeeListFilter from "../../../components/EmployeeListFilter";
 import Breadcrumbs from "../../../components/Breadcrumbs";
-import DeleteModal from "../../../components/modelpopup/DeleteModal";
-import SearchBox from "../../../components/SearchBox";
-import ClientAddPopup from "../../../components/modelpopup/Client/ClientAddPopup";
-import request from "../../../sdk/functions";
-import { useQuery } from "@tanstack/react-query";
-import { format, set } from "date-fns";
 import ClientListFilter from "../../../components/ClientListFilters";
+import ClientAddPopup from "../../../components/modelpopup/Client/ClientAddPopup";
+import DeleteModal from "../../../components/modelpopup/DeleteModal";
+import request from "../../../sdk/functions";
 
 const EmployeeList = () => {
   const columns = [
@@ -117,7 +115,7 @@ const EmployeeList = () => {
   });
 
   const handleTableChange = (pagination, filters, sorter) => {
-    console.log("handleTableChange");
+    //console.log("handleTableChange");
     setTableParams({
       pagination,
       filters,
