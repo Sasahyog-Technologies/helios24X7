@@ -11,17 +11,6 @@ import { useQuery } from "@tanstack/react-query";
 import { format, set } from "date-fns";
 import ClientListFilter from "../../../components/ClientListFilters";
 
-const formetter = (data) => {
-  return data.map((item) => ({
-    role: item.role,
-    mobile: item.mobile,
-    firstname: item.firstname,
-    lastname: item.lastname,
-    createdAt: item.createdAt,
-    branch: item.branch.name,
-  }));
-};
-
 const EmployeeList = () => {
   const columns = [
     {
@@ -62,6 +51,7 @@ const EmployeeList = () => {
     {
       title: "Branch",
       dataIndex: "branch",
+      render: (text, record) => <span>{text?.name}</span>,
     },
     {
       title: "Action",
@@ -121,7 +111,8 @@ const EmployeeList = () => {
         ...tableParams,
         pagination: { ...tableParams.pagination, total: data.length },
       });
-      return formetter(data);
+      // return formetter(data);
+      return data;
     },
   });
 
