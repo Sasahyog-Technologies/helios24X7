@@ -1,3 +1,5 @@
+// react-hot-toast;;
+
 import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
@@ -7,6 +9,16 @@ import axios from "axios";
 
 import request from "../../../sdk/functions";
 import strapiAxios from "../../../sdk";
+
+const formDataDefaultValues = {
+  firstname: "deepak",
+  lastname: "vishwakarma",
+  mobile: "917354657459",
+  password: "123123",
+  email: `random${Math.floor(Math.random() * 100)}@gmail.com`, // please use uuid for unique email
+  branch: "",
+  plan: "",
+};
 
 const ClientAddPopup = () => {
   const employee = [
@@ -42,18 +54,11 @@ const ClientAddPopup = () => {
   const [planOptions, setPlanOptions] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const [userInfo, setUserInfo] = useState({
-    firstname: "",
-    lastname: "",
-    mobile: "",
-    password: "",
-    email: `random${Math.floor(Math.random() * 100)}@gmail.com`,
-    branch: {
-      data: {
-        id: "",
-      },
-    },
-  });
+ 
+ 
+ 
+  const [userInfo, setUserInfo] = useState(formDataDefaultValues);
+ 
 
   /* 
   const { data: branches, isFetched: isBranchesFetched } = useQuery({
@@ -88,13 +93,25 @@ const ClientAddPopup = () => {
         ...userInfo,
         username: userInfo.mobile,
       });
+
+      await request.create("subscription", {
+        data: {
+          user: data.user.id,
+          plan: userInfo.plan,
+          paid: 1200,
+          outstanding: 1200,
+          start: selectedDate1,
+          end: selectedDate1,
+          payment_type: "cash",
+          start_date: selectedDate1,
+        },
+      });
       console.log(data);
     } catch (error) {
-      console.log(error);
+      alert(error.response.data.error.message);
     } finally {
-      setLoading(true);
+      setLoading(false);
     }
-    console.log(userInfo);
   };
 
   useEffect(() => {
@@ -135,6 +152,7 @@ const ClientAddPopup = () => {
               </button>
             </div>
             <div className="modal-body">
+              {/* {JSON.stringify(userInfo)} */}
               <form onSubmit={submitHandler}>
                 <div className="row">
                   <div className="col-sm-6">
@@ -257,6 +275,12 @@ const ClientAddPopup = () => {
                         options={planOptions}
                         placeholder="Select"
                         styles={customStyles}
+                        onChange={(e) =>
+                          setUserInfo({
+                            ...userInfo,
+                            plan: e.value,
+                          })
+                        }
                       />
                     </div>
                   </div>
@@ -272,7 +296,7 @@ const ClientAddPopup = () => {
                         onChange={(e) =>
                           setUserInfo({
                             ...userInfo,
-                            branch: { data: { id: e.value } },
+                            branch: e.value,
                           })
                         }
                       />
@@ -735,7 +759,7 @@ const ClientAddPopup = () => {
                   <button
                     className="btn btn-primary submit-btn"
                     data-bs-dismiss="modal"
-                   // aria-label="Close"
+                    // aria-label="Close"
                     type="submit"
                     disabled={loading}
                   >
