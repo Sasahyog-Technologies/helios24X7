@@ -1,12 +1,11 @@
 // react-hot-toast;;
-
-import { useQuery } from "@tanstack/react-query";
+// "react-hook-form"
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
 // import { getBranches } from "../../../strapi/functions/braches";
 import axios from "axios";
-
 import request from "../../../sdk/functions";
 import strapiAxios from "../../../sdk";
 
@@ -15,7 +14,6 @@ const formDataDefaultValues = {
   lastname: "vishwakarma",
   mobile: "917354657459",
   password: "123123",
-  email: `random${Math.floor(Math.random() * 100)}@gmail.com`, // please use uuid for unique email
   branch: "",
   plan: "",
 };
@@ -56,6 +54,8 @@ const ClientAddPopup = () => {
 
   const [userInfo, setUserInfo] = useState(formDataDefaultValues);
 
+  const queryClient = useQueryClient();
+
   /* 
   const { data: branches, isFetched: isBranchesFetched } = useQuery({
     queryKey: ["arr"],
@@ -85,24 +85,30 @@ const ClientAddPopup = () => {
     e.preventDefault();
     try {
       setLoading(true);
+
       let data = await request.create("register", {
         ...userInfo,
         username: userInfo.mobile,
+        email: `mail${userInfo.mobile}@mail.com`, // this is dummy email
       });
 
       await request.create("subscription", {
         data: {
-          user: data.user.id,
-          plan: userInfo.plan,
           paid: 1200,
           outstanding: 1200,
-          start: selectedDate1,
+          user: data.user.id,
           end: selectedDate1,
+          plan: userInfo.plan,
+          start: selectedDate1,
           payment_type: "cash",
           start_date: selectedDate1,
         },
       });
-      console.log(data);
+
+      // refetch the client list
+      queryClient.invalidateQueries({
+        queryKey: ["client-list"],
+      });
     } catch (error) {
       alert(error.response.data.error.message);
     } finally {
