@@ -1,23 +1,25 @@
 // react-hot-toast;;
 
-import { useQuery } from "@tanstack/react-query";
 import React, { useEffect, useState } from "react";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
 // import { getBranches } from "../../../strapi/functions/braches";
-import axios from "axios";
-
+import toast from "react-hot-toast";
 import request from "../../../sdk/functions";
-import strapiAxios from "../../../sdk";
+import { useForm, Controller } from "react-hook-form";
 
 const formDataDefaultValues = {
-  firstname: "deepak",
-  lastname: "vishwakarma",
-  mobile: "917354657459",
-  password: "123123",
-  email: `random${Math.floor(Math.random() * 100)}@gmail.com`, // please use uuid for unique email
+  firstname: "",
+  lastname: "",
+  mobile: "",
+  password: "",
+  email: `random${Math.floor(
+    Math.random() * 1000 * Math.random() * 10
+  )}@gmail.com`, // please use uuid for unique email
   branch: "",
   plan: "",
+  paid: "",
+  outstanding: "",
 };
 
 const ClientAddPopup = () => {
@@ -49,16 +51,15 @@ const ClientAddPopup = () => {
     }),
   };
 
-  const [selectedDate1, setSelectedDate1] = useState(null);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const [branchOptions, setBranchOptions] = useState([]);
   const [planOptions, setPlanOptions] = useState([]);
   const [loading, setLoading] = useState(false);
 
- 
- 
- 
-  const [userInfo, setUserInfo] = useState(formDataDefaultValues);
- 
+  const { register, handleSubmit, control, setValue } = useForm({
+    defaultValues: formDataDefaultValues,
+  });
 
   /* 
   const { data: branches, isFetched: isBranchesFetched } = useQuery({
@@ -85,30 +86,35 @@ const ClientAddPopup = () => {
     : []; 
   */
 
-  const submitHandler = async (e) => {
-    e.preventDefault();
+  const onSubmit = async (data) => {
+    // e.preventDefault();
     try {
       setLoading(true);
-      let data = await request.create("register", {
-        ...userInfo,
-        username: userInfo.mobile,
+      let createRes = await request.create("register", {
+        username: data.mobile,
+        password: data.password,
+        firstname: data.firstname,
+        lastname: data.lastname,
+        mobile: data.mobile,
+        email: data.email,
+        branch: data.branch,
       });
 
-      await request.create("subscription", {
+      const subRes = await request.create("subscription", {
         data: {
-          user: data.user.id,
-          plan: userInfo.plan,
-          paid: 1200,
-          outstanding: 1200,
-          start: selectedDate1,
-          end: selectedDate1,
+          user: createRes.user.id,
+          plan: data.plan,
+          paid: data.paid,
+          outstanding: data.outstanding,
+          start: startDate,
+          end: endDate,
           payment_type: "cash",
-          start_date: selectedDate1,
+          //   start_date: startDate,
         },
       });
-      console.log(data);
+      toast.success("client created");
     } catch (error) {
-      alert(error.response.data.error.message);
+      toast.error(error.response.data.error.message,{duration:5000});
     } finally {
       setLoading(false);
     }
@@ -133,7 +139,7 @@ const ClientAddPopup = () => {
   }, []);
   //console.log(branchOptions, planOptions);
   const handleDateChange1 = (date) => {
-    setSelectedDate1(date);
+    setStartDate(date);
   };
   return (
     <>
@@ -153,7 +159,7 @@ const ClientAddPopup = () => {
             </div>
             <div className="modal-body">
               {/* {JSON.stringify(userInfo)} */}
-              <form onSubmit={submitHandler}>
+              <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="row">
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
@@ -164,13 +170,7 @@ const ClientAddPopup = () => {
                         className="form-control"
                         type="text"
                         required
-                        value={userInfo.firstname}
-                        onChange={(e) =>
-                          setUserInfo({
-                            ...userInfo,
-                            firstname: e.target.value,
-                          })
-                        }
+                        {...register("firstname", { required: true })}
                       />
                     </div>
                   </div>
@@ -183,29 +183,10 @@ const ClientAddPopup = () => {
                         className="form-control"
                         type="text"
                         required
-                        value={userInfo.lastname}
-                        onChange={(e) =>
-                          setUserInfo({ ...userInfo, lastname: e.target.value })
-                        }
+                        {...register("lastname", { required: true })}
                       />
                     </div>
                   </div>
-                  {/* <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">
-                        Username <span className="text-danger">*</span>
-                      </label>
-                      <input className="form-control" type="text" />
-                    </div>
-                  </div> */}
-                  {/* <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">
-                        Email <span className="text-danger">*</span>
-                      </label>
-                      <input className="form-control" type="email" />
-                    </div>
-                  </div> */}
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">
@@ -215,27 +196,10 @@ const ClientAddPopup = () => {
                         className="form-control"
                         type="password"
                         required
-                        value={userInfo.password}
-                        onChange={(e) =>
-                          setUserInfo({ ...userInfo, password: e.target.value })
-                        }
+                        {...register("password", { required: true })}
                       />
                     </div>
                   </div>
-                  {/*      <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">Confirm Password</label>
-                      <input className="form-control" type="password" />
-                    </div>
-                  </div> */}
-                  {/* <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">
-                        Employee ID <span className="text-danger">*</span>
-                      </label>
-                      <input type="text" className="form-control" />
-                    </div>
-                  </div> */}
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">
@@ -243,11 +207,29 @@ const ClientAddPopup = () => {
                       </label>
                       <div className="cal-icon">
                         <DatePicker
-                          selected={selectedDate1}
-                          onChange={handleDateChange1}
+                          selected={startDate}
+                          onChange={(date) => setStartDate(date)}
+                          className="form-control floating datetimepicker"
+                          type="date"
+                          required={true}
+                          dateFormat="dd-MM-yyyy"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="input-block mb-3">
+                      <label className="col-form-label">
+                        End Date <span className="text-danger">*</span>
+                      </label>
+                      <div className="cal-icon">
+                        <DatePicker
+                          selected={endDate}
+                          onChange={(date) => setEndDate(date)}
                           className="form-control floating datetimepicker"
                           type="date"
                           dateFormat="dd-MM-yyyy"
+                          required={true}
                         />
                       </div>
                     </div>
@@ -261,26 +243,25 @@ const ClientAddPopup = () => {
                         className="form-control"
                         type="text"
                         required
-                        value={userInfo.mobile}
-                        onChange={(e) =>
-                          setUserInfo({ ...userInfo, mobile: e.target.value })
-                        }
+                        {...register("mobile", { required: true })}
                       />
                     </div>
                   </div>
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">Plan</label>
-                      <Select
-                        options={planOptions}
-                        placeholder="Select"
-                        styles={customStyles}
-                        onChange={(e) =>
-                          setUserInfo({
-                            ...userInfo,
-                            plan: e.value,
-                          })
-                        }
+                      <Controller
+                        name="plan"
+                        control={control}
+                        render={({ onChange, value, ref }) => (
+                          <Select
+                            options={planOptions}
+                            placeholder="Select"
+                            value={planOptions.find((c) => c.value === value)}
+                            onChange={(val) => setValue("plan", val.value)}
+                          />
+                        )}
+                        rules={{ required: true }}
                       />
                     </div>
                   </div>
@@ -289,16 +270,18 @@ const ClientAddPopup = () => {
                       <label className="col-form-label">
                         Branch <span className="text-danger">*</span>
                       </label>
-                      <Select
-                        options={branchOptions}
-                        placeholder="Select"
-                        styles={customStyles}
-                        onChange={(e) =>
-                          setUserInfo({
-                            ...userInfo,
-                            branch: e.value,
-                          })
-                        }
+                      <Controller
+                        name="branch"
+                        control={control}
+                        render={({ onChange, value, ref }) => (
+                          <Select
+                            options={branchOptions}
+                            placeholder="Select"
+                            value={branchOptions.find((c) => c.value === value)}
+                            onChange={(val) => setValue("branch", val.value)}
+                          />
+                        )}
+                        rules={{ required: true }}
                       />
                     </div>
                   </div>
@@ -306,459 +289,29 @@ const ClientAddPopup = () => {
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">Paid </label>
-                      <input className="form-control" type="text" />
+                      <input
+                        className="form-control"
+                        type="text"
+                        {...register("paid", { required: true })}
+                      />
                     </div>
                   </div>
 
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">Outstanding </label>
-                      <input className="form-control" type="text" />
-                    </div>
-                  </div>
-
-                  {/* <div className="col-md-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">
-                        Designation <span className="text-danger">*</span>
-                      </label>
-                      <Select
-                        options={designation}
-                        placeholder="Select"
-                        styles={customStyles}
+                      <input
+                        className="form-control"
+                        type="text"
+                        {...register("outstanding", { required: true })}
                       />
                     </div>
-                  </div> */}
+                  </div>
                 </div>
-                {/* <div className="table-responsive m-t-15">
-                  <table className="table table-striped custom-table">
-                    <thead>
-                      <tr>
-                        <th>Module Permission</th>
-                        <th className="text-center">Read</th>
-                        <th className="text-center">Write</th>
-                        <th className="text-center">Create</th>
-                        <th className="text-center">Delete</th>
-                        <th className="text-center">Import</th>
-                        <th className="text-center">Export</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Holidays</td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input type="checkbox" defaultChecked="true" />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input
-                              type="checkbox"
-                              name="rememberme"
-                              className="rememberme"
-                            />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input
-                              type="checkbox"
-                              name="rememberme"
-                              className="rememberme"
-                            />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input
-                              type="checkbox"
-                              name="rememberme"
-                              className="rememberme"
-                            />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input
-                              type="checkbox"
-                              name="rememberme"
-                              className="rememberme"
-                            />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input
-                              type="checkbox"
-                              name="rememberme"
-                              className="rememberme"
-                            />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Leaves</td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input type="checkbox" defaultChecked="true" />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input type="checkbox" defaultChecked="true" />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input type="checkbox" defaultChecked="true" />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input
-                              type="checkbox"
-                              name="rememberme"
-                              className="rememberme"
-                            />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input
-                              type="checkbox"
-                              name="rememberme"
-                              className="rememberme"
-                            />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input
-                              type="checkbox"
-                              name="rememberme"
-                              className="rememberme"
-                            />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Clients</td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input type="checkbox" defaultChecked="true" />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input type="checkbox" defaultChecked="true" />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input type="checkbox" defaultChecked="true" />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input
-                              type="checkbox"
-                              name="rememberme"
-                              className="rememberme"
-                            />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input
-                              type="checkbox"
-                              name="rememberme"
-                              className="rememberme"
-                            />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input
-                              type="checkbox"
-                              name="rememberme"
-                              className="rememberme"
-                            />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Projects</td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input type="checkbox" defaultChecked="true" />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input
-                              type="checkbox"
-                              name="rememberme"
-                              className="rememberme"
-                            />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input
-                              type="checkbox"
-                              name="rememberme"
-                              className="rememberme"
-                            />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input
-                              type="checkbox"
-                              name="rememberme"
-                              className="rememberme"
-                            />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input
-                              type="checkbox"
-                              name="rememberme"
-                              className="rememberme"
-                            />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input
-                              type="checkbox"
-                              name="rememberme"
-                              className="rememberme"
-                            />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Tasks</td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input type="checkbox" defaultChecked="true" />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input type="checkbox" defaultChecked="true" />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input type="checkbox" defaultChecked="true" />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input type="checkbox" defaultChecked="true" />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input
-                              type="checkbox"
-                              name="rememberme"
-                              className="rememberme"
-                            />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input
-                              type="checkbox"
-                              name="rememberme"
-                              className="rememberme"
-                            />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Chats</td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input type="checkbox" defaultChecked="true" />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input type="checkbox" defaultChecked="true" />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input type="checkbox" defaultChecked="true" />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input type="checkbox" defaultChecked="true" />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input
-                              type="checkbox"
-                              name="rememberme"
-                              className="rememberme"
-                            />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input
-                              type="checkbox"
-                              name="rememberme"
-                              className="rememberme"
-                            />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Assets</td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input type="checkbox" defaultChecked="true" />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input type="checkbox" defaultChecked="true" />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input type="checkbox" defaultChecked="true" />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input type="checkbox" defaultChecked="true" />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input
-                              type="checkbox"
-                              name="rememberme"
-                              className="rememberme"
-                            />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input
-                              type="checkbox"
-                              name="rememberme"
-                              className="rememberme"
-                            />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td>Timing Sheets</td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input type="checkbox" defaultChecked="true" />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input type="checkbox" defaultChecked="true" />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input type="checkbox" defaultChecked="true" />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input type="checkbox" defaultChecked="true" />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input
-                              type="checkbox"
-                              name="rememberme"
-                              className="rememberme"
-                            />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                        <td className="text-center">
-                          <label className="custom_check">
-                            <input
-                              type="checkbox"
-                              name="rememberme"
-                              className="rememberme"
-                            />
-                            <span className="checkmark" />
-                          </label>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div> */}
                 <div className="submit-section">
                   <button
                     className="btn btn-primary submit-btn"
-                    data-bs-dismiss="modal"
+                    // data-bs-dismiss="modal"
                     // aria-label="Close"
                     type="submit"
                     disabled={loading}
@@ -771,6 +324,8 @@ const ClientAddPopup = () => {
           </div>
         </div>
       </div>
+
+      {/* ------------------------Edit------------------------------- */}
 
       <div id="edit_employee" className="modal custom-modal fade" role="dialog">
         <div
@@ -878,7 +433,7 @@ const ClientAddPopup = () => {
                       </label>
                       <div className="cal-icon">
                         <DatePicker
-                          selected={selectedDate1}
+                          selected={startDate}
                           onChange={handleDateChange1}
                           className="form-control floating datetimepicker"
                           type="date"
@@ -1360,9 +915,9 @@ const ClientAddPopup = () => {
                 <div className="submit-section">
                   <button
                     className="btn btn-primary submit-btn"
-                    data-bs-dismiss="modal"
-                    aria-label="Close"
-                    type="reset"
+                    //  data-bs-dismiss="modal"
+                    // aria-label="Close"
+                    //  type="reset"
                   >
                     Save
                   </button>
@@ -1377,3 +932,432 @@ const ClientAddPopup = () => {
 };
 
 export default ClientAddPopup;
+
+/*
+
+
+  {/* <div className="table-responsive m-t-15">
+                  <table className="table table-striped custom-table">
+                    <thead>
+                      <tr>
+                        <th>Module Permission</th>
+                        <th className="text-center">Read</th>
+                        <th className="text-center">Write</th>
+                        <th className="text-center">Create</th>
+                        <th className="text-center">Delete</th>
+                        <th className="text-center">Import</th>
+                        <th className="text-center">Export</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td>Holidays</td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input type="checkbox" defaultChecked="true" />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input
+                              type="checkbox"
+                              name="rememberme"
+                              className="rememberme"
+                            />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input
+                              type="checkbox"
+                              name="rememberme"
+                              className="rememberme"
+                            />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input
+                              type="checkbox"
+                              name="rememberme"
+                              className="rememberme"
+                            />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input
+                              type="checkbox"
+                              name="rememberme"
+                              className="rememberme"
+                            />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input
+                              type="checkbox"
+                              name="rememberme"
+                              className="rememberme"
+                            />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Leaves</td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input type="checkbox" defaultChecked="true" />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input type="checkbox" defaultChecked="true" />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input type="checkbox" defaultChecked="true" />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input
+                              type="checkbox"
+                              name="rememberme"
+                              className="rememberme"
+                            />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input
+                              type="checkbox"
+                              name="rememberme"
+                              className="rememberme"
+                            />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input
+                              type="checkbox"
+                              name="rememberme"
+                              className="rememberme"
+                            />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Clients</td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input type="checkbox" defaultChecked="true" />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input type="checkbox" defaultChecked="true" />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input type="checkbox" defaultChecked="true" />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input
+                              type="checkbox"
+                              name="rememberme"
+                              className="rememberme"
+                            />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input
+                              type="checkbox"
+                              name="rememberme"
+                              className="rememberme"
+                            />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input
+                              type="checkbox"
+                              name="rememberme"
+                              className="rememberme"
+                            />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Projects</td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input type="checkbox" defaultChecked="true" />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input
+                              type="checkbox"
+                              name="rememberme"
+                              className="rememberme"
+                            />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input
+                              type="checkbox"
+                              name="rememberme"
+                              className="rememberme"
+                            />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input
+                              type="checkbox"
+                              name="rememberme"
+                              className="rememberme"
+                            />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input
+                              type="checkbox"
+                              name="rememberme"
+                              className="rememberme"
+                            />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input
+                              type="checkbox"
+                              name="rememberme"
+                              className="rememberme"
+                            />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Tasks</td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input type="checkbox" defaultChecked="true" />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input type="checkbox" defaultChecked="true" />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input type="checkbox" defaultChecked="true" />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input type="checkbox" defaultChecked="true" />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input
+                              type="checkbox"
+                              name="rememberme"
+                              className="rememberme"
+                            />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input
+                              type="checkbox"
+                              name="rememberme"
+                              className="rememberme"
+                            />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Chats</td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input type="checkbox" defaultChecked="true" />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input type="checkbox" defaultChecked="true" />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input type="checkbox" defaultChecked="true" />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input type="checkbox" defaultChecked="true" />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input
+                              type="checkbox"
+                              name="rememberme"
+                              className="rememberme"
+                            />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input
+                              type="checkbox"
+                              name="rememberme"
+                              className="rememberme"
+                            />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Assets</td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input type="checkbox" defaultChecked="true" />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input type="checkbox" defaultChecked="true" />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input type="checkbox" defaultChecked="true" />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input type="checkbox" defaultChecked="true" />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input
+                              type="checkbox"
+                              name="rememberme"
+                              className="rememberme"
+                            />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input
+                              type="checkbox"
+                              name="rememberme"
+                              className="rememberme"
+                            />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Timing Sheets</td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input type="checkbox" defaultChecked="true" />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input type="checkbox" defaultChecked="true" />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input type="checkbox" defaultChecked="true" />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input type="checkbox" defaultChecked="true" />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input
+                              type="checkbox"
+                              name="rememberme"
+                              className="rememberme"
+                            />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                        <td className="text-center">
+                          <label className="custom_check">
+                            <input
+                              type="checkbox"
+                              name="rememberme"
+                              className="rememberme"
+                            />
+                            <span className="checkmark" />
+                          </label>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div> */
