@@ -4,4 +4,5 @@ export const routes = {
   plan: "/plans",
   register: "/auth/local/register",
   subscription: "/subscriptions",
+  bodyDetail: "/body-details",
 };
