@@ -8,8 +8,12 @@ import ClientListFilter from "../../../components/ClientListFilters";
 import ClientAddPopup from "../../../components/modelpopup/Client/ClientAddPopup";
 import DeleteModal from "../../../components/modelpopup/DeleteModal";
 import request from "../../../sdk/functions";
+import ClientEditPopup from "../../../components/modelpopup/Client/ClientEditPopup";
+import ClientDeletePopup from "../../../components/modelpopup/Client/ClientDeletePopup";
+import { useSession } from "../../../Hook/useSession";
 
 const EmployeeList = () => {
+  const [userId, setUserId] = useState(null);
   const columns = [
     {
       title: "First Name",
@@ -53,7 +57,7 @@ const EmployeeList = () => {
     },
     {
       title: "Action",
-      render: () => (
+      render: (user) => (
         <div className="dropdown dropdown-action text-end">
           <Link
             to="#"
@@ -63,12 +67,14 @@ const EmployeeList = () => {
           >
             <i className="material-icons">more_vert</i>
           </Link>
+
           <div className="dropdown-menu dropdown-menu-right">
             <Link
               className="dropdown-item"
               to="#"
               data-bs-toggle="modal"
-              data-bs-target="#edit_employee"
+              data-bs-target="#edit_client"
+              onClick={() => setUserId(user.id)}
             >
               <i className="fa fa-pencil m-r-5" /> Edit
             </Link>
@@ -76,7 +82,8 @@ const EmployeeList = () => {
               className="dropdown-item"
               to="#"
               data-bs-toggle="modal"
-              data-bs-target="#delete_employee"
+              data-bs-target="#delete_client"
+              onClick={() => setUserId(user.id)}
             >
               <i className="fa fa-trash m-r-5" /> Delete
             </Link>
@@ -98,12 +105,15 @@ const EmployeeList = () => {
     search: "",
     branch: "",
   });
-
+  const { getUserDataToCookie } = useSession();
+  const loggedinUser = getUserDataToCookie();
+  const loggedinUserId = loggedinUser.user.id;
   const { data: usersData, isLoading: usersIsLoading } = useQuery({
     queryKey: ["client-list"],
     queryFn: async () => {
       const data = await request.findMany("users", {
         populate: "branch",
+        "filters[id][$ne]": loggedinUserId,
       });
       setTableParams({
         ...tableParams,
@@ -166,7 +176,8 @@ const EmployeeList = () => {
         </div>
         {/* /Page Content */}
         <ClientAddPopup />
-        <DeleteModal Name="Delete Employee" />
+        <ClientEditPopup userId={userId} />
+        <ClientDeletePopup userId={userId} />
       </div>
     </div>
   );

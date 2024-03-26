@@ -5,7 +5,7 @@ const strapiAxios = axios.create({
   baseURL: BASEURL,
   headers: {
     "Content-Type": "application/json",
-    // Authorization: "Bearer " + process.env.NEXT_PUBLIC_STRAPI_TOKEN,
+     Authorization: "Bearer " + process.env.REACT_APP_STRAPI_TOKEN,
   },
 });
 
