@@ -136,8 +136,10 @@ const Breadcrumbs = (props) => {
     location.pathname === "/clients" ||
     location.pathname === "/clients-list" ||
     location.pathname === "/project-list" ||
-    location.pathname === "/employees" ||
-    location.pathname === "/employees-list"
+    location.pathname === "/client" ||
+    location.pathname === "/client-list" || 
+    location.pathname === "/trainer" ||
+    location.pathname === "/trainer-list" 
   ) {
     addButton = (
       <div className="row align-items-center">

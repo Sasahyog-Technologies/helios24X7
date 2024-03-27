@@ -5,16 +5,15 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 import ClientListFilter from "../../../components/ClientListFilters";
-import ClientAddPopup from "../../../components/modelpopup/Client/ClientAddPopup";
-import DeleteModal from "../../../components/modelpopup/DeleteModal";
-import request from "../../../sdk/functions";
-import ClientEditPopup from "../../../components/modelpopup/Client/ClientEditPopup";
 import ClientDeletePopup from "../../../components/modelpopup/Client/ClientDeletePopup";
-import { useSession } from "../../../Hook/useSession";
+import ClientEditPopup from "../../../components/modelpopup/Client/ClientEditPopup";
+import TrainerAddPopup from "../../../components/modelpopup/Trainer/TrainerAddPopup";
+import request from "../../../sdk/functions";
+import TrianerEditPopup from "../../../components/modelpopup/Trainer/TrainerEditPopup";
+import TrianerDeletePopup from "../../../components/modelpopup/Trainer/TrainerDeletePopup";
 
-const ClientList = () => {
+const TrainerList = () => {
   const [userId, setUserId] = useState(null);
-  
   const columns = [
     {
       title: "First Name",
@@ -74,7 +73,7 @@ const ClientList = () => {
               className="dropdown-item"
               to="#"
               data-bs-toggle="modal"
-              data-bs-target="#edit_client"
+              data-bs-target="#edit_trainer"
               onClick={() => setUserId(user.id)}
             >
               <i className="fa fa-pencil m-r-5" /> Edit
@@ -83,7 +82,7 @@ const ClientList = () => {
               className="dropdown-item"
               to="#"
               data-bs-toggle="modal"
-              data-bs-target="#delete_client"
+              data-bs-target="#delete_trainer"
               onClick={() => setUserId(user.id)}
             >
               <i className="fa fa-trash m-r-5" /> Delete
@@ -106,19 +105,21 @@ const ClientList = () => {
     search: "",
     branch: "",
   });
-  const { getUserDataToCookie } = useSession();
-  const loggedinUser = getUserDataToCookie();
-  const loggedinUserId = loggedinUser.user.id;
-  const { data: usersData, isLoading: usersIsLoading } = useQuery({
-    queryKey: ["client-list"],
+
+  const {
+    data: trainersData,
+    isLoading: usersIsLoading,
+    error,
+  } = useQuery({
+    queryKey: ["trainer-list"],
     queryFn: async () => {
       const data = await request.findMany("users", {
         populate: "branch",
-        //  "filters[id][$ne]": loggedinUserId,
         filters: {
-          type: "client",
+          type: "trainer",
         },
       });
+      console.log(data)
       setTableParams({
         ...tableParams,
         pagination: { ...tableParams.pagination, total: data.length },
@@ -127,7 +128,8 @@ const ClientList = () => {
       return data;
     },
   });
- 
+
+
   const handleTableChange = (pagination, filters, sorter) => {
     //console.log("handleTableChange");
     setTableParams({
@@ -149,13 +151,13 @@ const ClientList = () => {
         <div className="content container-fluid">
           {/* Page Header */}
           <Breadcrumbs
-            maintitle="Client"
+            maintitle="Trainer"
             title="Dashboard"
-            subtitle="Client"
-            modal="#add_client"
-            name="Add Client"
-            Linkname="/client"
-            Linkname1="/client-list"
+            subtitle="Trainer"
+            modal="#add_trainer"
+            name="Add Trainer"
+            Linkname="/trainer"
+            Linkname1="/trainer-list"
           />
           {/* /Page Header */}
           <ClientListFilter query={query} setQuery={setQuery} />
@@ -166,7 +168,7 @@ const ClientList = () => {
                   loading={usersIsLoading}
                   className="table-striped"
                   columns={columns}
-                  dataSource={usersData}
+                  dataSource={trainersData}
                   pagination={{
                     total: tableParams.pagination.total,
                     showSizeChanger: true,
@@ -179,12 +181,12 @@ const ClientList = () => {
           </div>
         </div>
         {/* /Page Content */}
-        <ClientAddPopup />
-        <ClientEditPopup userId={userId} />
-        <ClientDeletePopup userId={userId} />
+        <TrainerAddPopup />
+        <TrianerEditPopup userId={userId} />
+        <TrianerDeletePopup userId={userId} />
       </div>
     </div>
   );
 };
 
-export default ClientList;
+export default TrainerList;

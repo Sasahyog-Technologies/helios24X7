@@ -15,25 +15,12 @@ const formDataDefaultValues = {
     Math.random() * 1000 * Math.random() * 10
   )}@gmail.com`, // please use uuid for unique email
   branch: "",
-  plan: "",
-  paid: "",
-  outstanding: "",
-  weight: "",
-  height: "",
-  bmr: "",
-  chest: "",
-  hip: "",
-  biceps: "",
-  calf: "",
-  weist: "",
-  neck: "",
 };
 
-const ClientAddPopup = () => {
+const TrainerAddPopup = () => {
   const [startDate, setStartDate] = useState(null);
   const [birthDate, setBirthDate] = useState(null);
   const [branchOptions, setBranchOptions] = useState([]);
-  const [planOptions, setPlanOptions] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const {
@@ -49,21 +36,7 @@ const ClientAddPopup = () => {
   const onSubmit = async (data) => {
     try {
       setLoading(true);
-      let bodyDetailRes = await request.create("bodyDetail", {
-        data: {
-          weight: data.weight || null,
-          height: data.height || null,
-          bmr: data.bmr || null,
-          chest: data.chest || null,
-          hip: data.hip || null,
-          biceps: data.biceps || null,
-          calf: data.calf || null,
-          weist: data.weist || null,
-          neck: data.neck || null,
-        },
-      });
-
-      let createRes = await request.create("register", {
+      await request.create("register", {
         username: data.mobile,
         password: data.password,
         firstname: data.firstname,
@@ -72,21 +45,10 @@ const ClientAddPopup = () => {
         email: data.email,
         branch: data.branch,
         birthdate: birthDate,
-        body_detail: bodyDetailRes.data.id,
-        type: "client",
+        type: "trainer",
       });
-
-      await request.create("subscription", {
-        data: {
-          user: createRes.user.id,
-          plan: data.plan,
-          paid: data.paid,
-          outstanding: data.outstanding,
-          start: startDate,
-          payment_type: "cash",
-        },
-      });
-      toast.success("client created");
+      //console.log(createRes);
+      toast.success("trainer created");
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);
@@ -103,23 +65,17 @@ const ClientAddPopup = () => {
         label: branch.attributes.name,
       }));
       setBranchOptions(branchesArr);
-      let plans = await request.findMany("plan");
-      let plansArr = plans?.data?.map((plan) => ({
-        value: plan.id,
-        label: plan.attributes.title,
-      }));
-      setPlanOptions(plansArr);
     };
     fetchBranchPlans();
   }, []);
 
   return (
     <>
-      <div id="add_client" className="modal custom-modal fade" role="dialog">
+      <div id="add_trainer" className="modal custom-modal fade" role="dialog">
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">Add Client</h5>
+              <h5 className="modal-title">Add Trainer</h5>
               <button
                 type="button"
                 className="btn-close"
@@ -221,27 +177,7 @@ const ClientAddPopup = () => {
                       />
                     </div>
                   </div>
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">
-                        Plan<span className="text-danger">*</span>
-                      </label>
-                      <Controller
-                        name="plan"
-                        control={control}
-                        render={({ onChange, value, ref }) => (
-                          <Select
-                            options={planOptions}
-                            placeholder="Select"
-                            value={planOptions.find((c) => c.value === value)}
-                            onChange={(val) => setValue("plan", val.value)}
-                            required
-                          />
-                        )}
-                        rules={{ required: true }}
-                      />
-                    </div>
-                  </div>
+
                   <div className="col-md-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">
@@ -263,138 +199,8 @@ const ClientAddPopup = () => {
                       />
                     </div>
                   </div>
-
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">
-                        Paid <span className="text-danger">*</span>
-                      </label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        required
-                        {...register("paid", { required: true })}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">
-                        Outstanding <span className="text-danger">*</span>
-                      </label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        required
-                        {...register("outstanding", { required: true })}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">
-                        Weight <span className="text-danger">*</span>
-                      </label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        required
-                        {...register("weight", { required: true })}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">Height</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        {...register("height")}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">BMR</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        {...register("bmr")}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">Chest</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        {...register("chest")}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">Hip</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        {...register("hip")}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">Biceps</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        {...register("biceps")}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">Calf</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        {...register("calf")}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">Weist</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        {...register("weist")}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">Neck</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        {...register("neck")}
-                      />
-                    </div>
-                  </div>
                 </div>
-                <ErrorMessage
-                  errors={errors}
-                  name="multipleErrorInput"
-                  render={({ messages }) =>
-                    messages &&
-                    Object.entries(messages).map(([type, message]) => (
-                      <p key={type}> Error : {message}</p>
-                    ))
-                  }
-                />
+
                 <div className="submit-section">
                   <button
                     className="btn btn-primary submit-btn"
@@ -415,4 +221,4 @@ const ClientAddPopup = () => {
   );
 };
 
-export default ClientAddPopup;
+export default TrainerAddPopup;

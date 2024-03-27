@@ -1,64 +1,36 @@
 import { useQuery } from "@tanstack/react-query";
 import { Table } from "antd";
-import { format } from "date-fns";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Breadcrumbs from "../../../components/Breadcrumbs";
-import ClientListFilter from "../../../components/ClientListFilters";
-import ClientAddPopup from "../../../components/modelpopup/Client/ClientAddPopup";
-import DeleteModal from "../../../components/modelpopup/DeleteModal";
-import request from "../../../sdk/functions";
-import ClientEditPopup from "../../../components/modelpopup/Client/ClientEditPopup";
-import ClientDeletePopup from "../../../components/modelpopup/Client/ClientDeletePopup";
+import PlansListFilter from "../../../components/ClientListFilters";
+import PlansAddPopup from "../../../components/modelpopup/Plans/PlansAddPopup";
+import PlansDeletePopup from "../../../components/modelpopup/Plans/PlansDeletePopup";
+import PlanEditPopup from "../../../components/modelpopup/Plans/PlansEditPopup";
 import { useSession } from "../../../Hook/useSession";
+import request from "../../../sdk/functions";
 
-const ClientList = () => {
-  const [userId, setUserId] = useState(null);
-  
+const PlansList = () => {
+  const [planId, setPlanId] = useState(null);
   const columns = [
     {
-      title: "First Name",
-      dataIndex: "firstname",
-      render: (text, record) => (
-        <span className="table-avatar">
-          <Link to="/profile">
-            {text} <span>{record.role}</span>
-          </Link>
-        </span>
-      ),
+      title: "Title",
+      dataIndex: "title",
     },
     {
-      title: "Last Name",
-      dataIndex: "lastname",
-      render: (text, record) => (
-        <span className="table-avatar">
-          <Link to="/profile">
-            {text} <span>{record.role}</span>
-          </Link>
-        </span>
-      ),
+      title: "Price",
+      dataIndex: "price",
     },
 
     {
-      title: "Mobile",
-      dataIndex: "mobile",
+      title: "Duration",
+      dataIndex: "duration",
     },
 
-    {
-      title: "Join Date",
-      dataIndex: "createdAt",
-      render: (text, record) => (
-        <span>{format(new Date(text), "dd/MM/yyyy")}</span>
-      ),
-    },
-    {
-      title: "Branch",
-      dataIndex: "branch",
-      render: (text, record) => <span>{text?.name}</span>,
-    },
+ 
     {
       title: "Action",
-      render: (user) => (
+      render: (plan) => (
         <div className="dropdown dropdown-action text-end">
           <Link
             to="#"
@@ -74,8 +46,8 @@ const ClientList = () => {
               className="dropdown-item"
               to="#"
               data-bs-toggle="modal"
-              data-bs-target="#edit_client"
-              onClick={() => setUserId(user.id)}
+              data-bs-target="#edit_plan"
+              onClick={() => setPlanId(plan.id)}
             >
               <i className="fa fa-pencil m-r-5" /> Edit
             </Link>
@@ -83,8 +55,8 @@ const ClientList = () => {
               className="dropdown-item"
               to="#"
               data-bs-toggle="modal"
-              data-bs-target="#delete_client"
-              onClick={() => setUserId(user.id)}
+              data-bs-target="#delete_plan"
+              onClick={() => setPlanId(plan.id)}
             >
               <i className="fa fa-trash m-r-5" /> Delete
             </Link>
@@ -108,26 +80,25 @@ const ClientList = () => {
   });
   const { getUserDataToCookie } = useSession();
   const loggedinUser = getUserDataToCookie();
-  const loggedinUserId = loggedinUser.user.id;
-  const { data: usersData, isLoading: usersIsLoading } = useQuery({
-    queryKey: ["client-list"],
+  const loggedinplanId = loggedinUser.user.id;
+  const { data: plansData, isLoading: usersIsLoading } = useQuery({
+    queryKey: ["plans-list"],
     queryFn: async () => {
-      const data = await request.findMany("users", {
-        populate: "branch",
-        //  "filters[id][$ne]": loggedinUserId,
-        filters: {
-          type: "client",
-        },
-      });
+      const data = await request.findMany("plan");
       setTableParams({
         ...tableParams,
         pagination: { ...tableParams.pagination, total: data.length },
       });
       // return formetter(data);
-      return data;
+      return data.data.map((item) => {
+        return {
+          ...item.attributes,
+          id: item.id,
+        };
+      });
     },
   });
- 
+
   const handleTableChange = (pagination, filters, sorter) => {
     //console.log("handleTableChange");
     setTableParams({
@@ -149,16 +120,16 @@ const ClientList = () => {
         <div className="content container-fluid">
           {/* Page Header */}
           <Breadcrumbs
-            maintitle="Client"
+            maintitle="Plans"
             title="Dashboard"
-            subtitle="Client"
-            modal="#add_client"
-            name="Add Client"
-            Linkname="/client"
-            Linkname1="/client-list"
+            subtitle="Plans"
+            modal="#add_plan"
+            name="Add Plan"
+            Linkname="/plan"
+            Linkname1="/plans-list"
           />
           {/* /Page Header */}
-          <ClientListFilter query={query} setQuery={setQuery} />
+          <PlansListFilter query={query} setQuery={setQuery} />
           <div className="row">
             <div className="col-md-12">
               <div className="table-responsive">
@@ -166,7 +137,7 @@ const ClientList = () => {
                   loading={usersIsLoading}
                   className="table-striped"
                   columns={columns}
-                  dataSource={usersData}
+                  dataSource={plansData}
                   pagination={{
                     total: tableParams.pagination.total,
                     showSizeChanger: true,
@@ -179,12 +150,12 @@ const ClientList = () => {
           </div>
         </div>
         {/* /Page Content */}
-        <ClientAddPopup />
-        <ClientEditPopup userId={userId} />
-        <ClientDeletePopup userId={userId} />
+        <PlansAddPopup />
+        <PlanEditPopup planId={planId} />
+        <PlansDeletePopup planId={planId} />
       </div>
     </div>
   );
 };
 
-export default ClientList;
+export default PlansList;

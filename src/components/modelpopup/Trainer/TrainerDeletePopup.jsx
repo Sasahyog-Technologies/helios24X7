@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import request from "../../../sdk/functions";
 import toast from "react-hot-toast";
-const ClientDeletePopup = ({ userId }) => {
+const TrianerDeletePopup = ({ userId }) => {
   const [loading, setLoading] = useState(false);
   const removeHandler = async () => {
     try {
       setLoading(true);
       const data = await request.remove("users", userId);
-      console.log(data);
+    //  console.log(data);
       toast.success("User deleted");
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
@@ -17,11 +17,11 @@ const ClientDeletePopup = ({ userId }) => {
     }
   };
   return (
-    <div id="delete_client" className="modal custom-modal fade" role="dialog">
+    <div id="delete_trainer" className="modal custom-modal fade" role="dialog">
       <div className="modal-dialog modal-dialog-centered modal-lg">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">Delete Client</h5>
+            <h5 className="modal-title">Delete Trainer</h5>
             <button
               type="button"
               className="btn-close"
@@ -32,7 +32,7 @@ const ClientDeletePopup = ({ userId }) => {
             </button>
           </div>
           <div className="modal-body">
-            <p>You really want to delete this client</p>
+            <p>You really want to delete this trainer</p>
             <div className="d-flex justify-content-evenly">
               <button
                 className="btn btn-primary submit-btn"
@@ -61,4 +61,4 @@ const ClientDeletePopup = ({ userId }) => {
   );
 };
 
-export default ClientDeletePopup;
+export default TrianerDeletePopup;
