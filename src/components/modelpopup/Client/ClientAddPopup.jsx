@@ -5,6 +5,7 @@ import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import Select from "react-select";
 import request from "../../../sdk/functions";
+import { Refresh } from "../../../utils/refresh";
 
 const formDataDefaultValues = {
   firstname: "",
@@ -47,6 +48,8 @@ const ClientAddPopup = () => {
   });
 
   const onSubmit = async (data) => {
+    if (data.mobile.length > 10 || data.mobile.length < 10)
+      return toast.error("Mobile must be at least 10");
     try {
       setLoading(true);
       let bodyDetailRes = await request.create("bodyDetail", {
@@ -87,6 +90,7 @@ const ClientAddPopup = () => {
         },
       });
       toast.success("client created");
+      Refresh();
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);

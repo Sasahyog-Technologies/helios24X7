@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import request from "../../../sdk/functions";
 import Loading from "../../Loading";
+import { Refresh } from "../../../utils/refresh";
 const userDefaultValues = {
   title: "",
   price: "",
@@ -44,6 +45,7 @@ const PlanEditPopup = ({ planId }) => {
         data: { ...dt },
       });
       toast.success("plan updated");
+      Refresh()
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);
@@ -85,7 +87,7 @@ const PlanEditPopup = ({ planId }) => {
                       <div className="col-sm-6">
                         <div className="input-block mb-3">
                           <label className="col-form-label">
-                            First Name <span className="text-danger">*</span>
+                            Title <span className="text-danger">*</span>
                           </label>
                           <input
                             className="form-control"
@@ -100,7 +102,7 @@ const PlanEditPopup = ({ planId }) => {
                       <div className="col-sm-6">
                         <div className="input-block mb-3">
                           <label className="col-form-label">
-                            Last Name <span className="text-danger">*</span>
+                            Price <span className="text-danger">*</span>
                           </label>
                           <input
                             className="form-control"
@@ -113,7 +115,7 @@ const PlanEditPopup = ({ planId }) => {
                       <div className="col-sm-6">
                         <div className="input-block mb-3">
                           <label className="col-form-label">
-                            Phone <span className="text-danger">*</span>
+                            Duration <span className="text-danger">*</span>
                           </label>
                           <input
                             className="form-control"

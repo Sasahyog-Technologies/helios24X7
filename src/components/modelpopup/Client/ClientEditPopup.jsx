@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import request from "../../../sdk/functions";
 import Loading from "../../Loading";
+import { Refresh } from "../../../utils/refresh";
 const userDefaultValues = {
   firstname: "",
   lastname: "",
@@ -82,6 +83,7 @@ const ClientEditPopup = ({ userId }) => {
       }
       //   console.log(bodyDetailRes);
       toast.success("client updated");
+      Refresh()
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);
