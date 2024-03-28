@@ -2,40 +2,20 @@ import { useQuery } from "@tanstack/react-query";
 import { Table } from "antd";
 import { format } from "date-fns";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import Breadcrumbs from "../../../components/Breadcrumbs";
-import ClientListFilter from "../../../components/ClientListFilters";
-import ClientAddPopup from "../../../components/modelpopup/Client/ClientAddPopup";
-import DeleteModal from "../../../components/modelpopup/DeleteModal";
-import request from "../../../sdk/functions";
-import ClientEditPopup from "../../../components/modelpopup/Client/ClientEditPopup";
-import ClientDeletePopup from "../../../components/modelpopup/Client/ClientDeletePopup";
+import MembershipListFilter from "../../../components/ClientListFilters";
 import { useSession } from "../../../Hook/useSession";
+import request from "../../../sdk/functions";
 
-const ClientList = () => {
+const MembershipList = () => {
   const [userId, setUserId] = useState(null);
 
   const columns = [
     {
-      title: "First Name",
-      dataIndex: "firstname",
-      render: (text, record) => (
-        <span className="table-avatar">
-          <Link to={`/owner/client-profile/${record.id}`}>{text}</Link>
-        </span>
-      ),
+      title: "Full Name",
+      dataIndex: "fullname",
     },
-    {
-      title: "Last Name",
-      dataIndex: "lastname",
-      render: (text, record) => (
-        <span className="table-avatar">
-          <Link to={`/owner/client-profile/${record.id}`}>
-            {text} <span>{record.role}</span>
-          </Link>
-        </span>
-      ),
-    },
+ 
 
     {
       title: "Mobile",
@@ -43,18 +23,37 @@ const ClientList = () => {
     },
 
     {
-      title: "Join Date",
-      dataIndex: "createdAt",
+      title: "Start Date",
+      dataIndex: "start",
       render: (text, record) => (
         <span>{format(new Date(text), "dd/MM/yyyy")}</span>
       ),
     },
     {
-      title: "Branch",
-      dataIndex: "branch",
-      render: (text, record) => <span>{text?.name}</span>,
+      title: "End Date",
+      dataIndex: "end",
+      render: (text, record) => (
+        <span>{text ? format(new Date(text), "dd/MM/yyyy") :""}</span>
+      ),
     },
     {
+      title: "Paid",
+      dataIndex: "paid",
+    },
+    {
+      title: "Outstanding",
+      dataIndex: "outstanding",
+    },
+    {
+      title: "Plan",
+      dataIndex: "plan",
+    },
+    {
+      title: "Payment Type",
+      dataIndex: "payment_type",
+    },
+ 
+   /*  {
       title: "Action",
       render: (user) => (
         <div className="dropdown dropdown-action text-end">
@@ -89,7 +88,7 @@ const ClientList = () => {
           </div>
         </div>
       ),
-    },
+    }, */
   ];
 
   const [tableParams, setTableParams] = useState({
@@ -107,24 +106,30 @@ const ClientList = () => {
   const { getUserDataToCookie } = useSession();
   const loggedinUser = getUserDataToCookie();
   const loggedinUserId = loggedinUser.user.id;
-  const { data: usersData, isLoading: usersIsLoading } = useQuery({
-    queryKey: ["client-list"],
+  const { data: subscriptionData, isLoading: usersIsLoading } = useQuery({
+    queryKey: ["membership-list"],
     queryFn: async () => {
-      const data = await request.findMany("users", {
-        populate: "branch",
-        //  "filters[id][$ne]": loggedinUserId,
-        filters: {
-          type: "client",
-        },
+      const data = await request.findMany("subscription", {
+        populate: ["user", "plan"],
       });
       setTableParams({
         ...tableParams,
         pagination: { ...tableParams.pagination, total: data.length },
       });
       // return formetter(data);
-      return data;
+      return data.data.map((item) => {
+        return {
+          ...item.attributes,
+          id: item.id,
+          plan:item.attributes.plan.data ? item.attributes.plan.data.attributes.title  :null,
+          fullname:item.attributes.user.data ? `${item.attributes.user.data.attributes.firstname} ${item.attributes.user.data.attributes.lastname}`  :null,
+          mobile:item.attributes.user.data ? `${item.attributes.user.data.attributes.mobile}`  :null,
+        };
+      });
     },
   });
+
+  //console.log(subscriptionData);
 
   const handleTableChange = (pagination, filters, sorter) => {
     //console.log("handleTableChange");
@@ -147,16 +152,16 @@ const ClientList = () => {
         <div className="content container-fluid">
           {/* Page Header */}
           <Breadcrumbs
-            maintitle="Client"
+            maintitle="Membership"
             title="Dashboard"
-            subtitle="Client"
-            modal="#add_client"
-            name="Add Client"
-            Linkname="/client"
-            Linkname1="/client-list"
+            subtitle="Membership"
+            modal="#add_membership"
+            name="Add Membership"
+            Linkname="/membership"
+            Linkname1="/membership-list"
           />
           {/* /Page Header */}
-          <ClientListFilter query={query} setQuery={setQuery} />
+          <MembershipListFilter query={query} setQuery={setQuery} />
           <div className="row">
             <div className="col-md-12">
               <div className="table-responsive">
@@ -164,7 +169,7 @@ const ClientList = () => {
                   loading={usersIsLoading}
                   className="table-striped"
                   columns={columns}
-                  dataSource={usersData}
+                   dataSource={subscriptionData}
                   pagination={{
                     total: tableParams.pagination.total,
                     showSizeChanger: true,
@@ -177,12 +182,12 @@ const ClientList = () => {
           </div>
         </div>
         {/* /Page Content */}
-        <ClientAddPopup />
+   {/*      <ClientAddPopup />
         <ClientEditPopup userId={userId} />
-        <ClientDeletePopup userId={userId} />
+        <ClientDeletePopup userId={userId} /> */}
       </div>
     </div>
   );
 };
 
-export default ClientList;
+export default MembershipList;

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import request from "../../../sdk/functions";
+import { Refresh } from "../../../utils/refresh";
 
 const formDataDefaultValues = {
   title: "",
@@ -33,6 +34,7 @@ const PlansAddPopup = () => {
         },
       });
       toast.success("plan created");
+      Refresh()
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);
