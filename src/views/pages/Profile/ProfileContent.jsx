@@ -681,6 +681,6 @@ export const ProjectDetails = () => {
 export const ListItem = ({ title, text }) => (
   <li>
     <div className="title">{title}</div>
-    <div className="text">{text}</div>
+    <div className="text text-capitalize">{text}</div>
   </li>
 );

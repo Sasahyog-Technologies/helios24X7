@@ -3,20 +3,16 @@ import { Link } from "react-router-dom";
 import ClientEditPopup from "../../../components/modelpopup/Client/ClientEditPopup";
 import { ListItem } from "../Profile/ProfileContent";
 import { format } from "date-fns";
+import Loading from "../../../components/Loading";
 
-const ClientProfileTab = ({ bodyDetails, userId, subscription }) => {
-  const primaryContactData = [
-    { id: 1, title: "Name", text: "John Doe" },
-    { id: 2, title: "Relationship", text: "Father" },
-    { id: 3, title: "Phone", text: "9876543210, 9876543210" },
-  ];
-
-  const secondaryContactData = [
-    { id: 1, title: "Name", text: "Karen Wills" },
-    { id: 2, title: "Relationship", text: "Brother" },
-    { id: 3, title: "Phone", text: "9876543210, 9876543210" },
-  ];
-
+const ClientProfileTab = ({
+  bodyDetails,
+  userId,
+  subscription,
+  subscriptionLoading,
+  ptp,
+  ptpLoading,
+}) => {
   return (
     <>
       <div className="tab-content">
@@ -67,17 +63,97 @@ const ClientProfileTab = ({ bodyDetails, userId, subscription }) => {
                       <i className="fa fa-pencil" />
                     </Link>
                   </h3>
-                  <ul className="personal-info">
-                    {primaryContactData.map((item, index) => (
-                      <ListItem
-                        id={item.id}
-                        key={index}
-                        title={item.title}
-                        text={item.text}
-                      />
-                    ))}
-                  </ul>
-                  <hr />
+                  {ptpLoading ? (
+                    <>
+                      <Loading />
+                    </>
+                  ) : (
+                    <>
+                      {ptp ? (
+                        <>
+                          {ptp.map((p, index) => (
+                            <div key={index}>
+                              <ul className="personal-info">
+                                <ListItem
+                                  title={"Trainer"}
+                                  text={`${p.trainer.data.attributes.firstname} ${p.trainer.data.attributes.lastname}`}
+                                />
+                                <ListItem
+                                  title={"Session From"}
+                                  text={p.session_from}
+                                />
+                                <ListItem
+                                  title={"Session To"}
+                                  text={p.session_to}
+                                />
+                              </ul>
+                              <hr />
+                              {p.subscription ? (
+                                <>
+                                  {p.subscription.map((subs, index) => (
+                                    <div key={index}>
+                                      <h4>Trainer Subscription {index + 1}</h4>
+                                      <ul className="personal-info mt-3">
+                                        <ListItem
+                                          title={"Paid"}
+                                          text={subs.paid}
+                                        />
+                                        <ListItem
+                                          title={"Outstanding"}
+                                          text={subs.outstanding}
+                                        />
+                                        <ListItem
+                                          title={"Payment Type"}
+                                          text={subs.payment_type}
+                                        />
+                                        <ListItem
+                                          title={"Start"}
+                                          text={format(
+                                            new Date(subs.start),
+                                            "dd MMM yyyy"
+                                          )}
+                                        />
+                                        <ListItem
+                                          title={"End"}
+                                          text={
+                                            subs.end ? (
+                                              <>
+                                                {format(
+                                                  new Date(subs.end),
+                                                  "dd MMM yyyy"
+                                                )}
+                                              </>
+                                            ) : (
+                                              ""
+                                            )
+                                          }
+                                        />
+                                      </ul>
+                                      <button className="btn btn-info">
+                                        Extend Subscription
+                                      </button>
+                                    </div>
+                                  ))}
+                                </>
+                              ) : (
+                                <>
+                                  <button className="btn btn-info">
+                                    Create Subscription
+                                  </button>
+                                </>
+                              )}
+                            </div>
+                          ))}
+                        </>
+                      ) : (
+                        <>
+                          <button className="btn btn-info">
+                            Create Subscription
+                          </button>{" "}
+                        </>
+                      )}
+                    </>
+                  )}
                 </div>
               </div>
             </div>
@@ -85,70 +161,83 @@ const ClientProfileTab = ({ bodyDetails, userId, subscription }) => {
           <div className="row">
             <div className="col-md-6 d-flex">
               <div className="card profile-box flex-fill">
-                <div className="card-body">
-                  <h3 className="card-title">
-                    GYM Subscription
-                    <Link
-                      to="#"
-                      className="edit-icon"
-                      data-bs-toggle="modal"
-                      data-bs-target="#emergency_contact_modal"
-                    >
-                      <i className="fa fa-pencil" />
-                    </Link>
-                  </h3>
+                {subscriptionLoading ? (
+                  <>
+                    <Loading />
+                  </>
+                ) : (
+                  <>
+                    {subscription &&
+                      subscription.map((subs, index) => (
+                        <div key={index}>
+                          <div className="card-body">
+                            <h3 className="card-title">
+                              GYM Subscription {index + 1}
+                              <Link
+                                to="#"
+                                className="edit-icon"
+                                data-bs-toggle="modal"
+                                data-bs-target="#emergency_contact_modal"
+                              >
+                                <i className="fa fa-pencil" />
+                              </Link>
+                            </h3>
 
-                  {subscription ? (
-                    <>
-                      <ul className="personal-info">
-                        <ListItem
-                          title={"Plan"}
-                          text={subscription.plan.title}
-                        />
-                        <ListItem title={"Paid"} text={subscription.paid} />
-                        <ListItem
-                          title={"Outstanding"}
-                          text={subscription.outstanding}
-                        />
-                        <ListItem
-                          title={"Start"}
-                          text={format(
-                            new Date(subscription.start),
-                            "dd MMM yyyy"
-                          )}
-                        />
-                        <ListItem
-                          title={"End"}
-                          text={
-                            subscription.end ? (
+                            {subs ? (
                               <>
-                                {format(
-                                  new Date(subscription.end),
-                                  "dd MMM yyyy"
-                                )}
+                                <ul className="personal-info">
+                                  <ListItem
+                                    title={"Plan"}
+                                    text={subs.plan.data.attributes.title}
+                                  />
+                                  <ListItem title={"Paid"} text={subs.paid} />
+                                  <ListItem
+                                    title={"Outstanding"}
+                                    text={subs.outstanding}
+                                  />
+                                  <ListItem
+                                    title={"Start"}
+                                    text={format(
+                                      new Date(subs.start),
+                                      "dd MMM yyyy"
+                                    )}
+                                  />
+                                  <ListItem
+                                    title={"End"}
+                                    text={
+                                      subs.end ? (
+                                        <>
+                                          {format(
+                                            new Date(subs.end),
+                                            "dd MMM yyyy"
+                                          )}
+                                        </>
+                                      ) : (
+                                        ""
+                                      )
+                                    }
+                                  />
+                                  <ListItem
+                                    title={"Payment Type"}
+                                    text={subs.payment_type}
+                                  />
+                                </ul>
+                                <button className="btn btn-info">
+                                  Extend Subscription
+                                </button>
                               </>
                             ) : (
-                              ""
-                            )
-                          }
-                        />
-                        <ListItem
-                          title={"Payment Type"}
-                          text={subscription.payment_type}
-                        />
-                      </ul>
-                      <button className="btn btn-info">
-                        Extend Subscription
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <button className="btn btn-info">
-                        Create Subscription
-                      </button>{" "}
-                    </>
-                  )}
-                </div>
+                              <>
+                                <button className="btn btn-info">
+                                  Create Subscription
+                                </button>{" "}
+                              </>
+                            )}
+                          </div>
+                        </div>
+                      ))}
+                  </>
+                )}
               </div>
             </div>
           </div>

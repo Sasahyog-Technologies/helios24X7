@@ -79,7 +79,7 @@ const ClientAddPopup = () => {
         type: "client",
       });
 
-      let subsData = await request.create("subscription", {
+      await request.create("subscription", {
         data: {
           user: createRes.user.id,
           plan: data.plan,
@@ -89,10 +89,6 @@ const ClientAddPopup = () => {
           payment_type: "cash",
           type: "gym-subscription",
         },
-      });
-
-      await request.update("users", createRes.user.id, {
-        subscription: subsData.data.id,
       });
       toast.success("client created");
       Refresh();

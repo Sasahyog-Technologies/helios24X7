@@ -9,8 +9,6 @@ import request from "../../../sdk/functions";
 import ClientProfileTab from "./ClientProfileTap";
 
 const UserProfile = () => {
-  const [userLoading, setUserLoading] = useState(false);
-   
   const path = window.location.pathname;
   const userId = path.split("/")[path.split("/").length - 1];
 
@@ -31,10 +29,9 @@ const UserProfile = () => {
       avatar: "assets/img/profiles/avatar-16.jpg",
     },
   };
-  const { data: clientData } = useQuery({ 
+  const { data: clientData, isLoading: userLoading } = useQuery({
     queryKey: ["client-profile-data"],
     queryFn: async () => {
-      setUserLoading(true);
       if (userId) {
         const data = await request.findOne("users", userId, {
           populate: [
@@ -44,14 +41,64 @@ const UserProfile = () => {
             "subscription.plan",
           ],
         });
-        setUserLoading(false);
         return data;
       }
       return null;
     },
   });
+  const { data: clientSubscriptionData, isLoading: subscriptionLoading } =
+    useQuery({
+      queryKey: ["client-subscription-data"],
+      queryFn: async () => {
+        if (userId) {
+          const data = await request.findMany("subscription", {
+            populate: "plan",
+            filters: {
+              user: userId,
+              type: "gym-subscription",
+              end: {
+                $gte: new Date().toISOString(),
+              },
+            },
+          });
+          return data.data.map((item) => {
+            return {
+              ...item.attributes,
+              id: item.id,
+            };
+          });
+        }
+        return null;
+      },
+    });
+  const { data: clientPTPData, isLoading: isPtpLoading } = useQuery({
+    queryKey: ["client-ptp-data"],
+    queryFn: async () => {
+      if (userId) {
+        const data = await request.findMany("ptp", {
+          populate: ["subscription", "trainer"],
+          filters: {
+            trainee: userId,
+          },
+        });
+        return data.data.map((item) => {
+          return {
+            ...item.attributes,
+            id: item.id,
+            subscription: item.attributes?.subscription?.data.map((item) => {
+              return {
+                ...item.attributes,
+                id: item.id,
+              };
+            }),
+          };
+        });
+      }
+      return null;
+    },
+  });
 
-  console.log(clientData);
+ // console.log(clientPTPData);
   return (
     <>
       <div className="page-wrapper">
@@ -165,7 +212,10 @@ const UserProfile = () => {
                   <ClientProfileTab
                     bodyDetails={clientData?.body_detail}
                     userId={userId}
-                    subscription={clientData?.subscription}
+                    subscriptionLoading={subscriptionLoading}
+                    subscription={clientSubscriptionData}
+                    ptpLoading={isPtpLoading}
+                    ptp={clientPTPData}
                   />
                 </>
               ) : (
