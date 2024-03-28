@@ -55,10 +55,7 @@ import UnderManitenance from "../../views/pages/Pages/UnderManitenance";
 import OwnerLogin from "../../views/pages/Authentication/Owner/Login";
 import ManagerLogin from "../../views/pages/Authentication/Manager/Login";
 import TrainerLogin from "../../views/pages/Authentication/Trainer/Login";
-import ClientLogin from "../../views/pages/Authentication/Client/Login";
-
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-
 const queryClient = new QueryClient();
 
 const ScrollToTop = () => {
@@ -84,6 +81,7 @@ const AppRouter = () => {
             <ScrollToTop />
             <Routes>
               {/* Authetication  Start */}
+
               <Route path="/" element={<Login />} />
               <Route path="/auth/login/owner" element={<OwnerLogin />} />
               <Route path="/auth/login/manager" element={<ManagerLogin />} />
