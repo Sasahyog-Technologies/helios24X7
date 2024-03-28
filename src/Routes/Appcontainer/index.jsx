@@ -2,6 +2,7 @@
 
 // Customized
 import CustomClientList from "../../views/pages/Client/ClientList.jsx";
+import TestPage from "../../components/Test/TestPage.jsx";
 
 import React, { useEffect } from "react";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
@@ -1215,6 +1216,19 @@ const AppContainer = () => {
     <>
       <div className="main-wrapper" onClick={mobileResponsive}>
         <Routes>
+          {/* this part is just for testing purpose  */}
+          <Route path={"/*"}>
+            {[
+              {
+                id: 1,
+                path: "dev/test-1",
+                element: <TestPage />,
+              },
+            ].map((item) => (
+              <Route key={item.id} path={item.path} element={item.element} />
+            ))}
+          </Route>
+
           <Route path={"/*"} element={<SidebarLayout />}>
             {[
               {
