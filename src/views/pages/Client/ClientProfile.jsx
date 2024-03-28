@@ -31,7 +31,7 @@ const UserProfile = () => {
       avatar: "assets/img/profiles/avatar-16.jpg",
     },
   };
-  const { data: clientData } = useQuery({
+  const { data: clientData } = useQuery({ 
     queryKey: ["client-profile-data"],
     queryFn: async () => {
       setUserLoading(true);
