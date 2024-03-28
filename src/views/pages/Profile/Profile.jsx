@@ -8,7 +8,7 @@ import Breadcrumbs from "../../../components/Breadcrumbs";
 const Profile = () => {
   const userData = {
     id: 1,
-    name: "John Doe",
+    name: "John Dev",
     role: "UI/UX Design Team",
     jobTitle: "Web Designer",
     employeeId: "FT-0001",

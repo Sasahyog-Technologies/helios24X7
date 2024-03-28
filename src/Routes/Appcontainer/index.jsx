@@ -200,6 +200,7 @@ import Typicons from "../../views/pages/Ui_Interface/Icons/Typicons.jsx";
 import WeatherIcons from "../../views/pages/Ui_Interface/Icons/Weathericons.jsx";
 import PlansList from "../../views/pages/Plans/PlansList.jsx";
 import MembershipList from "../../views/pages/Memberships/MembershipList.jsx";
+import UserProfile from "../../views/pages/Client/ClientProfile.jsx";
 
 const AppContainer = () => {
   useEffect(() => {
@@ -1222,6 +1223,17 @@ const AppContainer = () => {
                 id: 1,
                 path: "owner/client-list",
                 element: <CustomClientList />,
+              },
+            ].map((item) => (
+              <Route key={item.id} path={item.path} element={item.element} />
+            ))}
+          </Route>
+          <Route path={"/*"} element={<SidebarLayout />}>
+            {[
+              {
+                id: 1,
+                path: `owner/client-profile/:clientid`,
+                element: <UserProfile />,
               },
             ].map((item) => (
               <Route key={item.id} path={item.path} element={item.element} />

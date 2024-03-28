@@ -14,16 +14,14 @@ import { useSession } from "../../../Hook/useSession";
 
 const ClientList = () => {
   const [userId, setUserId] = useState(null);
-  
+
   const columns = [
     {
       title: "First Name",
       dataIndex: "firstname",
       render: (text, record) => (
         <span className="table-avatar">
-          <Link to="/profile">
-            {text} <span>{record.role}</span>
-          </Link>
+          <Link to={`/owner/client-profile/${record.id}`}>{text}</Link>
         </span>
       ),
     },
@@ -32,7 +30,7 @@ const ClientList = () => {
       dataIndex: "lastname",
       render: (text, record) => (
         <span className="table-avatar">
-          <Link to="/profile">
+          <Link to={`/owner/client-profile/${record.id}`}>
             {text} <span>{record.role}</span>
           </Link>
         </span>
@@ -127,7 +125,7 @@ const ClientList = () => {
       return data;
     },
   });
- 
+
   const handleTableChange = (pagination, filters, sorter) => {
     //console.log("handleTableChange");
     setTableParams({
