@@ -7,6 +7,7 @@ import Breadcrumbs from "../../../components/Breadcrumbs";
 import Loading from "../../../components/Loading";
 import request from "../../../sdk/functions";
 import ClientProfileTab from "./ClientProfileTap";
+import AttendenceClient from "./ClientAttendence";
 
 const UserProfile = () => {
   const path = window.location.pathname;
@@ -98,7 +99,7 @@ const UserProfile = () => {
     },
   });
 
- // console.log(clientPTPData);
+  // console.log(clientPTPData);
   return (
     <>
       <div className="page-wrapper">
@@ -208,6 +209,7 @@ const UserProfile = () => {
                       </div>
                     </div>
                   </div>
+
                   {/* Profile Info Tab */}
                   <ClientProfileTab
                     bodyDetails={clientData?.body_detail}
@@ -217,6 +219,7 @@ const UserProfile = () => {
                     ptpLoading={isPtpLoading}
                     ptp={clientPTPData}
                   />
+                  <AttendenceClient />
                 </>
               ) : (
                 <>
