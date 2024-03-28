@@ -69,7 +69,7 @@ const ClientProfileTab = ({
                     </>
                   ) : (
                     <>
-                      {ptp ? (
+                      {ptp.length ? (
                         <>
                           {ptp.map((p, index) => (
                             <div key={index}>
@@ -167,75 +167,83 @@ const ClientProfileTab = ({
                   </>
                 ) : (
                   <>
-                    {subscription &&
-                      subscription.map((subs, index) => (
-                        <div key={index}>
-                          <div className="card-body">
-                            <h3 className="card-title">
-                              GYM Subscription {index + 1}
-                              <Link
-                                to="#"
-                                className="edit-icon"
-                                data-bs-toggle="modal"
-                                data-bs-target="#emergency_contact_modal"
-                              >
-                                <i className="fa fa-pencil" />
-                              </Link>
-                            </h3>
+                    {subscription.length ? (
+                      <>
+                        {subscription.map((subs, index) => (
+                          <div key={index}>
+                            <div className="card-body">
+                              <h3 className="card-title">
+                                GYM Subscription {index + 1}
+                                <Link
+                                  to="#"
+                                  className="edit-icon"
+                                  data-bs-toggle="modal"
+                                  data-bs-target="#emergency_contact_modal"
+                                >
+                                  <i className="fa fa-pencil" />
+                                </Link>
+                              </h3>
 
-                            {subs ? (
-                              <>
-                                <ul className="personal-info">
-                                  <ListItem
-                                    title={"Plan"}
-                                    text={subs.plan.data.attributes.title}
-                                  />
-                                  <ListItem title={"Paid"} text={subs.paid} />
-                                  <ListItem
-                                    title={"Outstanding"}
-                                    text={subs.outstanding}
-                                  />
-                                  <ListItem
-                                    title={"Start"}
-                                    text={format(
-                                      new Date(subs.start),
-                                      "dd MMM yyyy"
-                                    )}
-                                  />
-                                  <ListItem
-                                    title={"End"}
-                                    text={
-                                      subs.end ? (
-                                        <>
-                                          {format(
-                                            new Date(subs.end),
-                                            "dd MMM yyyy"
-                                          )}
-                                        </>
-                                      ) : (
-                                        ""
-                                      )
-                                    }
-                                  />
-                                  <ListItem
-                                    title={"Payment Type"}
-                                    text={subs.payment_type}
-                                  />
-                                </ul>
-                                <button className="btn btn-info">
-                                  Extend Subscription
-                                </button>
-                              </>
-                            ) : (
-                              <>
-                                <button className="btn btn-info">
-                                  Create Subscription
-                                </button>{" "}
-                              </>
-                            )}
+                              {subs ? (
+                                <>
+                                  <ul className="personal-info">
+                                    <ListItem
+                                      title={"Plan"}
+                                      text={subs.plan.data.attributes.title}
+                                    />
+                                    <ListItem title={"Paid"} text={subs.paid} />
+                                    <ListItem
+                                      title={"Outstanding"}
+                                      text={subs.outstanding}
+                                    />
+                                    <ListItem
+                                      title={"Start"}
+                                      text={format(
+                                        new Date(subs.start),
+                                        "dd MMM yyyy"
+                                      )}
+                                    />
+                                    <ListItem
+                                      title={"End"}
+                                      text={
+                                        subs.end ? (
+                                          <>
+                                            {format(
+                                              new Date(subs.end),
+                                              "dd MMM yyyy"
+                                            )}
+                                          </>
+                                        ) : (
+                                          ""
+                                        )
+                                      }
+                                    />
+                                    <ListItem
+                                      title={"Payment Type"}
+                                      text={subs.payment_type}
+                                    />
+                                  </ul>
+                                  <button className="btn btn-info">
+                                    Extend Subscription
+                                  </button>
+                                </>
+                              ) : (
+                                <></>
+                              )}
+                            </div>
                           </div>
+                        ))}
+                      </>
+                    ) : (
+                      <>
+                        <div className="card-body">
+                          <h3 className="card-title">GYM Subscription</h3>
+                          <button className="btn btn-info mt-1">
+                            Create Subscription
+                          </button>
                         </div>
-                      ))}
+                      </>
+                    )}
                   </>
                 )}
               </div>
