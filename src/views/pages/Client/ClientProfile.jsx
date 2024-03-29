@@ -61,6 +61,7 @@ const UserProfile = () => {
                 $gte: new Date().toISOString(),
               },
             },
+            sort: "id:desc",
           });
           return data.data.map((item) => {
             return {
@@ -79,7 +80,7 @@ const UserProfile = () => {
         const data = await request.findMany("ptp", {
           populate: {
             subscription: {
-              sort: ["id:asc"],
+              sort: ["id:desc"],
               filters: {
                 end: {
                   $gte: new Date().toISOString(),
@@ -87,7 +88,7 @@ const UserProfile = () => {
               },
             },
             trainer: {
-              sort: ["id:asc"],
+              sort: ["id:desc"],
             },
           },
           filters: {

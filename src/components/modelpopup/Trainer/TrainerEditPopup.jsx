@@ -1,9 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import toast from "react-hot-toast";
 import request from "../../../sdk/functions";
 import Loading from "../../Loading";
+import Select from "react-select";
+import { Refresh } from "../../../utils/refresh";
 const userDefaultValues = {
   firstname: "",
   lastname: "",
@@ -15,10 +17,15 @@ const userDefaultValues = {
 const TrianerEditPopup = ({ userId }) => {
   const [userLoading, setUserLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
-  const { register, handleSubmit, reset } = useForm({
+  const [branchOptions, setBranchOptions] = useState([]);
+  const { register, handleSubmit, reset, control, setValue } = useForm({
     defaultValues: userDefaultValues,
   });
-  const { isLoading: userIsLoading, refetch } = useQuery({
+  const {
+    data: userData,
+    isLoading: userIsLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["trainer-data"],
     queryFn: async () => {
       setUserLoading(true);
@@ -31,9 +38,8 @@ const TrianerEditPopup = ({ userId }) => {
           lastname: data.lastname,
           mobile: data.mobile,
           email: data.email,
-          branch: data?.branch?.name || "",
+          branch: data?.branch?.id || "",
         });
-     
         setUserLoading(false);
         return data;
       }
@@ -45,24 +51,13 @@ const TrianerEditPopup = ({ userId }) => {
   const onSubmit = async (data) => {
     setSubmitLoading(true);
     try {
-      /*   let bodyDetailRes = await request.update("bodyDetail", bodyDetailId, {
-        data: {
-          weight: data.weight || null,
-          height: data.height || null,
-          bmr: data.bmr || null,
-          chest: data.chest || null,
-          hip: data.hip || null,
-          biceps: data.biceps || null,
-          calf: data.calf || null,
-          weist: data.weist || null,
-          neck: data.neck || null,
-        },
+      await request.update("users", userId, {
+        firstname: data.firstname,
+        lastname: data.lastname,
+        branch: data?.branch,
       });
-      if (bodyDetailRes.error) {
-        throw new Error("Something went wrong");
-      } */
-      //   console.log(bodyDetailRes);
-      //  toast.success("client updated");
+      Refresh();
+      toast.success("Trainer Updated");
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);
@@ -74,6 +69,18 @@ const TrianerEditPopup = ({ userId }) => {
   useEffect(() => {
     refetch();
   }, [userId, refetch, reset]);
+
+  useEffect(() => {
+    let fetchBranchPlans = async () => {
+      let branches = await request.findMany("branch");
+      let branchesArr = branches?.data?.map((branch) => ({
+        value: branch.id,
+        label: branch.attributes.name,
+      }));
+      setBranchOptions(branchesArr);
+    };
+    fetchBranchPlans();
+  }, []);
 
   return (
     <>
@@ -110,7 +117,6 @@ const TrianerEditPopup = ({ userId }) => {
                             className="form-control"
                             type="text"
                             required
-                            disabled
                             {...register("firstname", {
                               required: "This input is required.",
                             })}
@@ -126,7 +132,6 @@ const TrianerEditPopup = ({ userId }) => {
                             className="form-control"
                             type="text"
                             required
-                            disabled
                             {...register("lastname", { required: true })}
                           />
                         </div>
@@ -145,18 +150,27 @@ const TrianerEditPopup = ({ userId }) => {
                           />
                         </div>
                       </div>
-
-                      <div className="col-sm-6">
+                      <div className="col-md-6">
                         <div className="input-block mb-3">
                           <label className="col-form-label">
                             Branch <span className="text-danger">*</span>
                           </label>
-                          <input
-                            className="form-control"
-                            type="text"
-                            required
-                            disabled
-                            {...register("branch", { required: true })}
+                          <Controller
+                            name="branch"
+                            control={control}
+                            render={({ onChange, value, ref }) => (
+                              <Select
+                                options={branchOptions}
+                                placeholder={userData?.branch?.name}
+                                value={branchOptions.find(
+                                  (c) => c.value === value
+                                )}
+                                onChange={(val) =>
+                                  setValue("branch", val.value)
+                                }
+                                defaultValue={userData?.branch?.name}
+                              />
+                            )}
                           />
                         </div>
                       </div>
