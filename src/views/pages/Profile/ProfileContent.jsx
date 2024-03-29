@@ -256,7 +256,10 @@ export const ProjectDetails = () => {
         <div className="tab-pane fade" id="emp_projects">
           <div className="row">
             {projectsData.map((project) => (
-              <div className="col-lg-4 col-sm-6 col-md-4 col-xl-3 d-flex" key={project.id}>
+              <div
+                className="col-lg-4 col-sm-6 col-md-4 col-xl-3 d-flex"
+                key={project.id}
+              >
                 <div className="card w-100">
                   <div className="card-body">
                     <div className="dropdown dropdown-action profile-action">
@@ -681,6 +684,8 @@ export const ProjectDetails = () => {
 export const ListItem = ({ title, text }) => (
   <li className="d-flex  justify-content-between">
     <div className="title">{title}</div>
-    <div className="text text-capitalize">{text}</div>
+    <div className="text text-capitalize d-flex justify-content-end">
+      {text}
+    </div>
   </li>
 );
