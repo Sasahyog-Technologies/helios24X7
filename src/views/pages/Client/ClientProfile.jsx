@@ -57,9 +57,9 @@ const UserProfile = () => {
             filters: {
               user: userId,
               type: "gym-subscription",
-              end: {
+           /*    end: {
                 $gte: new Date().toISOString(),
-              },
+              }, */
             },
           });
           return data.data.map((item) => {

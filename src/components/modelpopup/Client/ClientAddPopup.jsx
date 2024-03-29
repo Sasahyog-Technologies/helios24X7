@@ -17,6 +17,7 @@ const formDataDefaultValues = {
   )}@gmail.com`, // please use uuid for unique email
   branch: "",
   plan: "",
+  gender: "",
   paid: "",
   outstanding: "",
   weight: "",
@@ -31,11 +32,16 @@ const formDataDefaultValues = {
 };
 
 const ClientAddPopup = () => {
-  const [startDate, setStartDate] = useState(null);
+  const [startDate, setStartDate] = useState(Date.now());
   const [birthDate, setBirthDate] = useState(null);
   const [branchOptions, setBranchOptions] = useState([]);
   const [planOptions, setPlanOptions] = useState([]);
   const [loading, setLoading] = useState(false);
+  const genderOptions = [
+    { value: "male", label: "Male" },
+    { value: "female", label: "Female" },
+    { value: "other", label: "Other" },
+  ];
 
   const {
     register,
@@ -74,6 +80,7 @@ const ClientAddPopup = () => {
         mobile: data.mobile,
         email: data.email,
         branch: data.branch,
+        gender: data.gender,
         birthdate: birthDate,
         body_detail: bodyDetailRes.data.id,
         type: "client",
@@ -117,6 +124,8 @@ const ClientAddPopup = () => {
     };
     fetchBranchPlans();
   }, []);
+
+  
 
   return (
     <>
@@ -247,6 +256,27 @@ const ClientAddPopup = () => {
                       />
                     </div>
                   </div>
+                  <div className="col-sm-6">
+                    <div className="input-block mb-3">
+                      <label className="col-form-label">
+                        Gender<span className="text-danger">*</span>
+                      </label>
+                      <Controller
+                        name="plan"
+                        control={control}
+                        render={({ onChange, value, ref }) => (
+                          <Select
+                            options={genderOptions}
+                            placeholder="Select"
+                            value={genderOptions.find((c) => c.value === value)}
+                            onChange={(val) => setValue("gender", val.value)}
+                            required
+                          />
+                        )}
+                        rules={{ required: true }}
+                      />
+                    </div>
+                  </div>
                   <div className="col-md-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">
@@ -309,7 +339,7 @@ const ClientAddPopup = () => {
                       />
                     </div>
                   </div>
-                  <div className="col-sm-6">
+                  {/*   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">Height</label>
                       <input
@@ -388,7 +418,7 @@ const ClientAddPopup = () => {
                         {...register("neck")}
                       />
                     </div>
-                  </div>
+                  </div> */}
                 </div>
                 <ErrorMessage
                   errors={errors}

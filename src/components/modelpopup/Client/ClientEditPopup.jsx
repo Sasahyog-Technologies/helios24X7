@@ -63,27 +63,28 @@ const ClientEditPopup = ({ userId }) => {
   });
 
   const onSubmit = async (data) => {
-    setSubmitLoading(true);
+    console.log("id", bodyDetailId);
     try {
-      let bodyDetailRes = await request.update("bodyDetail", bodyDetailId, {
-        data: {
-          weight: data.weight || null,
-          height: data.height || null,
-          bmr: data.bmr || null,
-          chest: data.chest || null,
-          hip: data.hip || null,
-          biceps: data.biceps || null,
-          calf: data.calf || null,
-          weist: data.weist || null,
-          neck: data.neck || null,
-        },
-      });
-      if (bodyDetailRes.error) {
-        throw new Error("Something went wrong");
+      setSubmitLoading(true);
+      if (bodyDetailId) {
+        await request.update("bodyDetail", bodyDetailId, {
+          data: {
+            weight: data.weight || null,
+            height: data.height || null,
+            bmr: data.bmr || null,
+            chest: data.chest || null,
+            hip: data.hip || null,
+            biceps: data.biceps || null,
+            calf: data.calf || null,
+            weist: data.weist || null,
+            neck: data.neck || null,
+          },
+        });
       }
+     
       //   console.log(bodyDetailRes);
       toast.success("client updated");
-      Refresh()
+      Refresh();
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);

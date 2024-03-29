@@ -1,28 +1,23 @@
-import { ErrorMessage } from "@hookform/error-message";
 import React, { useEffect, useState } from "react";
-import DatePicker from "react-datepicker";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import Select from "react-select";
 import request from "../../../sdk/functions";
 import { Refresh } from "../../../utils/refresh";
+import Select from "react-select";
+import DatePicker from "react-datepicker";
 
 const formDataDefaultValues = {
-  firstname: "",
-  lastname: "",
-  mobile: "",
-  password: "",
-  email: `random${Math.floor(
-    Math.random() * 1000 * Math.random() * 10
-  )}@gmail.com`, // please use uuid for unique email
-  branch: "",
+  plan: "",
+  paid: "",
+  outstanding: "",
+  trainer: "",
 };
 
-const TrainerAddPopup = () => {
-  const [startDate, setStartDate] = useState(Date.now());
-  const [birthDate, setBirthDate] = useState(null);
-  const [branchOptions, setBranchOptions] = useState([]);
+const PtpAddPopup = ({ userId }) => {
   const [loading, setLoading] = useState(false);
+  const [startDate, setStartDate] = useState(Date.now());
+  const [planOptions, setPlanOptions] = useState([]);
+  const [trainerOptions, setTrainerOptions] = useState([]);
 
   const {
     register,
@@ -35,24 +30,29 @@ const TrainerAddPopup = () => {
   });
 
   const onSubmit = async (data) => {
-    if (data.mobile.length > 10 || data.mobile.length < 10)
-      return toast.error("Mobile must be at least 10");
     try {
       setLoading(true);
-      await request.create("register", {
-        username: data.mobile,
-        password: data.password,
-        firstname: data.firstname,
-        lastname: data.lastname,
-        mobile: data.mobile,
-        email: data.email,
-        branch: data.branch,
-        birthdate: birthDate,
-        type: "trainer",
+      let subscriptionRes = await request.create("subscription", {
+        data: {
+          user: userId,
+          plan: data.plan,
+          paid: data.paid,
+          outstanding: data.outstanding,
+          start: startDate,
+          payment_type: "cash",
+          type: "trainer-subscription",
+        },
       });
-      //console.log(createRes);
-      toast.success("trainer created");
-      Refresh()
+      const response = await request.create("ptp", {
+        data: {
+          trainee: userId,
+          trainer: data.trainer,
+          subscription: subscriptionRes.data.id,
+        },
+      });
+      console.log(response);
+      toast.success("PTP created");
+      Refresh();
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);
@@ -63,23 +63,33 @@ const TrainerAddPopup = () => {
 
   useEffect(() => {
     let fetchBranchPlans = async () => {
-      let branches = await request.findMany("branch");
-      let branchesArr = branches?.data?.map((branch) => ({
-        value: branch.id,
-        label: branch.attributes.name,
+      let plans = await request.findMany("plan");
+      let plansArr = plans?.data?.map((plan) => ({
+        value: plan.id,
+        label: plan.attributes.title,
       }));
-      setBranchOptions(branchesArr);
+      setPlanOptions(plansArr);
+      const trainer = await request.findMany("users", {
+        filters: {
+          type: "trainer",
+        },
+      });
+      let trainerArr = trainer?.map((t) => ({
+        value: t.id,
+        label: `${t.firstname} ${t.lastname}`,
+      }));
+      setTrainerOptions(trainerArr);
     };
     fetchBranchPlans();
   }, []);
 
   return (
     <>
-      <div id="add_trainer" className="modal custom-modal fade" role="dialog">
+      <div id="add_ptp" className="modal custom-modal fade" role="dialog">
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">Add Trainer</h5>
+              <h5 className="modal-paid">Add Trainer</h5>
               <button
                 type="button"
                 className="btn-close"
@@ -96,41 +106,15 @@ const TrainerAddPopup = () => {
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">
-                        First Name <span className="text-danger">*</span>
+                        paid <span className="text-danger">*</span>
                       </label>
                       <input
                         className="form-control"
                         type="text"
                         required
-                        {...register("firstname", {
+                        {...register("paid", {
                           required: "This input is required.",
                         })}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">
-                        Last Name <span className="text-danger">*</span>
-                      </label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        required
-                        {...register("lastname", { required: true })}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">
-                        Password <span className="text-danger">*</span>
-                      </label>
-                      <input
-                        className="form-control"
-                        type="password"
-                        required
-                        {...register("password", { required: true })}
                       />
                     </div>
                   </div>
@@ -154,48 +138,53 @@ const TrainerAddPopup = () => {
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">
-                        Date of Birth <span className="text-danger">*</span>
-                      </label>
-                      <div className="cal-icon">
-                        <DatePicker
-                          selected={birthDate}
-                          onChange={(date) => setBirthDate(date)}
-                          className="form-control floating datetimepicker"
-                          type="date"
-                          required={true}
-                          dateFormat="dd-MM-yyyy"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">
-                        Phone <span className="text-danger">*</span>
+                        outstanding <span className="text-danger">*</span>
                       </label>
                       <input
                         className="form-control"
                         type="text"
                         required
-                        {...register("mobile", { required: true })}
+                        {...register("outstanding", { required: true })}
                       />
                     </div>
                   </div>
-
-                  <div className="col-md-6">
+                  <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">
-                        Branch <span className="text-danger">*</span>
+                        Plan<span className="text-danger">*</span>
                       </label>
                       <Controller
-                        name="branch"
+                        name="plan"
                         control={control}
                         render={({ onChange, value, ref }) => (
                           <Select
-                            options={branchOptions}
+                            options={planOptions}
                             placeholder="Select"
-                            value={branchOptions.find((c) => c.value === value)}
-                            onChange={(val) => setValue("branch", val.value)}
+                            value={planOptions.find((c) => c.value === value)}
+                            onChange={(val) => setValue("plan", val.value)}
+                            required
+                          />
+                        )}
+                        rules={{ required: true }}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="input-block mb-3">
+                      <label className="col-form-label">
+                        Trainer<span className="text-danger">*</span>
+                      </label>
+                      <Controller
+                        name="trainer"
+                        control={control}
+                        render={({ onChange, value, ref }) => (
+                          <Select
+                            options={trainerOptions}
+                            placeholder="Select"
+                            value={trainerOptions.find(
+                              (c) => c.value === value
+                            )}
+                            onChange={(val) => setValue("trainer", val.value)}
                             required
                           />
                         )}
@@ -225,4 +214,4 @@ const TrainerAddPopup = () => {
   );
 };
 
-export default TrainerAddPopup;
+export default PtpAddPopup;

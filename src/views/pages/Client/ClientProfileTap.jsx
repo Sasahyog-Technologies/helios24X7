@@ -4,6 +4,7 @@ import ClientEditPopup from "../../../components/modelpopup/Client/ClientEditPop
 import { ListItem } from "../Profile/ProfileContent";
 import { format } from "date-fns";
 import Loading from "../../../components/Loading";
+import PtpAddPopup from "../../../components/modelpopup/Client/PTPAddPopup";
 
 const ClientProfileTab = ({
   bodyDetails,
@@ -54,14 +55,14 @@ const ClientProfileTab = ({
                 <div className="card-body">
                   <h3 className="card-title">
                     Personal Training Program
-                    <Link
+                 {/*    <Link
                       to="#"
                       className="edit-icon"
                       data-bs-toggle="modal"
                       data-bs-target="#emergency_contact_modal"
                     >
                       <i className="fa fa-pencil" />
-                    </Link>
+                    </Link> */}
                   </h3>
                   {ptpLoading ? (
                     <>
@@ -138,7 +139,7 @@ const ClientProfileTab = ({
                               ) : (
                                 <>
                                   <button className="btn btn-info">
-                                    Create Subscription
+                                    Create PTP
                                   </button>
                                 </>
                               )}
@@ -147,9 +148,14 @@ const ClientProfileTab = ({
                         </>
                       ) : (
                         <>
-                          <button className="btn btn-info">
-                            Create Subscription
-                          </button>{" "}
+                          <Link
+                            to="#"
+                            data-bs-toggle="modal"
+                            data-bs-target="#add_ptp"
+                            className="btn btn-info"
+                          >
+                            Create PTP
+                          </Link>{" "}
                         </>
                       )}
                     </>
@@ -174,14 +180,14 @@ const ClientProfileTab = ({
                             <div className="card-body">
                               <h3 className="card-title">
                                 GYM Subscription {index + 1}
-                                <Link
+                               {/*  <Link
                                   to="#"
                                   className="edit-icon"
                                   data-bs-toggle="modal"
                                   data-bs-target="#emergency_contact_modal"
                                 >
                                   <i className="fa fa-pencil" />
-                                </Link>
+                                </Link> */}
                               </h3>
 
                               {subs ? (
@@ -252,6 +258,7 @@ const ClientProfileTab = ({
         </div>
         <ClientEditPopup userId={userId} />
       </div>
+      <PtpAddPopup userId={userId} />
     </>
   );
 };

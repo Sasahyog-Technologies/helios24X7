@@ -104,9 +104,9 @@ const ClientList = () => {
     search: "",
     branch: "",
   });
-  const { getUserDataToCookie } = useSession();
-  const loggedinUser = getUserDataToCookie();
-  const loggedinUserId = loggedinUser.user.id;
+  
+ 
+  
   const { data: usersData, isLoading: usersIsLoading } = useQuery({
     queryKey: ["client-list"],
     queryFn: async () => {

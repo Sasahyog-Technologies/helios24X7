@@ -6,7 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 // 2. active susbscription
 // 3. kon sa client kon se trainer ke sath connecte hai
 
-const createPPT = async (userId, trainerId) => {
+const createPTP = async (userId, trainerId) => {
   const subscription = await request.create("subscription", {
     data: {
       user: userId,
@@ -45,7 +45,7 @@ const TestPage = () => {
   const { data, isLoading } = useQuery({
     queryKey: "this is anythinhg",
     queryFn: () =>
-      request.findMany("ppt", {
+      request.findMany("ptp", {
         populate: "*",
         trainee: "54",
       }),

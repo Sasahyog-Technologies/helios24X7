@@ -5,7 +5,7 @@ const AttendenceClient = () => {
   return (
     <>
       <div className="">
-        <div className="c">
+        <div className="">
           {/* Page Header */}
       
           {/* /Page Header */}
