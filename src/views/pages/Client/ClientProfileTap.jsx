@@ -9,6 +9,30 @@ import CreateSubscriptionPopup from "../../../components/modelpopup/Client/Creat
 import ExtendPTPSubscriptionPopup from "../../../components/modelpopup/Client/ExtendPTPSubscription";
 import ExtendGYMSubscriptionPopup from "../../../components/modelpopup/Client/ExtendGYMSubscription";
 
+function convertToReadableTime(timeString) {
+  // Split the time string into hours, minutes, and seconds
+  const [hours, minutes] = timeString.split(":").map(Number);
+
+  // Ensure the time parts are valid
+  if (isNaN(hours) || isNaN(minutes)) {
+    return null;
+  }
+
+  // Determine if it's AM or PM
+  const meridiem = hours >= 12 ? "PM" : "AM";
+
+  // Convert 24-hour format to 12-hour format
+  let readableHours = hours % 12;
+  readableHours = readableHours === 0 ? 12 : readableHours;
+
+  // Construct the readable time string
+  const readableTime = `${readableHours}:${
+    (minutes < 10 ? "0" : "") + minutes
+  } ${meridiem}`;
+
+  return readableTime;
+}
+
 const ClientProfileTab = ({
   ptp,
   userId,
@@ -104,11 +128,12 @@ const ClientProfileTab = ({
                                 />
                                 <ListItem
                                   title={"Session From"}
-                                  text={p.session_from}
+                                  // text={p.session_from}
+                                  text={convertToReadableTime(p?.session_from)}
                                 />
                                 <ListItem
                                   title={"Session To"}
-                                  text={p.session_to}
+                                  text={convertToReadableTime(p?.session_to)}
                                 />
                               </ul>
                               <hr />
