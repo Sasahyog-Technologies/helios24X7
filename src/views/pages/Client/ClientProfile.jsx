@@ -137,7 +137,7 @@ const UserProfile = () => {
                         <div className="col-md-12">
                           <div className="profile-view">
                             <div className="profile-img-wrap">
-                              <div className="profile-img bg-info rounded-circle d-flex justify-content-center align-items-center display-3">
+                              <div className="profile-img text-uppercase bg-info rounded-circle d-flex justify-content-center align-items-center display-3">
                                 {`${clientData.firstname.split("")[0]}`}
                               </div>
                             </div>
@@ -145,7 +145,7 @@ const UserProfile = () => {
                               <div className="row d-flex justify-content-center align-items-center">
                                 <div className="col-md-5">
                                   <div className="profile-info-left">
-                                    <h3 className="user-name m-t-0 mb-0">
+                                    <h3 className="user-name m-t-0 mb-0 text-capitalize">
                                       {clientData.firstname}{" "}
                                       {clientData.lastname}
                                     </h3>

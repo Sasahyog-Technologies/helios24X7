@@ -1,25 +1,24 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import ClientEditPopup from "../../../components/modelpopup/Client/ClientEditPopup";
-import { ListItem } from "../Profile/ProfileContent";
 import { format } from "date-fns";
+import { Link } from "react-router-dom";
+import React, { useState } from "react";
 import Loading from "../../../components/Loading";
+import { ListItem } from "../Profile/ProfileContent";
 import PtpAddPopup from "../../../components/modelpopup/Client/PTPAddPopup";
+import ClientEditPopup from "../../../components/modelpopup/Client/ClientEditPopup";
 import CreateSubscriptionPopup from "../../../components/modelpopup/Client/CreateSubscription";
 import ExtendPTPSubscriptionPopup from "../../../components/modelpopup/Client/ExtendPTPSubscription";
 import ExtendGYMSubscriptionPopup from "../../../components/modelpopup/Client/ExtendGYMSubscription";
 
 const ClientProfileTab = ({
-  bodyDetails,
+  ptp,
   userId,
+  bodyDetails,
+  ptpLoading,
   subscription,
   subscriptionLoading,
-  ptp,
-  ptpLoading,
 }) => {
   const [activePlanEndDate, setActivePlanEndDate] = useState();
   const [activeGYMPlanEndDate, setActiveGYMPlanEndDate] = useState();
-  // console.log(ptp);
   return (
     <>
       <div className="tab-content">
@@ -32,7 +31,7 @@ const ClientProfileTab = ({
               <div className="card profile-box flex-fill">
                 <div className="card-body">
                   <h3 className="card-title">
-                    Body Details{" "}
+                    Body Details
                     <Link
                       to="#"
                       className="edit-icon"
@@ -87,17 +86,7 @@ const ClientProfileTab = ({
             <div className="col-md-6 d-flex">
               <div className="card profile-box flex-fill">
                 <div className="card-body">
-                  <h3 className="card-title">
-                    Personal Training Program
-                    {/*    <Link
-                      to="#"
-                      className="edit-icon"
-                      data-bs-toggle="modal"
-                      data-bs-target="#emergency_contact_modal"
-                    >
-                      <i className="fa fa-pencil" />
-                    </Link> */}
-                  </h3>
+                  <h3 className="card-title">Personal Training Program</h3>
                   {ptpLoading ? (
                     <>
                       <Loading />
