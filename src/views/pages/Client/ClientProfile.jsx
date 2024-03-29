@@ -57,9 +57,9 @@ const UserProfile = () => {
             filters: {
               user: userId,
               type: "gym-subscription",
-           /*    end: {
+              end: {
                 $gte: new Date().toISOString(),
-              }, */
+              },
             },
           });
           return data.data.map((item) => {
@@ -77,7 +77,19 @@ const UserProfile = () => {
     queryFn: async () => {
       if (userId) {
         const data = await request.findMany("ptp", {
-          populate: ["subscription", "trainer"],
+          populate: {
+            subscription: {
+              sort: ["id:asc"],
+              filters: {
+                end: {
+                  $gte: new Date().toISOString(),
+                },
+              },
+            },
+            trainer: {
+              sort: ["id:asc"],
+            },
+          },
           filters: {
             trainee: userId,
           },
