@@ -40,15 +40,26 @@ const formDataDefaultValues = {
   calf: "",
   weist: "",
   neck: "",
-  gender: "",
 };
 
+function calculateEndDate(startDate, durationInMonths) {
+  console.log(startDate);
+  if (typeof startDate === "string") {
+    startDate = new Date(startDate);
+  }
+  const t = new Date(startDate);
+  const p = new Date();
+  p.setMonth(t.getMonth() + parseInt(durationInMonths));
+  return p.toISOString();
+}
+
 const ClientAddPopup = () => {
-  const [startDate, setStartDate] = useState(Date.now());
+  const [startDate, setStartDate] = useState(new Date().toISOString());
   const [birthDate, setBirthDate] = useState(null);
   const [branchOptions, setBranchOptions] = useState([]);
   const [planOptions, setPlanOptions] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [plans, setPlans] = useState([]);
   const genderOptions = [
     { value: "male", label: "Male" },
     { value: "female", label: "Female" },
@@ -70,6 +81,9 @@ const ClientAddPopup = () => {
       return toast.error("Mobile must be at least 10");
     try {
       setLoading(true);
+      const planDuration = plans.find((pt) => pt.id == data.plan)?.attributes
+        .duration;
+
       let bodyDetailRes = await request.create("bodyDetail", {
         data: {
           weight: data.weight || null,
@@ -96,7 +110,6 @@ const ClientAddPopup = () => {
         birthdate: birthDate,
         body_detail: bodyDetailRes.data.id,
         type: "client",
-        gender: data.gender,
       });
 
       await request.create("subscription", {
@@ -106,6 +119,7 @@ const ClientAddPopup = () => {
           paid: data.paid,
           outstanding: data.outstanding,
           start: startDate,
+          end: calculateEndDate(startDate, planDuration),
           payment_type: "cash",
           type: "gym-subscription",
         },
@@ -113,7 +127,7 @@ const ClientAddPopup = () => {
       toast.success("client created");
       Refresh();
     } catch (error) {
-      toast.error(error.response.data.error.message, { duration: 4000 });
+      toast.error(error?.response?.data?.error?.message, { duration: 4000 });
       console.log(error);
     } finally {
       setLoading(false);
@@ -129,6 +143,7 @@ const ClientAddPopup = () => {
       }));
       setBranchOptions(branchesArr);
       let plans = await request.findMany("plan");
+      setPlans(plans.data);
       let plansArr = plans?.data?.map((plan) => ({
         value: plan.id,
         label: plan.attributes.title,
@@ -137,8 +152,6 @@ const ClientAddPopup = () => {
     };
     fetchBranchPlans();
   }, []);
-
-  
 
   return (
     <>
