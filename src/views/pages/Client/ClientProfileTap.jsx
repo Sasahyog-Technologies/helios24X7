@@ -141,7 +141,7 @@ const ClientProfileTab = ({
                                 <>
                                   {p.subscription.map((subs, index) => (
                                     <div key={index} className="mt-4">
-                                      <h4>Trainer Subscription {index + 1}</h4>
+                                      <h4>Trainer Subscription ({subs.id})</h4>
                                       <ul className="personal-info mt-3">
                                         <ListItem
                                           title={"Paid"}
