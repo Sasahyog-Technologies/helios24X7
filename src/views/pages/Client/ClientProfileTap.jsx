@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import ClientEditPopup from "../../../components/modelpopup/Client/ClientEditPopup";
 import { ListItem } from "../Profile/ProfileContent";
@@ -6,6 +6,8 @@ import { format } from "date-fns";
 import Loading from "../../../components/Loading";
 import PtpAddPopup from "../../../components/modelpopup/Client/PTPAddPopup";
 import CreateSubscriptionPopup from "../../../components/modelpopup/Client/CreateSubscription";
+import ExtendPTPSubscriptionPopup from "../../../components/modelpopup/Client/ExtendPTPSubscription";
+import ExtendGYMSubscriptionPopup from "../../../components/modelpopup/Client/ExtendGYMSubscription";
 
 const ClientProfileTab = ({
   bodyDetails,
@@ -15,6 +17,9 @@ const ClientProfileTab = ({
   ptp,
   ptpLoading,
 }) => {
+  const [activePlanEndDate, setActivePlanEndDate] = useState();
+  const [activeGYMPlanEndDate, setActiveGYMPlanEndDate] = useState();
+  // console.log(ptp);
   return (
     <>
       <div className="tab-content">
@@ -106,7 +111,7 @@ const ClientProfileTab = ({
                               <ul className="personal-info">
                                 <ListItem
                                   title={"Trainer"}
-                                  text={`${p.trainer.data.attributes.firstname} ${p.trainer.data.attributes.lastname}`}
+                                  text={`${p.trainer.data?.attributes.firstname} ${p.trainer.data?.attributes.lastname}`}
                                 />
                                 <ListItem
                                   title={"Session From"}
@@ -119,16 +124,14 @@ const ClientProfileTab = ({
                               </ul>
                               <hr />
 
-                              {JSON.stringify(p.subscription)}
-
                               {/* if ppt is coming and subscription is not available show purchase membership  & show your plan is expired  */}
                               {/* if ppt not available show create ppt  */}
                               {/* if ppt available and subscription is available show extend membership & show your plan details  */}
 
-                              {p.subscription ? (
+                              {p.subscription.length ? (
                                 <>
                                   {p.subscription.map((subs, index) => (
-                                    <div key={index}>
+                                    <div key={index} className="mt-4">
                                       <h4>Trainer Subscription {index + 1}</h4>
                                       <ul className="personal-info mt-3">
                                         <ListItem
@@ -166,17 +169,30 @@ const ClientProfileTab = ({
                                           }
                                         />
                                       </ul>
-                                      <button className="btn btn-info">
+                                      <Link
+                                        to="#"
+                                        data-bs-target="#extend_subscription"
+                                        className="btn btn-info"
+                                        data-bs-toggle="modal"
+                                        onClick={() =>
+                                          setActivePlanEndDate(subs.end)
+                                        }
+                                      >
                                         Extend Subscription
-                                      </button>
+                                      </Link>
                                     </div>
                                   ))}
                                 </>
                               ) : (
                                 <>
-                                  <button className="btn btn-info">
-                                    Create PTP
-                                  </button>
+                                  <Link
+                                    to="#"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#add_ptp"
+                                    className="btn btn-info"
+                                  >
+                                    Purchase Membership
+                                  </Link>
                                 </>
                               )}
                             </div>
@@ -231,7 +247,7 @@ const ClientProfileTab = ({
                                   <ul className="personal-info">
                                     <ListItem
                                       title={"Plan"}
-                                      text={subs.plan.data.attributes.title}
+                                      text={subs.plan.data?.attributes?.title}
                                     />
                                     <ListItem title={"Paid"} text={subs.paid} />
                                     <ListItem
@@ -265,9 +281,17 @@ const ClientProfileTab = ({
                                       text={subs.payment_type}
                                     />
                                   </ul>
-                                  <button className="btn btn-info">
+                                  <Link
+                                    to="#"
+                                    data-bs-toggle="modal"
+                                    className="btn btn-info"
+                                    data-bs-target="#extend_gym_subscription"
+                                    onClick={() =>
+                                      setActiveGYMPlanEndDate(subs.end)
+                                    }
+                                  >
                                     Extend Subscription
-                                  </button>
+                                  </Link>
                                 </>
                               ) : (
                                 <></>
@@ -300,6 +324,15 @@ const ClientProfileTab = ({
         <ClientEditPopup userId={userId} />
         <PtpAddPopup userId={userId} />
         <CreateSubscriptionPopup userId={userId} />
+        <ExtendPTPSubscriptionPopup
+          userId={userId}
+          ptpId={ptp ? ptp[0].id : ""}
+          activePlanEndDate={activePlanEndDate}
+        />
+        <ExtendGYMSubscriptionPopup
+          userId={userId}
+          activeGYMPlanEndDate={activeGYMPlanEndDate}
+        />
       </div>
     </>
   );

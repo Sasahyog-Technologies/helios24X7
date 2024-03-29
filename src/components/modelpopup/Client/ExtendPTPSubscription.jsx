@@ -1,25 +1,25 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import DatePicker from "react-datepicker";
 import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
-import request from "../../../sdk/functions";
-import { Refresh } from "../../../utils/refresh";
 import Select from "react-select";
-import DatePicker from "react-datepicker";
-import TimePicker from "react-time-picker";
+import request from "../../../sdk/functions";
+import { paymentTypeOptions } from "../../../utils";
 import { calculateEndDate } from "../../../utils/calculateEndDate";
+import { Refresh } from "../../../utils/refresh";
 
 const formDataDefaultValues = {
-  plan: "",
   paid: "",
   outstanding: "",
+  duration: "",
+  paymentType: "",
 };
 
-const CreateSubscriptionPopup = ({ userId }) => {
+const ExtendPTPSubscriptionPopup = ({ userId, ptpId, activePlanEndDate }) => {
   const [loading, setLoading] = useState(false);
   const [startDate, setStartDate] = useState(Date.now());
-  const [planOptions, setPlanOptions] = useState([]);
-  const [plans,setPlans] = useState([])
- 
+
+  // console.log(activePlanEndDate, `ptp : ${ptpId}` , `userid: ${userId}`);
 
   const {
     register,
@@ -32,56 +32,44 @@ const CreateSubscriptionPopup = ({ userId }) => {
   });
 
   const onSubmit = async (data) => {
+    //if (!activePlanEndDate) return null;
+    console.log("call");
+    const endDate = calculateEndDate(activePlanEndDate, data.duration);
     try {
       setLoading(true);
-      const planDuration = plans.find((pt) => pt.id == data.plan)?.attributes
-      .duration;
       await request.create("subscription", {
         data: {
           user: userId,
-          plan: data.plan,
           paid: data.paid,
-          outstanding: data.outstanding,
-          start: startDate,
-          end: calculateEndDate(startDate, planDuration),
-          payment_type: "cash",
-          type: "gym-subscription",
+          outstanding: data.outstanding || null,
+          start: activePlanEndDate,
+          end: endDate,
+          payment_type: data.paymentType,
+          type: "trainer-subscription",
+          personal_training_program: ptpId,
         },
       });
-      toast.success("Subscription created");
+      toast.success("Subscription extended");
       Refresh();
     } catch (error) {
-      toast.error(error.response.data.error.message, { duration: 4000 });
+      toast.error(error?.response?.data?.error?.message, { duration: 4000 });
       console.log(error);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => {
-    let fetchBranchPlans = async () => {
-      let plans = await request.findMany("plan");
-      setPlans(plans.data);
-      let plansArr = plans?.data?.map((plan) => ({
-        value: plan.id,
-        label: plan.attributes.title,
-      }));
-      setPlanOptions(plansArr);
-    };
-    fetchBranchPlans();
-  }, []);
-
   return (
     <>
       <div
-        id="create_subscription"
+        id="extend_subscription"
         className="modal custom-modal fade"
         role="dialog"
       >
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-paid">Create Subscription</h5>
+              <h5 className="modal-paid">Extend PTP Subscription</h5>
               <button
                 type="button"
                 className="btn-close"
@@ -92,7 +80,6 @@ const CreateSubscriptionPopup = ({ userId }) => {
               </button>
             </div>
             <div className="modal-body">
-              {/* {JSON.stringify(userInfo)} */}
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="row">
                   <div className="col-sm-6">
@@ -104,9 +91,7 @@ const CreateSubscriptionPopup = ({ userId }) => {
                         className="form-control"
                         type="text"
                         required
-                        {...register("paid", {
-                          required: "This input is required.",
-                        })}
+                        {...register("paid")}
                       />
                     </div>
                   </div>
@@ -121,49 +106,60 @@ const CreateSubscriptionPopup = ({ userId }) => {
                           onChange={(date) => setStartDate(date)}
                           className="form-control floating datetimepicker"
                           type="date"
-                          required={true}
                           dateFormat="dd-MM-yyyy"
+                          required
                         />
                       </div>
                     </div>
                   </div>
-
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">
-                        outstanding <span className="text-danger">*</span>
-                      </label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        required
-                        {...register("outstanding", { required: true })}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">
-                        Plan<span className="text-danger">*</span>
+                        Payment Type<span className="text-danger">*</span>
                       </label>
                       <Controller
                         name="plan"
                         control={control}
                         render={({ onChange, value, ref }) => (
                           <Select
-                            options={planOptions}
+                            options={paymentTypeOptions}
                             placeholder="Select"
-                            value={planOptions.find((c) => c.value === value)}
-                            onChange={(val) => setValue("plan", val.value)}
+                            value={paymentTypeOptions.find(
+                              (c) => c.value === value
+                            )}
+                            onChange={(val) =>
+                              setValue("paymentType", val.value)
+                            }
                             required
                           />
                         )}
-                        rules={{ required: true }}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="input-block mb-3">
+                      <label className="col-form-label">
+                        Duration(Month) <span className="text-danger">*</span>
+                      </label>
+                      <input
+                        className="form-control"
+                        type="number"
+                        required
+                        {...register("duration")}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="input-block mb-3">
+                      <label className="col-form-label">outstanding</label>
+                      <input
+                        className="form-control"
+                        type="text"
+                        {...register("outstanding")}
                       />
                     </div>
                   </div>
                 </div>
-
                 <div className="submit-section">
                   <button
                     className="btn btn-primary submit-btn"
@@ -172,7 +168,7 @@ const CreateSubscriptionPopup = ({ userId }) => {
                     type="submit"
                     disabled={loading}
                   >
-                    {loading ? " Submit...." : " Submit"}
+                    {loading ? " Extend...." : " Extend"}
                   </button>
                 </div>
               </form>
@@ -184,4 +180,4 @@ const CreateSubscriptionPopup = ({ userId }) => {
   );
 };
 
-export default CreateSubscriptionPopup;
+export default ExtendPTPSubscriptionPopup;

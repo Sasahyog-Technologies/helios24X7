@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import Select from "react-select";
 import request from "../../../sdk/functions";
 import { Refresh } from "../../../utils/refresh";
+import { paymentTypeOptions } from "../../../utils";
 
 function generatePassword(length = 8) {
   const charset =
@@ -27,6 +28,7 @@ const formDataDefaultValues = {
     Math.random() * 1000 * Math.random() * 10
   )}@gmail.com`, // please use uuid for unique email
   branch: "",
+  paymentType: "",
   plan: "",
   gender: "",
   paid: "",
@@ -65,6 +67,7 @@ const ClientAddPopup = () => {
     { value: "female", label: "Female" },
     { value: "other", label: "Other" },
   ];
+
 
   const {
     register,
@@ -120,7 +123,7 @@ const ClientAddPopup = () => {
           outstanding: data.outstanding,
           start: startDate,
           end: calculateEndDate(startDate, planDuration),
-          payment_type: "cash",
+          payment_type: data.paymentType,
           type: "gym-subscription",
         },
       });
@@ -275,6 +278,31 @@ const ClientAddPopup = () => {
                             placeholder="Select"
                             value={planOptions.find((c) => c.value === value)}
                             onChange={(val) => setValue("plan", val.value)}
+                            required
+                          />
+                        )}
+                        rules={{ required: true }}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="input-block mb-3">
+                      <label className="col-form-label">
+                        Payment Type<span className="text-danger">*</span>
+                      </label>
+                      <Controller
+                        name="plan"
+                        control={control}
+                        render={({ onChange, value, ref }) => (
+                          <Select
+                            options={paymentTypeOptions}
+                            placeholder="Select"
+                            value={paymentTypeOptions.find(
+                              (c) => c.value === value
+                            )}
+                            onChange={(val) =>
+                              setValue("paymentType", val.value)
+                            }
                             required
                           />
                         )}

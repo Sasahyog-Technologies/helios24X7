@@ -6,25 +6,14 @@ import { Refresh } from "../../../utils/refresh";
 import Select from "react-select";
 import DatePicker from "react-datepicker";
 import TimePicker from "react-time-picker";
+import { calculateEndDate } from "../../../utils/calculateEndDate";
 
 const formDataDefaultValues = {
-  plan: "",
   paid: "",
   outstanding: "",
   trainer: "",
   duration: "",
 };
-
-function calculateEndDate(startDate, durationInMonths) {
-  console.log(startDate);
-  if (typeof startDate === "string") {
-    startDate = new Date(startDate);
-  }
-  const t = new Date(startDate);
-  const p = new Date();
-  p.setMonth(t.getMonth() + parseInt(durationInMonths));
-  return p.toISOString();
-}
 
 const PtpAddPopup = ({ userId }) => {
   const [loading, setLoading] = useState(false);
