@@ -16,25 +16,19 @@ const formDataDefaultValues = {
 };
 
 function calculateEndDate(startDate, durationInMonths) {
-  console.log(startDate)
+  console.log(startDate);
   if (typeof startDate === "string") {
     startDate = new Date(startDate);
   }
-/*   if (!(startDate instanceof Date) || isNaN(startDate)) {
-    throw new Error("Invalid start date");
-  } */
-  let endDate = new Date(startDate);
-  endDate.setMonth(endDate.getMonth() + durationInMonths);
-  if (endDate.getDate() !== startDate.getDate()) {
-    endDate = new Date(endDate.getFullYear(), endDate.getMonth(), 0);
-  }
-
-  return endDate;
+  const t = new Date(startDate);
+  const p = new Date();
+  p.setMonth(t.getMonth() + parseInt(durationInMonths));
+  return p.toISOString();
 }
 
 const PtpAddPopup = ({ userId }) => {
   const [loading, setLoading] = useState(false);
-  const [startDate, setStartDate] = useState(Date.now());
+  const [startDate, setStartDate] = useState(new Date().toISOString());
   const [planOptions, setPlanOptions] = useState([]);
   const [trainerOptions, setTrainerOptions] = useState([]);
   const [sessionFrom, setSessionFrom] = useState("00:00:00");
@@ -61,10 +55,7 @@ const PtpAddPopup = ({ userId }) => {
           start: startDate,
           payment_type: "cash",
           type: "trainer-subscription",
-          end: calculateEndDate(
-            startDate.toString(),
-            parseInt(data.duration)
-          ).toISOString(),
+          end: calculateEndDate(startDate.toString(), parseInt(data.duration)),
         },
       });
       const response = await request.create("ptp", {
@@ -116,6 +107,7 @@ const PtpAddPopup = ({ userId }) => {
           <div className="modal-content">
             <div className="modal-header">
               <h5 className="modal-paid">Add Trainer</h5>
+
               <button
                 type="button"
                 className="btn-close"
