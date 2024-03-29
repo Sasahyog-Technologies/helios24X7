@@ -1,25 +1,48 @@
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
-import ClientEditPopup from "../../../components/modelpopup/Client/ClientEditPopup";
-import { ListItem } from "../Profile/ProfileContent";
 import { format } from "date-fns";
+import { Link } from "react-router-dom";
+import React, { useState } from "react";
 import Loading from "../../../components/Loading";
+import { ListItem } from "../Profile/ProfileContent";
 import PtpAddPopup from "../../../components/modelpopup/Client/PTPAddPopup";
+import ClientEditPopup from "../../../components/modelpopup/Client/ClientEditPopup";
 import CreateSubscriptionPopup from "../../../components/modelpopup/Client/CreateSubscription";
 import ExtendPTPSubscriptionPopup from "../../../components/modelpopup/Client/ExtendPTPSubscription";
 import ExtendGYMSubscriptionPopup from "../../../components/modelpopup/Client/ExtendGYMSubscription";
 
+function convertToReadableTime(timeString) {
+  // Split the time string into hours, minutes, and seconds
+  const [hours, minutes] = timeString.split(":").map(Number);
+
+  // Ensure the time parts are valid
+  if (isNaN(hours) || isNaN(minutes)) {
+    return null;
+  }
+
+  // Determine if it's AM or PM
+  const meridiem = hours >= 12 ? "PM" : "AM";
+
+  // Convert 24-hour format to 12-hour format
+  let readableHours = hours % 12;
+  readableHours = readableHours === 0 ? 12 : readableHours;
+
+  // Construct the readable time string
+  const readableTime = `${readableHours}:${
+    (minutes < 10 ? "0" : "") + minutes
+  } ${meridiem}`;
+
+  return readableTime;
+}
+
 const ClientProfileTab = ({
-  bodyDetails,
+  ptp,
   userId,
+  bodyDetails,
+  ptpLoading,
   subscription,
   subscriptionLoading,
-  ptp,
-  ptpLoading,
 }) => {
   const [activePlanEndDate, setActivePlanEndDate] = useState();
   const [activeGYMPlanEndDate, setActiveGYMPlanEndDate] = useState();
-  // console.log(ptp);
   return (
     <>
       <div className="tab-content">
@@ -32,7 +55,7 @@ const ClientProfileTab = ({
               <div className="card profile-box flex-fill">
                 <div className="card-body">
                   <h3 className="card-title">
-                    Body Details{" "}
+                    Body Details
                     <Link
                       to="#"
                       className="edit-icon"
@@ -87,17 +110,7 @@ const ClientProfileTab = ({
             <div className="col-md-6 d-flex">
               <div className="card profile-box flex-fill">
                 <div className="card-body">
-                  <h3 className="card-title">
-                    Personal Training Program
-                    {/*    <Link
-                      to="#"
-                      className="edit-icon"
-                      data-bs-toggle="modal"
-                      data-bs-target="#emergency_contact_modal"
-                    >
-                      <i className="fa fa-pencil" />
-                    </Link> */}
-                  </h3>
+                  <h3 className="card-title">Personal Training Program</h3>
                   {ptpLoading ? (
                     <>
                       <Loading />
@@ -115,24 +128,20 @@ const ClientProfileTab = ({
                                 />
                                 <ListItem
                                   title={"Session From"}
-                                  text={p.session_from}
+                                  // text={p.session_from}
+                                  text={convertToReadableTime(p?.session_from)}
                                 />
                                 <ListItem
                                   title={"Session To"}
-                                  text={p.session_to}
+                                  text={convertToReadableTime(p?.session_to)}
                                 />
                               </ul>
                               <hr />
-
-                              {/* if ppt is coming and subscription is not available show purchase membership  & show your plan is expired  */}
-                              {/* if ppt not available show create ppt  */}
-                              {/* if ppt available and subscription is available show extend membership & show your plan details  */}
-
                               {p.subscription.length ? (
                                 <>
                                   {p.subscription.map((subs, index) => (
                                     <div key={index} className="mt-4">
-                                      <h4>Trainer Subscription {index + 1}</h4>
+                                      <h4>Trainer Subscription ({subs.id})</h4>
                                       <ul className="personal-info mt-3">
                                         <ListItem
                                           title={"Paid"}
@@ -249,7 +258,10 @@ const ClientProfileTab = ({
                                       title={"Plan"}
                                       text={subs.plan.data?.attributes?.title}
                                     />
-                                    <ListItem title={"Paid"} text={subs?.paid} />
+                                    <ListItem
+                                      title={"Paid"}
+                                      text={subs?.paid}
+                                    />
                                     <ListItem
                                       title={"Outstanding"}
                                       text={subs.outstanding}
