@@ -5,6 +5,7 @@ import { ListItem } from "../Profile/ProfileContent";
 import { format } from "date-fns";
 import Loading from "../../../components/Loading";
 import PtpAddPopup from "../../../components/modelpopup/Client/PTPAddPopup";
+import CreateSubscriptionPopup from "../../../components/modelpopup/Client/CreateSubscription";
 
 const ClientProfileTab = ({
   bodyDetails,
@@ -83,7 +84,7 @@ const ClientProfileTab = ({
                 <div className="card-body">
                   <h3 className="card-title">
                     Personal Training Program
-                 {/*    <Link
+                    {/*    <Link
                       to="#"
                       className="edit-icon"
                       data-bs-toggle="modal"
@@ -208,7 +209,7 @@ const ClientProfileTab = ({
                             <div className="card-body">
                               <h3 className="card-title">
                                 GYM Subscription {index + 1}
-                               {/*  <Link
+                                {/*  <Link
                                   to="#"
                                   className="edit-icon"
                                   data-bs-toggle="modal"
@@ -272,9 +273,14 @@ const ClientProfileTab = ({
                       <>
                         <div className="card-body">
                           <h3 className="card-title">GYM Subscription</h3>
-                          <button className="btn btn-info mt-1">
+                          <Link
+                            to="#"
+                            data-bs-toggle="modal"
+                            data-bs-target="#create_subscription"
+                            className="btn btn-info"
+                          >
                             Create Subscription
-                          </button>
+                          </Link>{" "}
                         </div>
                       </>
                     )}
@@ -285,8 +291,9 @@ const ClientProfileTab = ({
           </div>
         </div>
         <ClientEditPopup userId={userId} />
+        <PtpAddPopup userId={userId} />
+        <CreateSubscriptionPopup userId={userId} />
       </div>
-      <PtpAddPopup userId={userId} />
     </>
   );
 };

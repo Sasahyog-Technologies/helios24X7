@@ -11,16 +11,13 @@ const formDataDefaultValues = {
   plan: "",
   paid: "",
   outstanding: "",
-  trainer: "",
 };
 
-const PtpAddPopup = ({ userId }) => {
+const CreateSubscriptionPopup = ({ userId }) => {
   const [loading, setLoading] = useState(false);
   const [startDate, setStartDate] = useState(Date.now());
   const [planOptions, setPlanOptions] = useState([]);
-  const [trainerOptions, setTrainerOptions] = useState([]);
-  const [sessionFrom, setSessionFrom] = useState("00:00:00");
-  const [sessionTo, setSessionTo] = useState("00:00:00");
+ 
 
   const {
     register,
@@ -34,9 +31,9 @@ const PtpAddPopup = ({ userId }) => {
 
   const onSubmit = async (data) => {
     try {
-     
+    
       setLoading(true);
-      let subscriptionRes = await request.create("subscription", {
+      await request.create("subscription", {
         data: {
           user: userId,
           plan: data.plan,
@@ -44,20 +41,10 @@ const PtpAddPopup = ({ userId }) => {
           outstanding: data.outstanding,
           start: startDate,
           payment_type: "cash",
-          type: "trainer-subscription",
+          type: "gym-subscription",
         },
       });
-      const response = await request.create("ptp", {
-        data: {
-          trainee: userId,
-          trainer: data.trainer,
-          subscription: subscriptionRes.data.id,
-          session_from: sessionFrom,
-          session_to: sessionTo,
-        },
-      });
-      console.log(response);
-      toast.success("PTP created");
+      toast.success("Subscription created");
       Refresh();
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
@@ -75,27 +62,21 @@ const PtpAddPopup = ({ userId }) => {
         label: plan.attributes.title,
       }));
       setPlanOptions(plansArr);
-      const trainer = await request.findMany("users", {
-        filters: {
-          type: "trainer",
-        },
-      });
-      let trainerArr = trainer?.map((t) => ({
-        value: t.id,
-        label: `${t.firstname} ${t.lastname}`,
-      }));
-      setTrainerOptions(trainerArr);
     };
     fetchBranchPlans();
   }, []);
 
   return (
     <>
-      <div id="add_ptp" className="modal custom-modal fade" role="dialog">
+      <div
+        id="create_subscription"
+        className="modal custom-modal fade"
+        role="dialog"
+      >
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-paid">Add Trainer</h5>
+              <h5 className="modal-paid">Create Subscription</h5>
               <button
                 type="button"
                 className="btn-close"
@@ -141,36 +122,7 @@ const PtpAddPopup = ({ userId }) => {
                       </div>
                     </div>
                   </div>
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">
-                        Session From <span className="text-danger">*</span>
-                      </label>
-                      <div className="">
-                        <input
-                          aria-label="time"
-                          type="time"
-                          value={sessionFrom}
-                          onChange={(e) => setSessionFrom(`${e.target.value}:00`)}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">
-                        Session To <span className="text-danger">*</span>
-                      </label>
-                      <div className="">
-                        <input
-                          aria-label="time"
-                          type="time"
-                          value={sessionTo}
-                          onChange={(e) => setSessionTo(`${e.target.value}:00`)}
-                        />
-                      </div>
-                    </div>
-                  </div>
+
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">
@@ -205,29 +157,6 @@ const PtpAddPopup = ({ userId }) => {
                       />
                     </div>
                   </div>
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">
-                        Trainer<span className="text-danger">*</span>
-                      </label>
-                      <Controller
-                        name="trainer"
-                        control={control}
-                        render={({ onChange, value, ref }) => (
-                          <Select
-                            options={trainerOptions}
-                            placeholder="Select"
-                            value={trainerOptions.find(
-                              (c) => c.value === value
-                            )}
-                            onChange={(val) => setValue("trainer", val.value)}
-                            required
-                          />
-                        )}
-                        rules={{ required: true }}
-                      />
-                    </div>
-                  </div>
                 </div>
 
                 <div className="submit-section">
@@ -250,4 +179,4 @@ const PtpAddPopup = ({ userId }) => {
   );
 };
 
-export default PtpAddPopup;
+export default CreateSubscriptionPopup;

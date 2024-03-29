@@ -69,6 +69,7 @@
     "react-slick": "^0.30.2",
     "react-stars": "^2.2.5",
     "react-tag-input-component": "^2.0.2",
+    "react-time-picker": "^6.6.0",
     "recharts": "^2.8.0",
     "sass": "^1.71.1",
     "strapi-sdk-js": "^2.3.3",
