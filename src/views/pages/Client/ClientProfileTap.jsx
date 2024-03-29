@@ -123,11 +123,6 @@ const ClientProfileTab = ({
                                 />
                               </ul>
                               <hr />
-
-                              {/* if ppt is coming and subscription is not available show purchase membership  & show your plan is expired  */}
-                              {/* if ppt not available show create ppt  */}
-                              {/* if ppt available and subscription is available show extend membership & show your plan details  */}
-
                               {p.subscription.length ? (
                                 <>
                                   {p.subscription.map((subs, index) => (
@@ -249,7 +244,10 @@ const ClientProfileTab = ({
                                       title={"Plan"}
                                       text={subs.plan.data?.attributes?.title}
                                     />
-                                    <ListItem title={"Paid"} text={subs?.paid} />
+                                    <ListItem
+                                      title={"Paid"}
+                                      text={subs?.paid}
+                                    />
                                     <ListItem
                                       title={"Outstanding"}
                                       text={subs.outstanding}
