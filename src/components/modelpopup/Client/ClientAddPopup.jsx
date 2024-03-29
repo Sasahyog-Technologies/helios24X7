@@ -120,7 +120,7 @@ const ClientAddPopup = () => {
           user: createRes.user.id,
           plan: data.plan,
           paid: data.paid,
-          outstanding: data.outstanding,
+          outstanding: data.outstanding || null,
           start: startDate,
           end: calculateEndDate(startDate, planDuration),
           payment_type: data.paymentType,
@@ -372,7 +372,7 @@ const ClientAddPopup = () => {
                       <input
                         className="form-control"
                         type="text"
-                        {...register("outstanding", { required: true })}
+                        {...register("outstanding")}
                       />
                     </div>
                   </div>

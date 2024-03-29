@@ -249,7 +249,7 @@ const ClientProfileTab = ({
                                       title={"Plan"}
                                       text={subs.plan.data?.attributes?.title}
                                     />
-                                    <ListItem title={"Paid"} text={subs.paid} />
+                                    <ListItem title={"Paid"} text={subs?.paid} />
                                     <ListItem
                                       title={"Outstanding"}
                                       text={subs.outstanding}
@@ -326,8 +326,9 @@ const ClientProfileTab = ({
         <CreateSubscriptionPopup userId={userId} />
         <ExtendPTPSubscriptionPopup
           userId={userId}
-          ptpId={ptp ? ptp[0].id : ""}
+          ptpId={ptp && ptp.length ? ptp[0].id : ""}
           activePlanEndDate={activePlanEndDate}
+          setActivePlanEndDate={setActivePlanEndDate}
         />
         <ExtendGYMSubscriptionPopup
           userId={userId}

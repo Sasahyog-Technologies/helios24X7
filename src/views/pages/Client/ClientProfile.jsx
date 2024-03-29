@@ -64,8 +64,8 @@ const UserProfile = () => {
           });
           return data.data.map((item) => {
             return {
-              ...item.attributes,
-              id: item.id,
+              ...item?.attributes,
+              id: item?.id,
             };
           });
         }
@@ -96,12 +96,12 @@ const UserProfile = () => {
         });
         return data.data.map((item) => {
           return {
-            ...item.attributes,
-            id: item.id,
+            ...item?.attributes,
+            id: item?.id,
             subscription: item.attributes?.subscription?.data.map((item) => {
               return {
-                ...item.attributes,
-                id: item.id,
+                ...item?.attributes,
+                id: item?.id,
               };
             }),
           };

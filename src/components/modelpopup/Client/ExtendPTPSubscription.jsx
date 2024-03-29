@@ -15,11 +15,11 @@ const formDataDefaultValues = {
   paymentType: "",
 };
 
-const ExtendPTPSubscriptionPopup = ({ userId, ptpId, activePlanEndDate }) => {
+const ExtendPTPSubscriptionPopup = ({ userId, ptpId, activePlanEndDate,setActivePlanEndDate }) => {
   const [loading, setLoading] = useState(false);
-  const [startDate, setStartDate] = useState(Date.now());
+ 
 
-  // console.log(activePlanEndDate, `ptp : ${ptpId}` , `userid: ${userId}`);
+   console.log(activePlanEndDate, `ptp : ${ptpId}` , `userid: ${userId}`);
 
   const {
     register,
@@ -50,6 +50,7 @@ const ExtendPTPSubscriptionPopup = ({ userId, ptpId, activePlanEndDate }) => {
         },
       });
       toast.success("Subscription extended");
+      setActivePlanEndDate(null)
       Refresh();
     } catch (error) {
       toast.error(error?.response?.data?.error?.message, { duration: 4000 });
@@ -95,23 +96,7 @@ const ExtendPTPSubscriptionPopup = ({ userId, ptpId, activePlanEndDate }) => {
                       />
                     </div>
                   </div>
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">
-                        Joining Date <span className="text-danger">*</span>
-                      </label>
-                      <div className="cal-icon">
-                        <DatePicker
-                          selected={startDate}
-                          onChange={(date) => setStartDate(date)}
-                          className="form-control floating datetimepicker"
-                          type="date"
-                          dateFormat="dd-MM-yyyy"
-                          required
-                        />
-                      </div>
-                    </div>
-                  </div>
+                
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">
