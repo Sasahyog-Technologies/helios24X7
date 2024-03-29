@@ -26,30 +26,55 @@ const createPTP = async (userId, trainerId) => {
   });
 };
 
+function calculateEndDate(startDate, durationInMonths) {
+  console.log(startDate);
+  if (typeof startDate === "string") {
+    startDate = new Date(startDate);
+  }
+  const t = new Date(startDate);
+  const p = new Date();
+  p.setMonth(t.getMonth() + parseInt(durationInMonths));
+  return p.toISOString();
+}
+
+const extendSubscrition = async (activePlanEndDate, duration, userId) => {
+  if (!activePlanEndDate) return null;
+  const endDate = calculateEndDate(activePlanEndDate, duration);
+  await request.create("subscription", {
+    data: {
+      user: userId,
+      end: endDate,
+      start: activePlanEndDate,
+      type: "gym-subscription",
+    },
+  });
+};
+
 const TestPage = () => {
   // here we are getting user's subsciption ()
-  // const { data, isLoading } = useQuery({
-  //   queryKey: "this is anythinhg",
-  //   queryFn: () =>
-  //     request.findMany("subscription", {
-  //       filters: {
-  //         user: 54,
-  //         type: "gym-subscription",
-  //         end: {
-  //           $gte: new Date().toISOString(),
-  //         },
-  //       },
-  //     }),
-  // });
-
   const { data, isLoading } = useQuery({
     queryKey: "this is anythinhg",
     queryFn: () =>
-      request.findMany("ptp", {
-        populate: "*",
-        trainee: "54",
+      request.findMany("subscription", {
+        filters: {
+          user: 75,
+          type: "gym-subscription",
+          end: {
+            $gte: new Date().toISOString(),
+          },
+        },
+        sort: "id:desc",
       }),
   });
+
+  // const { data, isLoading } = useQuery({
+  //   queryKey: "this is anythinhg",
+  //   queryFn: () =>
+  //     request.findMany("ptp", {
+  //       populate: "*",
+  //       trainee: "54",
+  //     }),
+  // });
 
   return (
     <div>
@@ -57,7 +82,13 @@ const TestPage = () => {
       <br />
       {JSON.stringify(new Date().toISOString())}
 
-      {/* <button onClick={() => createPPT(54, 53)}>create ppt</button> */}
+      <button
+        onClick={() =>
+          extendSubscrition(data?.data?.at(0).attributes.end, 1, 75)
+        }
+      >
+        create ppt
+      </button>
     </div>
   );
 };
