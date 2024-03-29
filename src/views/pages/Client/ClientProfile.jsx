@@ -140,7 +140,7 @@ const UserProfile = () => {
                                     <h6 className="text-muted">
                                       {clientData.username}
                                     </h6>
-                                    <div className="staff-id">Plan :</div>
+                                    {/* <div className="staff-id">Plan :</div> */}
                                     <div className="small doj text-muted">
                                       Date of Join :{" "}
                                       {format(
@@ -148,14 +148,14 @@ const UserProfile = () => {
                                         "dd MMM yyyy"
                                       )}
                                     </div>
-                                    <div className="staff-msg">
+                                    {/* <div className="staff-msg">
                                       <Link
                                         className="btn btn-custom"
                                         to="/call/chat"
                                       >
                                         Send Message
                                       </Link>
-                                    </div>
+                                    </div> */}
                                   </div>
                                 </div>
                                 <div className="col-md-7">
