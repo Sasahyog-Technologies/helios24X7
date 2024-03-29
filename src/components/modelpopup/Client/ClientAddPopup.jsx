@@ -7,11 +7,22 @@ import Select from "react-select";
 import request from "../../../sdk/functions";
 import { Refresh } from "../../../utils/refresh";
 
+function generatePassword(length = 8) {
+  const charset =
+    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=";
+  let password = "";
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    password += charset[randomIndex];
+  }
+  return password;
+}
+
 const formDataDefaultValues = {
   firstname: "",
   lastname: "",
   mobile: "",
-  password: "",
+  password: generatePassword(),
   email: `random${Math.floor(
     Math.random() * 1000 * Math.random() * 10
   )}@gmail.com`, // please use uuid for unique email
@@ -28,6 +39,7 @@ const formDataDefaultValues = {
   calf: "",
   weist: "",
   neck: "",
+  gender: "",
 };
 
 const ClientAddPopup = () => {
@@ -77,6 +89,7 @@ const ClientAddPopup = () => {
         birthdate: birthDate,
         body_detail: bodyDetailRes.data.id,
         type: "client",
+        gender: data.gender,
       });
 
       await request.create("subscription", {
@@ -173,7 +186,7 @@ const ClientAddPopup = () => {
                       </label>
                       <input
                         className="form-control"
-                        type="password"
+                        type="text"
                         required
                         {...register("password", { required: true })}
                       />
@@ -269,6 +282,46 @@ const ClientAddPopup = () => {
                     </div>
                   </div>
 
+                  <div className="col-md-6">
+                    <div className="input-block mb-3">
+                      <label className="col-form-label">
+                        Gender <span className="text-danger">*</span>
+                      </label>
+                      <Controller
+                        name="gender"
+                        control={control}
+                        render={({ onChange, value, ref }) => (
+                          <Select
+                            options={[
+                              {
+                                value: "male",
+                                label: "Male",
+                              },
+                              {
+                                value: "female",
+                                label: "Female",
+                              },
+                            ]}
+                            placeholder="Select"
+                            value={[
+                              {
+                                value: "male",
+                                label: "Male",
+                              },
+                              {
+                                value: "female",
+                                label: "Female",
+                              },
+                            ].find((c) => c.value === value)}
+                            onChange={(val) => setValue("gender", val.value)}
+                            required
+                          />
+                        )}
+                        rules={{ required: true }}
+                      />
+                    </div>
+                  </div>
+
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">
@@ -285,26 +338,23 @@ const ClientAddPopup = () => {
 
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
-                      <label className="col-form-label">
-                        Outstanding <span className="text-danger">*</span>
-                      </label>
+                      <label className="col-form-label">Outstanding</label>
                       <input
                         className="form-control"
                         type="text"
-                        required
                         {...register("outstanding", { required: true })}
                       />
                     </div>
                   </div>
-                  <div className="col-sm-6">
+
+                  {/* body details  */}
+
+                  {/* <div className="col-sm-6">
                     <div className="input-block mb-3">
-                      <label className="col-form-label">
-                        Weight <span className="text-danger">*</span>
-                      </label>
+                      <label className="col-form-label">Weight</label>
                       <input
                         className="form-control"
                         type="text"
-                        required
                         {...register("weight", { required: true })}
                       />
                     </div>
@@ -388,7 +438,7 @@ const ClientAddPopup = () => {
                         {...register("neck")}
                       />
                     </div>
-                  </div>
+                  </div> */}
                 </div>
                 <ErrorMessage
                   errors={errors}
