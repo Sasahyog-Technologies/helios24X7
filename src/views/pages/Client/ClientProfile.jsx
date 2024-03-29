@@ -130,7 +130,7 @@ const UserProfile = () => {
                               </div>
                             </div>
                             <div className="profile-basic">
-                              <div className="row">
+                              <div className="row d-flex justify-content-center align-items-center">
                                 <div className="col-md-5">
                                   <div className="profile-info-left">
                                     <h3 className="user-name m-t-0 mb-0">

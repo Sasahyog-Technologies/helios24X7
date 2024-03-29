@@ -311,47 +311,6 @@ const ClientAddPopup = () => {
                       />
                     </div>
                   </div>
-
-                  <div className="col-md-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">
-                        Gender <span className="text-danger">*</span>
-                      </label>
-                      <Controller
-                        name="gender"
-                        control={control}
-                        render={({ onChange, value, ref }) => (
-                          <Select
-                            options={[
-                              {
-                                value: "male",
-                                label: "Male",
-                              },
-                              {
-                                value: "female",
-                                label: "Female",
-                              },
-                            ]}
-                            placeholder="Select"
-                            value={[
-                              {
-                                value: "male",
-                                label: "Male",
-                              },
-                              {
-                                value: "female",
-                                label: "Female",
-                              },
-                            ].find((c) => c.value === value)}
-                            onChange={(val) => setValue("gender", val.value)}
-                            required
-                          />
-                        )}
-                        rules={{ required: true }}
-                      />
-                    </div>
-                  </div>
-
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">

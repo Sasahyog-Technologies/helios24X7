@@ -12,7 +12,25 @@ const formDataDefaultValues = {
   paid: "",
   outstanding: "",
   trainer: "",
+  duration: "",
 };
+
+function calculateEndDate(startDate, durationInMonths) {
+  console.log(startDate)
+  if (typeof startDate === "string") {
+    startDate = new Date(startDate);
+  }
+/*   if (!(startDate instanceof Date) || isNaN(startDate)) {
+    throw new Error("Invalid start date");
+  } */
+  let endDate = new Date(startDate);
+  endDate.setMonth(endDate.getMonth() + durationInMonths);
+  if (endDate.getDate() !== startDate.getDate()) {
+    endDate = new Date(endDate.getFullYear(), endDate.getMonth(), 0);
+  }
+
+  return endDate;
+}
 
 const PtpAddPopup = ({ userId }) => {
   const [loading, setLoading] = useState(false);
@@ -34,17 +52,19 @@ const PtpAddPopup = ({ userId }) => {
 
   const onSubmit = async (data) => {
     try {
-     
       setLoading(true);
       let subscriptionRes = await request.create("subscription", {
         data: {
           user: userId,
-          plan: data.plan,
           paid: data.paid,
           outstanding: data.outstanding,
           start: startDate,
           payment_type: "cash",
           type: "trainer-subscription",
+          end: calculateEndDate(
+            startDate.toString(),
+            parseInt(data.duration)
+          ).toISOString(),
         },
       });
       const response = await request.create("ptp", {
@@ -60,7 +80,7 @@ const PtpAddPopup = ({ userId }) => {
       toast.success("PTP created");
       Refresh();
     } catch (error) {
-      toast.error(error.response.data.error.message, { duration: 4000 });
+      // toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);
     } finally {
       setLoading(false);
@@ -151,7 +171,9 @@ const PtpAddPopup = ({ userId }) => {
                           aria-label="time"
                           type="time"
                           value={sessionFrom}
-                          onChange={(e) => setSessionFrom(`${e.target.value}:00`)}
+                          onChange={(e) =>
+                            setSessionFrom(`${e.target.value}:00`)
+                          }
                         />
                       </div>
                     </div>
@@ -187,21 +209,13 @@ const PtpAddPopup = ({ userId }) => {
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">
-                        Plan<span className="text-danger">*</span>
+                        Duration(Month) <span className="text-danger">*</span>
                       </label>
-                      <Controller
-                        name="plan"
-                        control={control}
-                        render={({ onChange, value, ref }) => (
-                          <Select
-                            options={planOptions}
-                            placeholder="Select"
-                            value={planOptions.find((c) => c.value === value)}
-                            onChange={(val) => setValue("plan", val.value)}
-                            required
-                          />
-                        )}
-                        rules={{ required: true }}
+                      <input
+                        className="form-control"
+                        type="number"
+                        required
+                        {...register("duration", { required: true })}
                       />
                     </div>
                   </div>

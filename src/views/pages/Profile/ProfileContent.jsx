@@ -679,7 +679,7 @@ export const ProjectDetails = () => {
 };
 
 export const ListItem = ({ title, text }) => (
-  <li>
+  <li className="d-flex  justify-content-between">
     <div className="title">{title}</div>
     <div className="text text-capitalize">{text}</div>
   </li>
