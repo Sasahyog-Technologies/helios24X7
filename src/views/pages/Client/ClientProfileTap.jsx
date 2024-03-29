@@ -36,16 +36,44 @@ const ClientProfileTab = ({
                       <i className="fa fa-pencil" />
                     </Link>
                   </h3>
+
                   <ul className="personal-info">
-                    <ListItem title={"Weight"} text={bodyDetails?.weight} />
-                    <ListItem title={"Height"} text={bodyDetails?.height} />
-                    <ListItem title={"BMR"} text={bodyDetails?.bmr} />
-                    <ListItem title={"HIP"} text={bodyDetails?.hip} />
-                    <ListItem title={"Neck"} text={bodyDetails?.neck} />
-                    <ListItem title={"Weist"} text={bodyDetails?.weist} />
-                    <ListItem title={"Calf"} text={bodyDetails?.calf} />
-                    <ListItem title={"Chest"} text={bodyDetails?.chest} />
-                    <ListItem title={"Biceps"} text={bodyDetails?.biceps} />
+                    <ListItem
+                      title={"Weight"}
+                      text={bodyDetails?.weight ?? "unspecified"}
+                    />
+                    <ListItem
+                      title={"Height"}
+                      text={bodyDetails?.height ?? "unspecified"}
+                    />
+                    <ListItem
+                      title={"BMR"}
+                      text={bodyDetails?.bmr ?? "unspecified"}
+                    />
+                    <ListItem
+                      title={"HIP"}
+                      text={bodyDetails?.hip ?? "unspecified"}
+                    />
+                    <ListItem
+                      title={"Neck"}
+                      text={bodyDetails?.neck ?? "unspecified"}
+                    />
+                    <ListItem
+                      title={"Weist"}
+                      text={bodyDetails?.weist ?? "unspecified"}
+                    />
+                    <ListItem
+                      title={"Calf"}
+                      text={bodyDetails?.calf ?? "unspecified"}
+                    />
+                    <ListItem
+                      title={"Chest"}
+                      text={bodyDetails?.chest ?? "unspecified"}
+                    />
+                    <ListItem
+                      title={"Biceps"}
+                      text={bodyDetails?.biceps ?? "unspecified"}
+                    />
                   </ul>
                 </div>
               </div>
