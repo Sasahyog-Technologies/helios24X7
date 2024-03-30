@@ -3,6 +3,7 @@ const paymentTypeOptions = [
   { value: "debit-card", label: "Debit Card" },
   { value: "credit-card", label: "Credit Card" },
   { value: "bank-transfer", label: "Bank Transfer" },
+  { value: "upi", label: "UPI" },
 ];
 
 const durationOptions = [
