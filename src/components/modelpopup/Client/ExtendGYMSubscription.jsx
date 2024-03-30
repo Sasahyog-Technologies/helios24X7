@@ -103,7 +103,7 @@ const ExtendGYMSubscriptionPopup = ({ userId, activeGYMPlanEndDate }) => {
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">
-                        paid <span className="text-danger">*</span>
+                        Paid <span className="text-danger">*</span>
                       </label>
                       <input
                         className="form-control"
@@ -178,7 +178,7 @@ const ExtendGYMSubscriptionPopup = ({ userId, activeGYMPlanEndDate }) => {
 
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
-                      <label className="col-form-label">outstanding</label>
+                      <label className="col-form-label">Outstanding</label>
                       <input
                         className="form-control"
                         type="text"

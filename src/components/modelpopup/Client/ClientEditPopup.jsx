@@ -81,7 +81,7 @@ const ClientEditPopup = ({ userId }) => {
           },
         });
       }
-     
+
       //   console.log(bodyDetailRes);
       toast.success("client updated");
       Refresh();
@@ -221,7 +221,7 @@ const ClientEditPopup = ({ userId }) => {
                       <div className="col-sm-6">
                         <div className="input-block mb-3">
                           <label className="col-form-label">
-                            Weight <span className="text-danger">*</span>
+                            Weight (Kg) <span className="text-danger">*</span>
                           </label>
                           <input
                             className="form-control"
@@ -233,7 +233,9 @@ const ClientEditPopup = ({ userId }) => {
                       </div>
                       <div className="col-sm-6">
                         <div className="input-block mb-3">
-                          <label className="col-form-label">Height</label>
+                          <label className="col-form-label">
+                            Height (cm)
+                          </label>
                           <input
                             className="form-control"
                             type="text"
@@ -243,7 +245,9 @@ const ClientEditPopup = ({ userId }) => {
                       </div>
                       <div className="col-sm-6">
                         <div className="input-block mb-3">
-                          <label className="col-form-label">BMR</label>
+                          <label className="col-form-label">
+                            BMR (cal/day)
+                          </label>
                           <input
                             className="form-control"
                             type="text"
@@ -253,7 +257,7 @@ const ClientEditPopup = ({ userId }) => {
                       </div>
                       <div className="col-sm-6">
                         <div className="input-block mb-3">
-                          <label className="col-form-label">Chest</label>
+                          <label className="col-form-label">Chest (cm)</label>
                           <input
                             className="form-control"
                             type="text"
@@ -263,7 +267,7 @@ const ClientEditPopup = ({ userId }) => {
                       </div>
                       <div className="col-sm-6">
                         <div className="input-block mb-3">
-                          <label className="col-form-label">Hip</label>
+                          <label className="col-form-label">Hip (cm)</label>
                           <input
                             className="form-control"
                             type="text"
@@ -273,7 +277,7 @@ const ClientEditPopup = ({ userId }) => {
                       </div>
                       <div className="col-sm-6">
                         <div className="input-block mb-3">
-                          <label className="col-form-label">Biceps</label>
+                          <label className="col-form-label">Biceps (cm)</label>
                           <input
                             className="form-control"
                             type="text"
@@ -283,7 +287,7 @@ const ClientEditPopup = ({ userId }) => {
                       </div>
                       <div className="col-sm-6">
                         <div className="input-block mb-3">
-                          <label className="col-form-label">Calf</label>
+                          <label className="col-form-label">Calf (cm)</label>
                           <input
                             className="form-control"
                             type="text"
@@ -293,7 +297,7 @@ const ClientEditPopup = ({ userId }) => {
                       </div>
                       <div className="col-sm-6">
                         <div className="input-block mb-3">
-                          <label className="col-form-label">Weist</label>
+                          <label className="col-form-label">Weist (cm)</label>
                           <input
                             className="form-control"
                             type="text"
@@ -303,7 +307,7 @@ const ClientEditPopup = ({ userId }) => {
                       </div>
                       <div className="col-sm-6">
                         <div className="input-block mb-3">
-                          <label className="col-form-label">Neck</label>
+                          <label className="col-form-label">Neck (cm)</label>
                           <input
                             className="form-control"
                             type="text"

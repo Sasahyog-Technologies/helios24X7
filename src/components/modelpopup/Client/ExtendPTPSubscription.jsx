@@ -19,7 +19,7 @@ const ExtendPTPSubscriptionPopup = ({ userId, ptpId, activePlanEndDate,setActive
   const [loading, setLoading] = useState(false);
  
 
-   console.log(activePlanEndDate, `ptp : ${ptpId}` , `userid: ${userId}`);
+   //console.log(activePlanEndDate, `ptp : ${ptpId}` , `userid: ${userId}`);
 
   const {
     register,
@@ -33,7 +33,7 @@ const ExtendPTPSubscriptionPopup = ({ userId, ptpId, activePlanEndDate,setActive
 
   const onSubmit = async (data) => {
     //if (!activePlanEndDate) return null;
-    console.log("call");
+    
     const endDate = calculateEndDate(activePlanEndDate, data.duration);
     try {
       setLoading(true);
@@ -136,7 +136,7 @@ const ExtendPTPSubscriptionPopup = ({ userId, ptpId, activePlanEndDate,setActive
                   </div>
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
-                      <label className="col-form-label">outstanding</label>
+                      <label className="col-form-label">Outstanding</label>
                       <input
                         className="form-control"
                         type="text"

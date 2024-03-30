@@ -95,7 +95,7 @@ const PtpAddPopup = ({ userId }) => {
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-paid">Add Trainer</h5>
+              <h5 className="modal-paid">Add PTP</h5>
 
               <button
                 type="button"
@@ -113,7 +113,7 @@ const PtpAddPopup = ({ userId }) => {
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">
-                        paid <span className="text-danger">*</span>
+                        Paid <span className="text-danger">*</span>
                       </label>
                       <input
                         className="form-control"
@@ -177,7 +177,7 @@ const PtpAddPopup = ({ userId }) => {
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">
-                        outstanding <span className="text-danger">*</span>
+                        Outstanding <span className="text-danger">*</span>
                       </label>
                       <input
                         className="form-control"

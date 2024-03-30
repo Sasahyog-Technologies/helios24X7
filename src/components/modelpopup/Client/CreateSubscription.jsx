@@ -98,7 +98,7 @@ const CreateSubscriptionPopup = ({ userId }) => {
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">
-                        paid <span className="text-danger">*</span>
+                        Paid <span className="text-danger">*</span>
                       </label>
                       <input
                         className="form-control"
@@ -131,7 +131,7 @@ const CreateSubscriptionPopup = ({ userId }) => {
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">
-                        outstanding <span className="text-danger">*</span>
+                        Outstanding <span className="text-danger">*</span>
                       </label>
                       <input
                         className="form-control"
