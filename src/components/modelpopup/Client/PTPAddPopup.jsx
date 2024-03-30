@@ -7,6 +7,7 @@ import Select from "react-select";
 import DatePicker from "react-datepicker";
 import TimePicker from "react-time-picker";
 import { calculateEndDate } from "../../../utils/calculateEndDate";
+import {durationOptions} from "../../../utils/index"
 
 const formDataDefaultValues = {
   paid: "",
@@ -190,19 +191,6 @@ const PtpAddPopup = ({ userId }) => {
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">
-                        Duration(Month) <span className="text-danger">*</span>
-                      </label>
-                      <input
-                        className="form-control"
-                        type="number"
-                        required
-                        {...register("duration", { required: true })}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">
                         Trainer<span className="text-danger">*</span>
                       </label>
                       <Controller
@@ -216,6 +204,29 @@ const PtpAddPopup = ({ userId }) => {
                               (c) => c.value === value
                             )}
                             onChange={(val) => setValue("trainer", val.value)}
+                            required
+                          />
+                        )}
+                        rules={{ required: true }}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="input-block mb-3">
+                      <label className="col-form-label">
+                        Duration (Month)<span className="text-danger">*</span>
+                      </label>
+                      <Controller
+                        name="trainer"
+                        control={control}
+                        render={({ onChange, value, ref }) => (
+                          <Select
+                            options={durationOptions}
+                            placeholder="Select"
+                            value={durationOptions.find(
+                              (c) => c.value === value
+                            )}
+                            onChange={(val) => setValue("duration", val.value)}
                             required
                           />
                         )}

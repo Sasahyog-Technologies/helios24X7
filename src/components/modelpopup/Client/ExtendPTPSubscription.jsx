@@ -4,7 +4,7 @@ import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import Select from "react-select";
 import request from "../../../sdk/functions";
-import { paymentTypeOptions } from "../../../utils";
+import { durationOptions, paymentTypeOptions } from "../../../utils";
 import { calculateEndDate } from "../../../utils/calculateEndDate";
 import { Refresh } from "../../../utils/refresh";
 
@@ -124,13 +124,22 @@ const ExtendPTPSubscriptionPopup = ({ userId, ptpId, activePlanEndDate,setActive
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">
-                        Duration(Month) <span className="text-danger">*</span>
+                        Duration (Month)<span className="text-danger">*</span>
                       </label>
-                      <input
-                        className="form-control"
-                        type="number"
-                        required
-                        {...register("duration")}
+                      <Controller
+                        name="trainer"
+                        control={control}
+                        render={({ onChange, value, ref }) => (
+                          <Select
+                            options={durationOptions}
+                            placeholder="Select"
+                            value={durationOptions.find(
+                              (c) => c.value === value
+                            )}
+                            onChange={(val) => setValue("duration", val.value)}
+                            required
+                          />
+                        )}
                       />
                     </div>
                   </div>
