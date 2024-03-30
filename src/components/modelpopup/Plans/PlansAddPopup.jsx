@@ -11,7 +11,7 @@ const formDataDefaultValues = {
   duration: "",
 };
 
-const PlansAddPopup = () => {
+const PlansAddPopup = ({refetch}) => {
   const [loading, setLoading] = useState(false);
 
   const {
@@ -33,8 +33,9 @@ const PlansAddPopup = () => {
           desc: dt.description,
         },
       });
+      //document.getElementById("add_plan").modal("hide");
       toast.success("plan created");
-      Refresh()
+      //Refresh()
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);

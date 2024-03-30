@@ -27,7 +27,6 @@ const PlansList = () => {
       dataIndex: "duration",
     },
 
- 
     {
       title: "Action",
       render: (plan) => (
@@ -78,10 +77,11 @@ const PlansList = () => {
     search: "",
     branch: "",
   });
-  const { getUserDataToCookie } = useSession();
-  const loggedinUser = getUserDataToCookie();
-  const loggedinplanId = loggedinUser.user.id;
-  const { data: plansData, isLoading: usersIsLoading } = useQuery({
+  const {
+    data: plansData,
+    isLoading: usersIsLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["plans-list"],
     queryFn: async () => {
       const data = await request.findMany("plan");
@@ -150,7 +150,7 @@ const PlansList = () => {
           </div>
         </div>
         {/* /Page Content */}
-        <PlansAddPopup />
+        <PlansAddPopup refetch={refetch} />
         <PlanEditPopup planId={planId} />
         <PlansDeletePopup planId={planId} />
       </div>

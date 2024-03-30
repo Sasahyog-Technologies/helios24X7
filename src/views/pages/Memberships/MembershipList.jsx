@@ -15,7 +15,6 @@ const MembershipList = () => {
       title: "Full Name",
       dataIndex: "fullname",
     },
- 
 
     {
       title: "Mobile",
@@ -33,7 +32,7 @@ const MembershipList = () => {
       title: "End Date",
       dataIndex: "end",
       render: (text, record) => (
-        <span>{text ? format(new Date(text), "dd/MM/yyyy") :""}</span>
+        <span>{text ? format(new Date(text), "dd/MM/yyyy") : ""}</span>
       ),
     },
     {
@@ -52,8 +51,8 @@ const MembershipList = () => {
       title: "Payment Type",
       dataIndex: "payment_type",
     },
- 
-   /*  {
+
+    /*  {
       title: "Action",
       render: (user) => (
         <div className="dropdown dropdown-action text-end">
@@ -103,9 +102,6 @@ const MembershipList = () => {
     search: "",
     branch: "",
   });
-  const { getUserDataToCookie } = useSession();
-  const loggedinUser = getUserDataToCookie();
-  const loggedinUserId = loggedinUser.user.id;
   const { data: subscriptionData, isLoading: usersIsLoading } = useQuery({
     queryKey: ["membership-list"],
     queryFn: async () => {
@@ -121,9 +117,15 @@ const MembershipList = () => {
         return {
           ...item.attributes,
           id: item.id,
-          plan:item.attributes.plan.data ? item.attributes.plan.data.attributes.title  :null,
-          fullname:item.attributes.user.data ? `${item.attributes.user.data.attributes.firstname} ${item.attributes.user.data.attributes.lastname}`  :null,
-          mobile:item.attributes.user.data ? `${item.attributes.user.data.attributes.mobile}`  :null,
+          plan: item.attributes.plan.data
+            ? item.attributes.plan.data.attributes.title
+            : null,
+          fullname: item.attributes.user.data
+            ? `${item.attributes.user.data.attributes.firstname} ${item.attributes.user.data.attributes.lastname}`
+            : null,
+          mobile: item.attributes.user.data
+            ? `${item.attributes.user.data.attributes.mobile}`
+            : null,
         };
       });
     },
@@ -169,7 +171,7 @@ const MembershipList = () => {
                   loading={usersIsLoading}
                   className="table-striped"
                   columns={columns}
-                   dataSource={subscriptionData}
+                  dataSource={subscriptionData}
                   pagination={{
                     total: tableParams.pagination.total,
                     showSizeChanger: true,
@@ -182,7 +184,7 @@ const MembershipList = () => {
           </div>
         </div>
         {/* /Page Content */}
-   {/*      <ClientAddPopup />
+        {/*      <ClientAddPopup />
         <ClientEditPopup userId={userId} />
         <ClientDeletePopup userId={userId} /> */}
       </div>

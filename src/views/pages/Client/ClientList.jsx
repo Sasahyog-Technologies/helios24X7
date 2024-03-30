@@ -6,11 +6,9 @@ import { Link } from "react-router-dom";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 import ClientListFilter from "../../../components/ClientListFilters";
 import ClientAddPopup from "../../../components/modelpopup/Client/ClientAddPopup";
-import DeleteModal from "../../../components/modelpopup/DeleteModal";
-import request from "../../../sdk/functions";
-import ClientEditPopup from "../../../components/modelpopup/Client/ClientEditPopup";
 import ClientDeletePopup from "../../../components/modelpopup/Client/ClientDeletePopup";
-import { useSession } from "../../../Hook/useSession";
+import ClientEditPopup from "../../../components/modelpopup/Client/ClientEditPopup";
+import request from "../../../sdk/functions";
 
 const ClientList = () => {
   const [userId, setUserId] = useState(null);

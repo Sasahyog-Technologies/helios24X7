@@ -5,12 +5,10 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 import ClientListFilter from "../../../components/ClientListFilters";
-import ClientDeletePopup from "../../../components/modelpopup/Client/ClientDeletePopup";
-import ClientEditPopup from "../../../components/modelpopup/Client/ClientEditPopup";
 import TrainerAddPopup from "../../../components/modelpopup/Trainer/TrainerAddPopup";
-import request from "../../../sdk/functions";
-import TrianerEditPopup from "../../../components/modelpopup/Trainer/TrainerEditPopup";
 import TrianerDeletePopup from "../../../components/modelpopup/Trainer/TrainerDeletePopup";
+import TrianerEditPopup from "../../../components/modelpopup/Trainer/TrainerEditPopup";
+import request from "../../../sdk/functions";
 
 const TrainerList = () => {
   const [userId, setUserId] = useState(null);
