@@ -139,58 +139,61 @@ const ClientProfileTab = ({
                               <hr />
                               {p.subscription.length ? (
                                 <>
-                                  {p.subscription.map((subs, index) => (
-                                    <div key={index} className="mt-4">
-                                      <h4>Trainer Subscription ({subs.id})</h4>
-                                      <ul className="personal-info mt-3">
-                                        <ListItem
-                                          title={"Paid"}
-                                          text={subs.paid}
-                                        />
-                                        <ListItem
-                                          title={"Outstanding"}
-                                          text={subs.outstanding}
-                                        />
-                                        <ListItem
-                                          title={"Payment Type"}
-                                          text={subs.payment_type}
-                                        />
-                                        <ListItem
-                                          title={"Start"}
-                                          text={format(
-                                            new Date(subs.start),
-                                            "dd MMM yyyy"
-                                          )}
-                                        />
-                                        <ListItem
-                                          title={"End"}
-                                          text={
-                                            subs.end ? (
-                                              <>
-                                                {format(
-                                                  new Date(subs.end),
-                                                  "dd MMM yyyy"
-                                                )}
-                                              </>
-                                            ) : (
-                                              ""
-                                            )
-                                          }
-                                        />
-                                      </ul>
-                                      <Link
-                                        to="#"
-                                        data-bs-target="#extend_subscription"
-                                        className="btn btn-info"
-                                        data-bs-toggle="modal"
-                                        onClick={() =>
-                                          setActivePlanEndDate(subs.end)
+                                  <div className="mt-4">
+                                    <h4>
+                                      Trainer Subscription (
+                                      {p.subscription[0].id})
+                                    </h4>
+                                    <ul className="personal-info mt-3">
+                                      <ListItem
+                                        title={"Paid"}
+                                        text={p.subscription[0].paid}
+                                      />
+                                      <ListItem
+                                        title={"Outstanding"}
+                                        text={p.subscription[0].outstanding}
+                                      />
+                                      <ListItem
+                                        title={"Payment Type"}
+                                        text={p.subscription[0].payment_type}
+                                      />
+                                      <ListItem
+                                        title={"Start"}
+                                        text={format(
+                                          new Date(p.subscription[0].start),
+                                          "dd MMM yyyy"
+                                        )}
+                                      />
+                                      <ListItem
+                                        title={"End"}
+                                        text={
+                                          p.subscription[0].end ? (
+                                            <>
+                                              {format(
+                                                new Date(p.subscription[0].end),
+                                                "dd MMM yyyy"
+                                              )}
+                                            </>
+                                          ) : (
+                                            ""
+                                          )
                                         }
-                                      >
-                                        Extend Subscription
-                                      </Link>
-                                    </div>
-                                  ))}
+                                      />
+                                    </ul>
+                                    <Link
+                                      to="#"
+                                      data-bs-target="#extend_subscription"
+                                      className="btn btn-info"
+                                      data-bs-toggle="modal"
+                                      onClick={() =>
+                                        setActivePlanEndDate(
+                                          p.subscription[0].end
+                                        )
+                                      }
+                                    >
+                                      Extend Subscription
+                                    </Link>
+                                  </div>
                                 </>
                               ) : (
                                 <>
@@ -236,12 +239,11 @@ const ClientProfileTab = ({
                   <>
                     {subscription.length ? (
                       <>
-                        {subscription.map((subs, index) => (
-                          <div key={index}>
-                            <div className="card-body">
-                              <h3 className="card-title">
-                                GYM Subscription {index + 1}
-                                {/*  <Link
+                        <div>
+                          <div className="card-body">
+                            <h3 className="card-title">
+                              GYM Subscription ({subscription[0].id})
+                              {/*  <Link
                                   to="#"
                                   className="edit-icon"
                                   data-bs-toggle="modal"
@@ -249,68 +251,64 @@ const ClientProfileTab = ({
                                 >
                                   <i className="fa fa-pencil" />
                                 </Link> */}
-                              </h3>
-
-                              {subs ? (
-                                <>
-                                  <ul className="personal-info">
-                                    <ListItem
-                                      title={"Plan"}
-                                      text={subs.plan.data?.attributes?.title}
-                                    />
-                                    <ListItem
-                                      title={"Paid"}
-                                      text={subs?.paid}
-                                    />
-                                    <ListItem
-                                      title={"Outstanding"}
-                                      text={subs.outstanding}
-                                    />
-                                    <ListItem
-                                      title={"Start"}
-                                      text={format(
-                                        new Date(subs.start),
-                                        "dd MMM yyyy"
-                                      )}
-                                    />
-                                    <ListItem
-                                      title={"End"}
-                                      text={
-                                        subs.end ? (
-                                          <>
-                                            {format(
-                                              new Date(subs.end),
-                                              "dd MMM yyyy"
-                                            )}
-                                          </>
-                                        ) : (
-                                          ""
-                                        )
-                                      }
-                                    />
-                                    <ListItem
-                                      title={"Payment Type"}
-                                      text={subs.payment_type}
-                                    />
-                                  </ul>
-                                  <Link
-                                    to="#"
-                                    data-bs-toggle="modal"
-                                    className="btn btn-info"
-                                    data-bs-target="#extend_gym_subscription"
-                                    onClick={() =>
-                                      setActiveGYMPlanEndDate(subs.end)
-                                    }
-                                  >
-                                    Extend Subscription
-                                  </Link>
-                                </>
-                              ) : (
-                                <></>
-                              )}
-                            </div>
+                            </h3>
+                            <>
+                              <ul className="personal-info">
+                                <ListItem
+                                  title={"Plan"}
+                                  text={
+                                    subscription[0].plan.data?.attributes?.title
+                                  }
+                                />
+                                <ListItem
+                                  title={"Paid"}
+                                  text={subscription[0]?.paid}
+                                />
+                                <ListItem
+                                  title={"Outstanding"}
+                                  text={subscription[0].outstanding}
+                                />
+                                <ListItem
+                                  title={"Start"}
+                                  text={format(
+                                    new Date(subscription[0].start),
+                                    "dd MMM yyyy"
+                                  )}
+                                />
+                                <ListItem
+                                  title={"End"}
+                                  text={
+                                    subscription[0].end ? (
+                                      <>
+                                        {format(
+                                          new Date(subscription[0].end),
+                                          "dd MMM yyyy"
+                                        )}
+                                      </>
+                                    ) : (
+                                      ""
+                                    )
+                                  }
+                                />
+                                <ListItem
+                                  title={"Payment Type"}
+                                  text={subscription[0].payment_type}
+                                />
+                              </ul>
+                              <Link
+                                to="#"
+                                data-bs-toggle="modal"
+                                className="btn btn-info"
+                                data-bs-target="#extend_gym_subscription"
+                                onClick={() =>
+                                  setActiveGYMPlanEndDate(subscription[0].end)
+                                }
+                              >
+                                Extend Subscription
+                              </Link>
+                            </>
                           </div>
-                        ))}
+                        </div>
                       </>
                     ) : (
                       <>
