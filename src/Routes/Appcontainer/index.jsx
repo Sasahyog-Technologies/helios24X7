@@ -202,6 +202,7 @@ import WeatherIcons from "../../views/pages/Ui_Interface/Icons/Weathericons.jsx"
 import PlansList from "../../views/pages/Plans/PlansList.jsx";
 import MembershipList from "../../views/pages/Memberships/MembershipList.jsx";
 import UserProfile from "../../views/pages/Client/ClientProfile.jsx";
+import EventsList from "../../views/pages/events/EventsList.jsx";
 
 const AppContainer = () => {
   useEffect(() => {
@@ -1270,6 +1271,17 @@ const AppContainer = () => {
                 id: 1,
                 path: "owner/plans-list",
                 element: <PlansList />,
+              },
+            ].map((item) => (
+              <Route key={item.id} path={item.path} element={item.element} />
+            ))}
+          </Route>
+          <Route path={"/*"} element={<SidebarLayout />}>
+            {[
+              {
+                id: 1,
+                path: "owner/event-list",
+                element: <EventsList />,
               },
             ].map((item) => (
               <Route key={item.id} path={item.path} element={item.element} />

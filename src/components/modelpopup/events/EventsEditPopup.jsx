@@ -7,27 +7,23 @@ import Loading from "../../Loading";
 import { Refresh } from "../../../utils/refresh";
 const userDefaultValues = {
   title: "",
-  price: "",
-  duration: "",
   desc: "",
 };
 
-const PlanEditPopup = ({ planId }) => {
+const EventEditPopup = ({ eventId }) => {
   const [userLoading, setUserLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   const { register, handleSubmit, reset } = useForm({
     defaultValues: userDefaultValues,
   });
   const { isLoading: userIsLoading, refetch } = useQuery({
-    queryKey: ["plan-data"],
+    queryKey: ["event-data"],
     queryFn: async () => {
       setUserLoading(true);
-      if (planId) {
-        const res = await request.findOne("plan", planId);
+      if (eventId) {
+        const res = await request.findOne("event", eventId);
         reset({
           title: res.data.attributes.title,
-          price: res.data.attributes.price,
-          duration: res.data.attributes.duration,
           desc: res.data.attributes.desc,
         });
         setUserLoading(false);
@@ -41,10 +37,10 @@ const PlanEditPopup = ({ planId }) => {
   const onSubmit = async (dt) => {
     setSubmitLoading(true);
     try {
-      await request.update("plan", planId, {
+      await request.update("event", eventId, {
         data: { ...dt },
       });
-      toast.success("plan updated");
+      toast.success("Event updated");
       Refresh()
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
@@ -56,15 +52,15 @@ const PlanEditPopup = ({ planId }) => {
 
   useEffect(() => {
     refetch();
-  }, [planId, refetch, reset]);
+  }, [eventId, refetch, reset]);
 
   return (
     <>
-      <div id="edit_plan" className="modal custom-modal fade" role="dialog">
+      <div id="edit_event" className="modal custom-modal fade" role="dialog">
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">Edit Plan</h5>
+              <h5 className="modal-title">Edit Event</h5>
               <button
                 type="button"
                 className="btn-close"
@@ -99,32 +95,8 @@ const PlanEditPopup = ({ planId }) => {
                           />
                         </div>
                       </div>
-                      <div className="col-sm-6">
-                        <div className="input-block mb-3">
-                          <label className="col-form-label">
-                            Price <span className="text-danger">*</span>
-                          </label>
-                          <input
-                            className="form-control"
-                            type="text"
-                            required
-                            {...register("price", { required: true })}
-                          />
-                        </div>
-                      </div>
-                      <div className="col-sm-6">
-                        <div className="input-block mb-3">
-                          <label className="col-form-label">
-                            Duration <span className="text-danger">*</span>
-                          </label>
-                          <input
-                            className="form-control"
-                            type="text"
-                            required
-                            {...register("duration", { required: true })}
-                          />
-                        </div>
-                      </div>
+                    
+                     
                       <div className="col-sm-6">
                         <div className="input-block mb-3">
                           <label className="col-form-label">Description</label>
@@ -159,4 +131,4 @@ const PlanEditPopup = ({ planId }) => {
   );
 };
 
-export default PlanEditPopup;
+export default EventEditPopup;

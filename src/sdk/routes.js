@@ -5,5 +5,6 @@ export const routes = {
   register: "/auth/local/register",
   subscription: "/subscriptions",
   bodyDetail: "/body-details",
-  ptp: "personal-training-programs",
+  ptp: "/personal-training-programs",
+  event:"/events"
 };
