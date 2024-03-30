@@ -55,7 +55,7 @@ function calculateEndDate(startDate, durationInMonths) {
   return p.toISOString();
 }
 
-const ClientAddPopup = () => {
+const ClientAddPopup = ({ refetch }) => {
   const [startDate, setStartDate] = useState(new Date().toISOString());
   const [birthDate, setBirthDate] = useState(null);
   const [branchOptions, setBranchOptions] = useState([]);
@@ -67,7 +67,6 @@ const ClientAddPopup = () => {
     { value: "female", label: "Female" },
     { value: "other", label: "Other" },
   ];
-
 
   const {
     register,
@@ -129,6 +128,7 @@ const ClientAddPopup = () => {
       });
       toast.success("client created");
       Refresh();
+      //  refetch()
     } catch (error) {
       toast.error(error?.response?.data?.error?.message, { duration: 4000 });
       console.log(error);

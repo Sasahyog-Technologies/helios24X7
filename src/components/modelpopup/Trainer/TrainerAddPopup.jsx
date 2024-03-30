@@ -16,6 +16,7 @@ const formDataDefaultValues = {
     Math.random() * 1000 * Math.random() * 10
   )}@gmail.com`, // please use uuid for unique email
   branch: "",
+  gender: "",
 };
 
 const TrainerAddPopup = () => {
@@ -23,6 +24,11 @@ const TrainerAddPopup = () => {
   const [birthDate, setBirthDate] = useState(null);
   const [branchOptions, setBranchOptions] = useState([]);
   const [loading, setLoading] = useState(false);
+  const genderOptions = [
+    { value: "male", label: "Male" },
+    { value: "female", label: "Female" },
+    { value: "other", label: "Other" },
+  ];
 
   const {
     register,
@@ -49,10 +55,11 @@ const TrainerAddPopup = () => {
         branch: data.branch,
         birthdate: birthDate,
         type: "trainer",
+        gender: data.gender,
       });
       //console.log(createRes);
       toast.success("trainer created");
-      Refresh()
+      Refresh();
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);
@@ -102,9 +109,7 @@ const TrainerAddPopup = () => {
                         className="form-control"
                         type="text"
                         required
-                        {...register("firstname", {
-                          required: "This input is required.",
-                        })}
+                        {...register("firstname")}
                       />
                     </div>
                   </div>
@@ -117,7 +122,7 @@ const TrainerAddPopup = () => {
                         className="form-control"
                         type="text"
                         required
-                        {...register("lastname", { required: true })}
+                        {...register("lastname")}
                       />
                     </div>
                   </div>
@@ -130,7 +135,28 @@ const TrainerAddPopup = () => {
                         className="form-control"
                         type="password"
                         required
-                        {...register("password", { required: true })}
+                        {...register("password")}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="input-block mb-3">
+                      <label className="col-form-label">
+                        Gender<span className="text-danger">*</span>
+                      </label>
+                      <Controller
+                        name="plan"
+                        control={control}
+                        render={({ onChange, value, ref }) => (
+                          <Select
+                            options={genderOptions}
+                            placeholder="Select"
+                            value={genderOptions.find((c) => c.value === value)}
+                            onChange={(val) => setValue("gender", val.value)}
+                            required
+                          />
+                        )}
+                      
                       />
                     </div>
                   </div>
@@ -145,7 +171,7 @@ const TrainerAddPopup = () => {
                           onChange={(date) => setStartDate(date)}
                           className="form-control floating datetimepicker"
                           type="date"
-                          required={true}
+                          required
                           dateFormat="dd-MM-yyyy"
                         />
                       </div>
@@ -162,7 +188,7 @@ const TrainerAddPopup = () => {
                           onChange={(date) => setBirthDate(date)}
                           className="form-control floating datetimepicker"
                           type="date"
-                          required={true}
+                          required
                           dateFormat="dd-MM-yyyy"
                         />
                       </div>
@@ -177,7 +203,7 @@ const TrainerAddPopup = () => {
                         className="form-control"
                         type="text"
                         required
-                        {...register("mobile", { required: true })}
+                        {...register("mobile")}
                       />
                     </div>
                   </div>
@@ -199,7 +225,7 @@ const TrainerAddPopup = () => {
                             required
                           />
                         )}
-                        rules={{ required: true }}
+                        
                       />
                     </div>
                   </div>

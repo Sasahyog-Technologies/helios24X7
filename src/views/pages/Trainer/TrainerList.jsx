@@ -20,7 +20,7 @@ const TrainerList = () => {
       dataIndex: "firstname",
       render: (text, record) => (
         <span className="table-avatar">
-          <Link to="/profile">
+          <Link to={`/owner/trainer-profile/${record.id}`}>
             {text} <span>{record.role}</span>
           </Link>
         </span>
@@ -31,7 +31,7 @@ const TrainerList = () => {
       dataIndex: "lastname",
       render: (text, record) => (
         <span className="table-avatar">
-          <Link to="/profile">
+          <Link to={`/owner/trainer-profile/${record.id}`}>
             {text} <span>{record.role}</span>
           </Link>
         </span>
@@ -119,7 +119,7 @@ const TrainerList = () => {
           type: "trainer",
         },
       });
-      console.log(data)
+      console.log(data);
       setTableParams({
         ...tableParams,
         pagination: { ...tableParams.pagination, total: data.length },
@@ -128,7 +128,6 @@ const TrainerList = () => {
       return data;
     },
   });
-
 
   const handleTableChange = (pagination, filters, sorter) => {
     //console.log("handleTableChange");

@@ -107,7 +107,7 @@ const ClientList = () => {
   
  
   
-  const { data: usersData, isLoading: usersIsLoading } = useQuery({
+  const { data: usersData, isLoading: usersIsLoading,refetch } = useQuery({
     queryKey: ["client-list"],
     queryFn: async () => {
       const data = await request.findMany("users", {
@@ -177,7 +177,7 @@ const ClientList = () => {
           </div>
         </div>
         {/* /Page Content */}
-        <ClientAddPopup />
+        <ClientAddPopup refetch={refetch} />
         <ClientEditPopup userId={userId} />
         <ClientDeletePopup userId={userId} />
       </div>
