@@ -18,9 +18,7 @@ const TrainerList = () => {
       dataIndex: "firstname",
       render: (text, record) => (
         <span className="table-avatar">
-          <Link to={`/owner/trainer-profile/${record.id}`}>
-            {text} <span>{record.role}</span>
-          </Link>
+          <Link to={`/owner/trainer-profile/${record.id}`}>{text}</Link>
         </span>
       ),
     },
@@ -29,9 +27,7 @@ const TrainerList = () => {
       dataIndex: "lastname",
       render: (text, record) => (
         <span className="table-avatar">
-          <Link to={`/owner/trainer-profile/${record.id}`}>
-            {text} <span>{record.role}</span>
-          </Link>
+          <Link to={`/owner/trainer-profile/${record.id}`}>{text}</Link>
         </span>
       ),
     },
@@ -39,19 +35,32 @@ const TrainerList = () => {
     {
       title: "Mobile",
       dataIndex: "mobile",
+      render: (text, record) => (
+        <span className="table-avatar">
+          <Link to={`/owner/trainer-profile/${record.id}`}>{text}</Link>
+        </span>
+      ),
     },
 
     {
       title: "Join Date",
       dataIndex: "createdAt",
       render: (text, record) => (
-        <span>{format(new Date(text), "dd/MM/yyyy")}</span>
+        <span>
+          <Link to={`/owner/trainer-profile/${record.id}`}>
+            {format(new Date(text), "dd/MM/yyyy")}
+          </Link>
+        </span>
       ),
     },
     {
       title: "Branch",
       dataIndex: "branch",
-      render: (text, record) => <span>{text?.name}</span>,
+      render: (text, record) => (
+        <span className="table-avatar">
+          <Link to={`/owner/trainer-profile/${record.id}`}>{text?.name}</Link>
+        </span>
+      ),
     },
     {
       title: "Action",

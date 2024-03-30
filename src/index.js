@@ -1,7 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import Approuter from "./Routes/Approuter";
-import {Toaster } from "react-hot-toast"
+import {Toaster } from "react-hot-toast";
+import "./style.css"
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.js";

@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Table } from "antd";
 import { format } from "date-fns";
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 import ClientListFilter from "../../../components/ClientListFilters";
 import ClientAddPopup from "../../../components/modelpopup/Client/ClientAddPopup";
@@ -12,13 +12,13 @@ import request from "../../../sdk/functions";
 
 const ClientList = () => {
   const [userId, setUserId] = useState(null);
-
+  const navigate = useNavigate();
   const columns = [
     {
       title: "First Name",
       dataIndex: "firstname",
       render: (text, record) => (
-        <span className="table-avatar">
+        <span className="w-100">
           <Link to={`/owner/client-profile/${record.id}`}>{text}</Link>
         </span>
       ),
@@ -38,24 +38,40 @@ const ClientList = () => {
     {
       title: "Mobile",
       dataIndex: "mobile",
+      render: (text, record) => (
+        <span className="w-100">
+          <Link to={`/owner/client-profile/${record.id}`}>{text}</Link>
+        </span>
+      ),
     },
 
     {
       title: "Join Date",
       dataIndex: "createdAt",
       render: (text, record) => (
-        <span>{format(new Date(text), "dd/MM/yyyy")}</span>
+        <span>
+          <Link to={`/owner/client-profile/${record.id}`}>
+            {" "}
+            {format(new Date(text), "dd/MM/yyyy")}
+          </Link>
+        </span>
       ),
     },
     {
       title: "Branch",
       dataIndex: "branch",
-      render: (text, record) => <span>{text?.name}</span>,
+      render: (text, record) => (
+        <span>
+          <Link to={`/owner/client-profile/${record.id}`}>{text?.name}</Link>
+        </span>
+      ),
     },
     {
       title: "Action",
       render: (user) => (
-        <div className="dropdown dropdown-action text-end">
+        <div
+          className="dropdown dropdown-action text-end" /* style={{zIndex:100}} */
+        >
           <Link
             to="#"
             className="action-icon dropdown-toggle"
@@ -102,10 +118,12 @@ const ClientList = () => {
     search: "",
     branch: "",
   });
-  
- 
-  
-  const { data: usersData, isLoading: usersIsLoading,refetch } = useQuery({
+
+  const {
+    data: usersData,
+    isLoading: usersIsLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["client-list"],
     queryFn: async () => {
       const data = await request.findMany("users", {
@@ -167,8 +185,14 @@ const ClientList = () => {
                     total: tableParams.pagination.total,
                     showSizeChanger: true,
                   }}
+                  //  rowClassName={"cursor-pointer"}
                   rowKey={(record) => record.id}
                   onChange={handleTableChange}
+                  /*   onRow={(record, rowIndex) => {
+                    return {
+                      onClick: event => {navigate(`/owner/client-profile/${record.id}`)}, // click row
+                    };
+                  }} */
                 />
               </div>
             </div>
