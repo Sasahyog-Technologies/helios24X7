@@ -126,7 +126,7 @@ const TrainerList = () => {
           type: "trainer",
         },
       });
-      console.log(data);
+     // console.log(data);
       setTableParams({
         ...tableParams,
         pagination: { ...tableParams.pagination, total: data.length },

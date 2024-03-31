@@ -204,6 +204,7 @@ import MembershipList from "../../views/pages/Memberships/MembershipList.jsx";
 import UserProfile from "../../views/pages/Client/ClientProfile.jsx";
 import EventsList from "../../views/pages/events/EventsList.jsx";
 import TrainerProfile from "../../views/pages/Trainer/TrainerProfile.jsx";
+import { useSession } from "../../Hook/useSession.jsx";
 
 const AppContainer = () => {
   useEffect(() => {
@@ -1159,6 +1160,44 @@ const AppContainer = () => {
     },
   ];
 
+  const OwnerRoutingObjects = [
+    {
+      id: 1,
+      path: "client-list",
+      element: <CustomClientList />,
+    },
+    {
+      id: 2,
+      path: `client-profile/:clientid`,
+      element: <UserProfile />,
+    },
+    {
+      id: 3,
+      path: `trainer-profile/:trainerid`,
+      element: <TrainerProfile />,
+    },
+    {
+      id: 4,
+      path: "trainer-list",
+      element: <TrainerList />,
+    },
+    {
+      id: 5,
+      path: "plans-list",
+      element: <PlansList />,
+    },
+    {
+      id: 6,
+      path: "event-list",
+      element: <EventsList />,
+    },
+    {
+      id: 7,
+      path: "membership-list",
+      element: <MembershipList />,
+    },
+  ];
+
   const SidebarLayout = () => (
     <>
       <Header />
@@ -1216,12 +1255,25 @@ const AppContainer = () => {
     }
   };
 
+  const { getUserDataToCookie } = useSession();
+  const user = getUserDataToCookie();
+  //console.log(user);
+  const OwnerProtectedRoute = ({ children }) => {
+    if (user && user?.jwt) {
+      if (user?.user.type === "owner") {
+        return children;
+      }
+      return <Navigate to={"/admin-dashboard"} replace={true} />;
+    }
+    return <Navigate replace={true} to="/" />;
+  };
+
   return (
     <>
       <div className="main-wrapper" onClick={mobileResponsive}>
         <Routes>
           {/* this part is just for testing purpose  */}
-          <Route path={"/*"}>
+          {/*    <Route path={"/*"}>
             {[
               {
                 id: 1,
@@ -1231,83 +1283,17 @@ const AppContainer = () => {
             ].map((item) => (
               <Route key={item.id} path={item.path} element={item.element} />
             ))}
-          </Route>
+          </Route> */}
 
-          <Route path={"/*"} element={<SidebarLayout />}>
-            {[
-              {
-                id: 1,
-                path: "owner/client-list",
-                element: <CustomClientList />,
-              },
-            ].map((item) => (
-              <Route key={item.id} path={item.path} element={item.element} />
-            ))}
-          </Route>
-          <Route path={"/*"} element={<SidebarLayout />}>
-            {[
-              {
-                id: 1,
-                path: `owner/client-profile/:clientid`,
-                element: <UserProfile />,
-              },
-            ].map((item) => (
-              <Route key={item.id} path={item.path} element={item.element} />
-            ))}
-          </Route>
-          <Route path={"/*"} element={<SidebarLayout />}>
-            {[
-              {
-                id: 1,
-                path: `owner/trainer-profile/:trainerid`,
-                element: <TrainerProfile />,
-              },
-            ].map((item) => (
-              <Route key={item.id} path={item.path} element={item.element} />
-            ))}
-          </Route>
-          <Route path={"/*"} element={<SidebarLayout />}>
-            {[
-              {
-                id: 1,
-                path: "owner/trainer-list",
-                element: <TrainerList />,
-              },
-            ].map((item) => (
-              <Route key={item.id} path={item.path} element={item.element} />
-            ))}
-          </Route>
-          <Route path={"/*"} element={<SidebarLayout />}>
-            {[
-              {
-                id: 1,
-                path: "owner/plans-list",
-                element: <PlansList />,
-              },
-            ].map((item) => (
-              <Route key={item.id} path={item.path} element={item.element} />
-            ))}
-          </Route>
-          <Route path={"/*"} element={<SidebarLayout />}>
-            {[
-              {
-                id: 1,
-                path: "owner/event-list",
-                element: <EventsList />,
-              },
-            ].map((item) => (
-              <Route key={item.id} path={item.path} element={item.element} />
-            ))}
-          </Route>
-          <Route path={"/*"} element={<SidebarLayout />}>
-            {[
-              {
-                id: 1,
-                path: "owner/membership-list",
-                element: <MembershipList />,
-              },
-            ].map((item) => (
-              <Route key={item.id} path={item.path} element={item.element} />
+          <Route path={"/owner"} element={<SidebarLayout />}>
+            {OwnerRoutingObjects.map((item) => (
+              <Route
+                key={item.id}
+                path={item.path}
+                element={
+                  <OwnerProtectedRoute>{item.element}</OwnerProtectedRoute>
+                }
+              />
             ))}
           </Route>
 
