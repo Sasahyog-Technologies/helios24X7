@@ -1,3 +1,6 @@
+import { useSession } from "../../Hook/useSession";
+//const {getUserDataToCookie} = useSession();
+
 export const SidebarData = [
   {
     tittle: "MAIN",
@@ -30,6 +33,19 @@ export const SidebarData = [
           {
             menuValue: "Subscriptions & Invoices",
             route: "/owner/membership-list",
+          },
+        ],
+      },
+      {
+        menuValue: "User",
+        hasSubRoute: true,
+        showSubRoute: false,
+        route: "#",
+        icon: "la la-dashcube",
+        subMenus: [
+          {
+            menuValue: "My Profile",
+            route: "/client/my-profile",
           },
         ],
       },

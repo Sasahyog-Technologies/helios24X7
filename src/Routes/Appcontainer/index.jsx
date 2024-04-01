@@ -205,6 +205,7 @@ import UserProfile from "../../views/pages/Client/ClientProfile.jsx";
 import EventsList from "../../views/pages/events/EventsList.jsx";
 import TrainerProfile from "../../views/pages/Trainer/TrainerProfile.jsx";
 import { useSession } from "../../Hook/useSession.jsx";
+import MyProfile from "../../views/pages/User/MyProfile.jsx";
 
 const AppContainer = () => {
   useEffect(() => {
@@ -1197,6 +1198,13 @@ const AppContainer = () => {
       element: <MembershipList />,
     },
   ];
+  const ClientRoutingObjects = [
+    {
+      id: 1,
+      path: "my-profile",
+      element: <MyProfile />,
+    },
+  ];
 
   const SidebarLayout = () => (
     <>
@@ -1259,11 +1267,20 @@ const AppContainer = () => {
   const user = getUserDataToCookie();
   //console.log(user);
   const OwnerProtectedRoute = ({ children }) => {
-    if (user && user?.jwt) {
+    if (user || user?.jwt) {
       if (user?.user.type === "owner") {
         return children;
       }
-      return <Navigate to={"/admin-dashboard"} replace={true} />;
+      return <Navigate to={"/client/my-profile"} replace={true} />;
+    }
+    return <Navigate replace={true} to="/" />;
+  };
+  const ClientProtectedRoute = ({ children }) => {
+    if (user || user?.jwt) {
+      if (user?.user.type === "client") {
+        return children;
+      }
+      return <Navigate to={"/owner/client-list"} replace={true} />;
     }
     return <Navigate replace={true} to="/" />;
   };
@@ -1292,6 +1309,17 @@ const AppContainer = () => {
                 path={item.path}
                 element={
                   <OwnerProtectedRoute>{item.element}</OwnerProtectedRoute>
+                }
+              />
+            ))}
+          </Route>
+          <Route path={"/client"} element={<SidebarLayout />}>
+            {ClientRoutingObjects.map((item) => (
+              <Route
+                key={item.id}
+                path={item.path}
+                element={
+                  <ClientProtectedRoute>{item.element}</ClientProtectedRoute>
                 }
               />
             ))}
