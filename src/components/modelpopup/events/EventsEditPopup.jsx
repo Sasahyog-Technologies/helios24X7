@@ -13,6 +13,13 @@ const userDefaultValues = {
 const EventEditPopup = ({ eventId }) => {
   const [userLoading, setUserLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
+  const [image, setImage] = useState();
+  const handleImageChange = (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      setImage(file);
+    }
+  };
   const { register, handleSubmit, reset } = useForm({
     defaultValues: userDefaultValues,
   });
@@ -41,7 +48,7 @@ const EventEditPopup = ({ eventId }) => {
         data: { ...dt },
       });
       toast.success("Event updated");
-      Refresh()
+      Refresh();
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);
@@ -95,8 +102,7 @@ const EventEditPopup = ({ eventId }) => {
                           />
                         </div>
                       </div>
-                    
-                     
+
                       <div className="col-sm-6">
                         <div className="input-block mb-3">
                           <label className="col-form-label">Description</label>
@@ -104,6 +110,20 @@ const EventEditPopup = ({ eventId }) => {
                             className="form-control"
                             type="text"
                             {...register("desc")}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-sm-6">
+                        <div className="input-block mb-3">
+                          <label className="col-form-label">Image</label>
+                          <input
+                            type="file"
+                            accept="image/*"
+                            onChange={handleImageChange}
+                            placeholder="Image"
+                            className="file-input file-input-bordered  file-input-info w-full max-w-xs"
+                            required
                           />
                         </div>
                       </div>
