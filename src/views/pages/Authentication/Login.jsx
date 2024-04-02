@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { Applogo } from "../../../Routes/ImagePath";
+import { Applogo, hlogo } from "../../../Routes/ImagePath";
 import { useSession } from "../../../Hook/useSession";
 import strapiAxios from "../../../sdk";
  
@@ -46,7 +46,7 @@ const TestLogin = () => {
               {/* Account Logo */}
               <div className="account-logo">
                 <Link to="/admin-dashboard">
-                  <img src={Applogo} alt="Dreamguy's Technologies" />
+                  <img src={hlogo} alt="Dreamguy's Technologies" className="w-50" />
                 </Link>
               </div>
               {/* /Account Logo */}

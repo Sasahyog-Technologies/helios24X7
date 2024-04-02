@@ -136,11 +136,11 @@ const EventsList = () => {
         <div className="content container-fluid">
           {/* Page Header */}
           <Breadcrumbs
-            maintitle="events"
+            maintitle="Events"
             title="Dashboard"
-            subtitle="events"
+            subtitle="Events"
             modal="#add_event"
-            name="Add event"
+            name="Add Event"
             Linkname="/event"
             Linkname1="/events-list"
           />

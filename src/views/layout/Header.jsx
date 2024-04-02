@@ -7,10 +7,12 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import notifications from "../../assets/json/notifications";
 import message from "../../assets/json/message";
+
 import {
   Applogo,
   Avatar_02,
   headerlogo,
+  hlogo,
   lnEnglish,
   lnFrench,
   lnGerman,
@@ -95,7 +97,7 @@ const Header = (props) => {
       {/* Logo */}
       <div className="header-left">
         <Link to="/admin-dashboard" className="logo">
-          <img src={headerlogo}  alt="img" />
+          <img src={hlogo}  alt="img" className="w-50 logo-image"  />
         </Link>
         <Link to="/admin-dashboard" className="logo2">
           <img src={Applogo} width={40} height={40} alt="img" />

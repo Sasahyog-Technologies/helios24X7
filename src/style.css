@@ -2,3 +2,16 @@
     cursor: pointer;
     z-index: 50;
 }
+
+.logo-image {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  /* Media query for small devices (e.g., smartphones) */
+  @media (max-width: 992px) {
+    .logo-image {
+      display: none; /* Hide the image on small devices */
+    }
+  }
+  
