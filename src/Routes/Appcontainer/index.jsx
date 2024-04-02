@@ -1276,11 +1276,15 @@ const AppContainer = () => {
     return <Navigate replace={true} to="/" />;
   };
   const ClientProtectedRoute = ({ children }) => {
-    if (user || user?.jwt) {
-      if (user?.user.type === "client") {
-        return children;
-      }
-      return <Navigate to={"/owner/client-list"} replace={true} />;
+    if (user || user?.jwt || user?.user?.id) {
+      /*    if (
+        user?.user.type === "client" ||
+        user?.user.type === "trainer" ||
+        user?.user.type === "owner"
+      ) {
+      } */
+      return children;
+      // return <Navigate to={"/owner/client-list"} replace={true} />;
     }
     return <Navigate replace={true} to="/" />;
   };
