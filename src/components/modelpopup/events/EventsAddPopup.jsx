@@ -18,30 +18,23 @@ const EventsAddPopup = () => {
       setImage(file);
     }
   };
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  const { register, handleSubmit } = useForm({
     defaultValues: formDataDefaultValues,
   });
 
   const onSubmit = async (dt) => {
+    let formData = new FormData();
     try {
       setLoading(true);
-      /*      const formData = new FormData();
       formData.append("title", dt.title || "hello");
       formData.append("desc", dt.description);
       formData.append("media", image);
-      console.log(formData); */
-      await request.create("event", {
-        data: {
-          title: dt.title,
-          desc: dt.description,
-        },
+      console.log(formData);
+          await request.create("event", {
+        data: formData,
       });
       toast.success("event created");
-      Refresh();
+      // Refresh();
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);
@@ -95,7 +88,7 @@ const EventsAddPopup = () => {
                       />
                     </div>
                   </div>
-                  {/*   <div className="col-sm-6">
+                  <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">Image</label>
                       <input
@@ -107,7 +100,7 @@ const EventsAddPopup = () => {
                         required
                       />
                     </div>
-                  </div> */}
+                  </div>
                 </div>
                 <div className="submit-section">
                   <button
