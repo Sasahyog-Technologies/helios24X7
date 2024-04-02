@@ -85,10 +85,10 @@ const Header = (props) => {
       lng === "en"
         ? lnEnglish
         : lng === "fr"
-          ? lnFrench
-          : lng === "es"
-            ? lnSpanish
-            : lnGerman
+        ? lnFrench
+        : lng === "es"
+        ? lnSpanish
+        : lnGerman
     );
   };
 
@@ -111,8 +111,8 @@ const Header = (props) => {
           display: pathname.includes("tasks")
             ? "none"
             : pathname.includes("compose")
-              ? "none"
-              : "",
+            ? "none"
+            : "",
         }}
         onClick={handlesidebar}
       >
@@ -124,7 +124,7 @@ const Header = (props) => {
       </Link>
       {/* Header Title */}
       <div className="page-title-box">
-        <h3>Dreams Technologies</h3>
+        <h3>Sasahayog Technologies</h3>
       </div>
       {/* /Header Title */}
       <Link
@@ -213,8 +213,9 @@ const Header = (props) => {
             <span className="badge badge-pill">3</span>
           </Link>
           <div
-            className={`dropdown-menu dropdown-menu-end notifications ${notification ? "show" : ""
-              }`}
+            className={`dropdown-menu dropdown-menu-end notifications ${
+              notification ? "show" : ""
+            }`}
           >
             <div className="topnav-dropdown-header">
               <span className="notification-title">Notifications</span>
@@ -288,8 +289,9 @@ const Header = (props) => {
             <span className="badge badge-pill">8</span>
           </Link>
           <div
-            className={`dropdown-menu dropdown-menu-end notifications ${isOpen ? "show" : ""
-              }`}
+            className={`dropdown-menu dropdown-menu-end notifications ${
+              isOpen ? "show" : ""
+            }`}
           >
             <div className="topnav-dropdown-header">
               <span className="notification-title">Messages</span>
@@ -356,8 +358,9 @@ const Header = (props) => {
             <span>{ProfileName ? `${ProfileName}` : "Admin"}</span>
           </Link>
           <div
-            className={`dropdown-menu dropdown-menu-end ${profile ? "show" : ""
-              }`}
+            className={`dropdown-menu dropdown-menu-end ${
+              profile ? "show" : ""
+            }`}
           >
             <Link className="dropdown-item" to="/profile">
               My Profile
