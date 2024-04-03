@@ -6,5 +6,6 @@ export const routes = {
   subscription: "/subscriptions",
   bodyDetail: "/body-details",
   ptp: "/personal-training-programs",
-  event:"/events"
+  event:"/events",
+  payment:"/payments",
 };

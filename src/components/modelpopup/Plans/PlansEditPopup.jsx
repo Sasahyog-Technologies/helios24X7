@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 import request from "../../../sdk/functions";
 import Loading from "../../Loading";
 import { Refresh } from "../../../utils/refresh";
-const userDefaultValues = {
+const planDefaultValues = {
   title: "",
   price: "",
   duration: "",
@@ -13,15 +13,15 @@ const userDefaultValues = {
 };
 
 const PlanEditPopup = ({ planId }) => {
-  const [userLoading, setUserLoading] = useState(false);
+  const [planLoading, setplanLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   const { register, handleSubmit, reset } = useForm({
-    defaultValues: userDefaultValues,
+    defaultValues: planDefaultValues,
   });
   const { isLoading: userIsLoading, refetch } = useQuery({
     queryKey: ["plan-data"],
     queryFn: async () => {
-      setUserLoading(true);
+      setplanLoading(true);
       if (planId) {
         const res = await request.findOne("plan", planId);
         reset({
@@ -30,10 +30,10 @@ const PlanEditPopup = ({ planId }) => {
           duration: res.data.attributes.duration,
           desc: res.data.attributes.desc,
         });
-        setUserLoading(false);
+        setplanLoading(false);
         return res;
       }
-      reset(userDefaultValues);
+      reset(planDefaultValues);
       return null;
     },
   });
@@ -76,7 +76,7 @@ const PlanEditPopup = ({ planId }) => {
             </div>
 
             <div className="modal-body">
-              {userLoading ? (
+              {planLoading ? (
                 <>
                   <Loading />
                 </>

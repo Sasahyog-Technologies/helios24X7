@@ -2,66 +2,94 @@ import { useQuery } from "@tanstack/react-query";
 import { Table } from "antd";
 import { format } from "date-fns";
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Breadcrumbs from "../../../components/Breadcrumbs";
-import ClientListFilter from "../../../components/ClientListFilters";
-import ClientAddPopup from "../../../components/modelpopup/Client/ClientAddPopup";
+import PaymentListFilter from "../../../components/ClientListFilters";
 import ClientDeletePopup from "../../../components/modelpopup/Client/ClientDeletePopup";
-import ClientEditPopup from "../../../components/modelpopup/Client/ClientEditPopup";
+import PaymentDeletePopup from "../../../components/modelpopup/payment/DeletePaymentPopup";
 import request from "../../../sdk/functions";
+import PaymentEditPopup from "../../../components/modelpopup/payment/EditPaymentPopup";
 
-const ClientList = () => {
-  const [userId, setUserId] = useState(null);
+const PaymentList = () => {
+  const [paymentsId, setpaymentsId] = useState(null);
   const columns = [
     {
-      title: "First Name",
-      dataIndex: "firstname",
+      title: "User Name",
+      dataIndex: "username",
       render: (text, record) => (
-        <span className="w-100">
-          <Link to={`/owner/client-profile/${record.id}`}>{text}</Link>
+        <span className="w-100 text-capitalize">
+          {text}
+          {/*  <Link to={`/owner/client-profile/${record.id}`}>{text}</Link> */}
         </span>
       ),
     },
     {
-      title: "Last Name",
-      dataIndex: "lastname",
+      title: "Label",
+      dataIndex: "label",
       render: (text, record) => (
         <span className="table-avatar">
-          <Link to={`/owner/client-profile/${record.id}`}>
-            {text} <span>{record.role}</span>
-          </Link>
+          {text}
+          {/*     <Link to={`/owner/client-profile/${record.id}`}>
+            {text}
+          </Link> */}
         </span>
       ),
     },
 
     {
-      title: "Mobile",
-      dataIndex: "mobile",
+      title: "Subscription Type",
+      dataIndex: "subscriptionType",
       render: (text, record) => (
-        <span className="w-100">
-          <Link to={`/owner/client-profile/${record.id}`}>{text}</Link>
+        <span className="w-100 text-capitalize">
+          {text}
+          {/*    <Link to={`/owner/client-profile/${record.id}`}>{text}</Link> */}
         </span>
       ),
     },
 
     {
-      title: "Join Date",
-      dataIndex: "createdAt",
+      title: "Amount",
+      dataIndex: "amount",
       render: (text, record) => (
         <span>
-          <Link to={`/owner/client-profile/${record.id}`}>
+          {/*    <Link to={`/owner/client-profile/${record.id}`}>
             {" "}
             {format(new Date(text), "dd/MM/yyyy")}
-          </Link>
+          </Link> */}
+          {text}
         </span>
       ),
     },
     {
-      title: "Branch",
-      dataIndex: "branch",
+      title: "Payment Date",
+      dataIndex: "payment_date",
       render: (text, record) => (
         <span>
-          <Link to={`/owner/client-profile/${record.id}`}>{text?.name}</Link>
+          {format(new Date(text), "dd/MM/yyyy")}
+          {/*   <Link to={`/owner/client-profile/${record.id}`}>
+            {" "}
+            {format(new Date(text), "dd/MM/yyyy")}
+          </Link> */}
+        </span>
+      ),
+    },
+    {
+      title: "Status",
+      dataIndex: "status",
+      render: (text, record) => (
+        <span>
+          {/*    <Link to={`/owner/client-profile/${record.id}`}>{text?.name}</Link> */}
+          {text}
+        </span>
+      ),
+    },
+    {
+      title: "Outstanding",
+      dataIndex: "outstanding",
+      render: (text, record) => (
+        <span>
+          {/*    <Link to={`/owner/client-profile/${record.id}`}>{text?.name}</Link> */}
+          {text}
         </span>
       ),
     },
@@ -85,8 +113,8 @@ const ClientList = () => {
               className="dropdown-item"
               to="#"
               data-bs-toggle="modal"
-              data-bs-target="#edit_client"
-              onClick={() => setUserId(user.id)}
+              data-bs-target="#edit_payment"
+              onClick={() => setpaymentsId(user.id)}
             >
               <i className="fa fa-pencil m-r-5" /> Edit
             </Link>
@@ -94,8 +122,8 @@ const ClientList = () => {
               className="dropdown-item"
               to="#"
               data-bs-toggle="modal"
-              data-bs-target="#delete_client"
-              onClick={() => setUserId(user.id)}
+              data-bs-target="#delete_payment"
+              onClick={() => setpaymentsId(user.id)}
             >
               <i className="fa fa-trash m-r-5" /> Delete
             </Link>
@@ -119,27 +147,34 @@ const ClientList = () => {
   });
 
   const {
-    data: usersData,
-    isLoading: usersIsLoading,
+    data: paymentsData,
+    isLoading: paymentsIsLoading,
     refetch,
   } = useQuery({
-    queryKey: ["client-list"],
+    queryKey: ["payment-list"],
     queryFn: async () => {
-      const data = await request.findMany("users", {
-        populate: "branch",
-        //  "filters[id][$ne]": loggedinUserId,
-        filters: {
-          type: "client",
-        },
+      const data = await request.findMany("payment", {
+        populate: ["user", "subscription"],
       });
       setTableParams({
         ...tableParams,
         pagination: { ...tableParams.pagination, total: data.length },
       });
       // return formetter(data);
-      return data;
+      return data.data.map((itm) => {
+        return {
+          ...itm.attributes,
+          id: itm.id,
+          username: `${itm.attributes.user.data.attributes.firstname} ${itm.attributes.user.data.attributes.lastname}`,
+          subscriptionType: `${itm.attributes?.subscription?.data?.attributes?.type
+            ?.split("-")
+            .join(" ")}`,
+        };
+      });
     },
   });
+
+  //console.log(paymentsData);
 
   const handleTableChange = (pagination, filters, sorter) => {
     //console.log("handleTableChange");
@@ -162,24 +197,24 @@ const ClientList = () => {
         <div className="content container-fluid">
           {/* Page Header */}
           <Breadcrumbs
-            maintitle="Client"
+            maintitle="Payments"
             title="Dashboard"
-            subtitle="Client"
-            modal="#add_client"
-            name="Add Client"
-            Linkname="/client"
-            Linkname1="/client-list"
+            subtitle="Payments"
+            modal="#add_payment"
+            name="Add Payment"
+            Linkname="/payment"
+            Linkname1="/payment-list"
           />
           {/* /Page Header */}
-          <ClientListFilter query={query} setQuery={setQuery} />
+          <PaymentListFilter query={query} setQuery={setQuery} />
           <div className="row">
             <div className="col-md-12">
               <div className="table-responsive">
                 <Table
-                  loading={usersIsLoading}
+                  loading={paymentsIsLoading}
                   className="table-striped"
                   columns={columns}
-                  dataSource={usersData}
+                  dataSource={paymentsData}
                   pagination={{
                     total: tableParams.pagination.total,
                     showSizeChanger: true,
@@ -198,12 +233,12 @@ const ClientList = () => {
           </div>
         </div>
         {/* /Page Content */}
-        <ClientAddPopup refetch={refetch} />
-        <ClientEditPopup userId={userId} />
-        <ClientDeletePopup userId={userId} />
+
+        <PaymentDeletePopup paymentId={paymentsId}  />
+        <PaymentEditPopup paymentId={paymentsId} />
       </div>
     </div>
   );
 };
 
-export default ClientList;
+export default PaymentList;

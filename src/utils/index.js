@@ -33,4 +33,19 @@ const durationOptions = [
   { value: "24", label: "24" },
 ];
 
-export { paymentTypeOptions, durationOptions };
+const statusOptions = [
+  {
+    value: "success",
+    label: "Success",
+  },
+  {
+    value: "failed",
+    label: "Failed",
+  },
+  {
+    value: "pending",
+    label: "Pending",
+  },
+];
+
+export { paymentTypeOptions, durationOptions,statusOptions };

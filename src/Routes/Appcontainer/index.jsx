@@ -206,6 +206,7 @@ import EventsList from "../../views/pages/events/EventsList.jsx";
 import TrainerProfile from "../../views/pages/Trainer/TrainerProfile.jsx";
 import { useSession } from "../../Hook/useSession.jsx";
 import MyProfile from "../../views/pages/User/MyProfile.jsx";
+import PaymentList from "../../views/pages/payment/PaymentList.jsx";
 
 const AppContainer = () => {
   useEffect(() => {
@@ -1196,6 +1197,11 @@ const AppContainer = () => {
       id: 7,
       path: "membership-list",
       element: <MembershipList />,
+    },
+    {
+      id: 7,
+      path: "payment-list",
+      element: <PaymentList />,
     },
   ];
   const ClientRoutingObjects = [

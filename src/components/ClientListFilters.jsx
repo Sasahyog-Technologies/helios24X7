@@ -5,7 +5,7 @@ import Select from "react-select";
 const ClientListFilter = ({ query, setQuery }) => {
   // const [searchParams, setSearchParamsString] = useSearchParams();
 
-  const employee = [
+  const employee = [ 
     { value: 1, label: "Gadarwara" },
     { value: 2, label: "Kaudia" },
   ];
