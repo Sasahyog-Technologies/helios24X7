@@ -1,41 +1,35 @@
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import React, { useState } from "react";
+import { useForm } from "react-hook-form";
 import request from "../../../sdk/functions";
-import { Refresh } from "../../../utils/refresh";
+import { useQueryClient } from "@tanstack/react-query";
 
 const formDataDefaultValues = {
   title: "",
   price: "",
-  description: "",
   duration: "",
+  description: "",
 };
 
-const PlansAddPopup = ({refetch}) => {
+const PlansAddPopup = ({ refetch }) => {
   const [loading, setLoading] = useState(false);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
+  const { register, handleSubmit } = useForm({
     defaultValues: formDataDefaultValues,
   });
 
-  const onSubmit = async (dt) => {
+  const onSubmit = async ({ title, price, duration, description }) => {
     try {
       setLoading(true);
       await request.create("plan", {
         data: {
-          title: dt.title,
-          price: dt.price,
-          duration: dt.duration,
-          desc: dt.description,
+          title: title,
+          price: price,
+          desc: description,
+          duration: duration,
         },
       });
-      //document.getElementById("add_plan").modal("hide");
-      toast.success("plan created");
-      //Refresh()
+      refetch();
+      toast.success("Plan Created");
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);
@@ -53,15 +47,14 @@ const PlansAddPopup = ({refetch}) => {
               <h5 className="modal-title">Add Plan</h5>
               <button
                 type="button"
+                aria-label="Close"
                 className="btn-close"
                 data-bs-dismiss="modal"
-                aria-label="Close"
               >
                 <span aria-hidden="true">×</span>
               </button>
             </div>
             <div className="modal-body">
-              {/* {JSON.stringify(userInfo)} */}
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="row">
                   <div className="col-sm-6">
@@ -70,9 +63,9 @@ const PlansAddPopup = ({refetch}) => {
                         Title <span className="text-danger">*</span>
                       </label>
                       <input
-                        className="form-control"
-                        type="text"
                         required
+                        type="text"
+                        className="form-control"
                         {...register("title", {
                           required: "This input is required.",
                         })}
@@ -85,9 +78,9 @@ const PlansAddPopup = ({refetch}) => {
                         Price <span className="text-danger">*</span>
                       </label>
                       <input
-                        className="form-control"
-                        type="text"
                         required
+                        type="number"
+                        className="form-control"
                         {...register("price", { required: true })}
                       />
                     </div>
@@ -98,9 +91,9 @@ const PlansAddPopup = ({refetch}) => {
                         Duration <span className="text-danger">*</span>
                       </label>
                       <input
-                        className="form-control"
-                        type="text"
                         required
+                        type="number"
+                        className="form-control"
                         {...register("duration", { required: true })}
                       />
                     </div>
@@ -109,8 +102,8 @@ const PlansAddPopup = ({refetch}) => {
                     <div className="input-block mb-3">
                       <label className="col-form-label">Description</label>
                       <textarea
-                        className="form-control"
                         type="text"
+                        className="form-control"
                         {...register("description")}
                       />
                     </div>
@@ -119,13 +112,13 @@ const PlansAddPopup = ({refetch}) => {
 
                 <div className="submit-section">
                   <button
-                    className="btn btn-primary submit-btn"
-                    // data-bs-dismiss="modal"
-                    // aria-label="Close"
                     type="submit"
+                    aria-label="Close"
                     disabled={loading}
+                    data-bs-dismiss="modal"
+                    className="btn btn-primary submit-btn"
                   >
-                    {loading ? " Submit...." : " Submit"}
+                    {loading ? " Submitting..." : " Submit"}
                   </button>
                 </div>
               </form>
