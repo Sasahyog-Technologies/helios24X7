@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import notifications from "../../assets/json/notifications";
 import message from "../../assets/json/message";
+import {useSession} from "../../Hook/useSession"
 
 import {
   Applogo,
@@ -32,6 +33,9 @@ const Header = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [profile, setProfile] = useState(false);
   const [flagImage, setFlagImage] = useState(lnEnglish);
+  const {getUserDataToCookie,logoutHandler} = useSession()
+
+  const user = getUserDataToCookie()?.user
 
   const handlesidebar = () => {
     document.body.classList.toggle("mini-sidebar");
@@ -97,7 +101,7 @@ const Header = (props) => {
       {/* Logo */}
       <div className="header-left">
         <Link to="/admin-dashboard" className="logo">
-          <img src={hlogo}  alt="img" className="w-50 logo-image"  />
+          <img src={hlogo} alt="img" className="w-50 logo-image" />
         </Link>
         <Link to="/admin-dashboard" className="logo2">
           <img src={Applogo} width={40} height={40} alt="img" />
@@ -138,7 +142,7 @@ const Header = (props) => {
       {/* Header Menu */}
       <ul className="nav user-menu">
         {/* Search */}
-        <li className="nav-item">
+        {/*    <li className="nav-item">
           <div className="top-nav-search">
             <Link to="#" className="responsive-search">
               <i className="fa fa-search" />
@@ -154,11 +158,11 @@ const Header = (props) => {
               </button>
             </form>
           </div>
-        </li>
+        </li> */}
         {/* /Search */}
         {/* Flag */}
 
-        <li className="nav-item dropdown has-arrow flag-nav">
+        {/*   <li className="nav-item dropdown has-arrow flag-nav">
           <Link
             className="nav-link dropdown-toggle"
             data-bs-toggle="dropdown"
@@ -197,10 +201,10 @@ const Header = (props) => {
               <img src={lnGerman} alt="Flag" height="16" /> German
             </Link>
           </div>
-        </li>
+        </li> */}
         {/* /Flag */}
         {/* Notifications */}
-        <li className="nav-item dropdown">
+    {/*     <li className="nav-item dropdown">
           <Link
             to="#"
             className="dropdown-toggle nav-link"
@@ -273,10 +277,10 @@ const Header = (props) => {
               </Link>
             </div>
           </div>
-        </li>
+        </li> */}
         {/* /Notifications */}
         {/* Message Notifications */}
-        <li className={`nav-item dropdown ${isOpen ? "show" : ""}`}>
+      {/*   <li className={`nav-item dropdown ${isOpen ? "show" : ""}`}>
           <Link
             to="#"
             className="dropdown-toggle nav-link"
@@ -341,7 +345,7 @@ const Header = (props) => {
               </Link>
             </div>
           </div>
-        </li>
+        </li> */}
         {/* /Message Notifications */}
         <li className="nav-item dropdown has-arrow main-drop">
           <Link
@@ -355,22 +359,22 @@ const Header = (props) => {
               <img src={Avatar_02} alt="img" />
               <span className="status online" />
             </span>
-            <span>{ProfileName ? `${ProfileName}` : "Admin"}</span>
+            <span className="text-capitalize">{user?.type}</span>
           </Link>
           <div
             className={`dropdown-menu dropdown-menu-end ${
               profile ? "show" : ""
             }`}
           >
-            <Link className="dropdown-item" to="/profile">
+            <Link className="dropdown-item" to="/client/my-profile">
               My Profile
             </Link>
-            <Link className="dropdown-item" to="/settings/companysetting">
+         {/*    <Link className="dropdown-item" to="/settings/companysetting">
               Settings
-            </Link>
-            <Link className="dropdown-item" to="/">
+            </Link> */}
+            <button className="dropdown-item btn" onClick={logoutHandler} >
               Logout
-            </Link>
+            </button>
           </div>
         </li>
       </ul>
@@ -386,15 +390,15 @@ const Header = (props) => {
           <i className="fa fa-ellipsis-v" />
         </Link>
         <div className="dropdown-menu dropdown-menu-end dropdown-menu-right">
-          <Link className="dropdown-item" to="/profile">
+          <Link className="dropdown-item" to="/client/my-profile">
             My Profile
           </Link>
-          <Link className="dropdown-item" to="/settings/companysetting">
+      {/*     <Link className="dropdown-item" to="/settings/companysetting">
             Settings
-          </Link>
-          <Link className="dropdown-item" to="/login">
+          </Link> */}
+          <button className="dropdown-item btn" onClick={logoutHandler}>
             Logout
-          </Link>
+          </button>
         </div>
       </div>
       {/* /Mobile Menu */}
