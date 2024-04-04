@@ -31,7 +31,7 @@ export const SidebarData = [
             route: "/owner/event-list",
           },
           {
-            menuValue: "Subscriptions & Invoices",
+            menuValue: "Subscriptions",
             route: "/owner/membership-list",
           },
           {

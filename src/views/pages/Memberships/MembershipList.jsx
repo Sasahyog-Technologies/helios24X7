@@ -6,14 +6,18 @@ import Breadcrumbs from "../../../components/Breadcrumbs";
 import MembershipListFilter from "../../../components/ClientListFilters";
 import { useSession } from "../../../Hook/useSession";
 import request from "../../../sdk/functions";
+import { Link } from "react-router-dom";
+import MembershipDeletePopup from "../../../components/modelpopup/Membership/DeleteMembershipPopup";
+import MembershipEditPopup from "../../../components/modelpopup/Membership/EditMembershipPopup";
 
 const MembershipList = () => {
-  const [userId, setUserId] = useState(null);
+  const [subscriptionId, setsubscriptionId] = useState(null);
 
   const columns = [
     {
       title: "Full Name",
       dataIndex: "fullname",
+      render: (text, record) => <span className="text-capitalize">{text}</span>,
     },
 
     {
@@ -48,11 +52,22 @@ const MembershipList = () => {
       dataIndex: "plan",
     },
     {
+      title: "Status",
+      dataIndex: "status",
+    },
+    {
       title: "Payment Type",
       dataIndex: "payment_type",
     },
+    {
+      title: "Subscription Type",
+      dataIndex: "type",
+      render: (text, record) => (
+        <span className="text-capitalize">{text?.split("-").join(" ")}</span>
+      ),
+    },
 
-    /*  {
+    {
       title: "Action",
       render: (user) => (
         <div className="dropdown dropdown-action text-end">
@@ -70,8 +85,8 @@ const MembershipList = () => {
               className="dropdown-item"
               to="#"
               data-bs-toggle="modal"
-              data-bs-target="#edit_client"
-              onClick={() => setUserId(user.id)}
+              data-bs-target="#edit_subscription"
+              onClick={() => setsubscriptionId(user.id)}
             >
               <i className="fa fa-pencil m-r-5" /> Edit
             </Link>
@@ -79,15 +94,15 @@ const MembershipList = () => {
               className="dropdown-item"
               to="#"
               data-bs-toggle="modal"
-              data-bs-target="#delete_client"
-              onClick={() => setUserId(user.id)}
+              data-bs-target="#delete_subscription"
+              onClick={() => setsubscriptionId(user.id)}
             >
               <i className="fa fa-trash m-r-5" /> Delete
             </Link>
           </div>
         </div>
       ),
-    }, */
+    },
   ];
 
   const [tableParams, setTableParams] = useState({
@@ -185,8 +200,10 @@ const MembershipList = () => {
         </div>
         {/* /Page Content */}
         {/*      <ClientAddPopup />
-        <ClientEditPopup userId={userId} />
-        <ClientDeletePopup userId={userId} /> */}
+        <ClientEditPopup subscriptionId={subscriptionId} />
+        <ClientDeletePopup subscriptionId={subscriptionId} /> */}
+        <MembershipDeletePopup membershipId={subscriptionId} />
+        <MembershipEditPopup membershipId={subscriptionId} />
       </div>
     </div>
   );

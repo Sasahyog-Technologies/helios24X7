@@ -1180,7 +1180,7 @@ const AppContainer = () => {
     },
     {
       id: 4,
-      path: "trainer-list",
+    path: "trainer-list",
       element: <TrainerList />,
     },
     {

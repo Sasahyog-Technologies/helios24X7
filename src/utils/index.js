@@ -33,7 +33,7 @@ const durationOptions = [
   { value: "24", label: "24" },
 ];
 
-const statusOptions = [
+const payementStatusOptions = [
   {
     value: "success",
     label: "Success",
@@ -48,4 +48,23 @@ const statusOptions = [
   },
 ];
 
-export { paymentTypeOptions, durationOptions,statusOptions };
+const subscriptionStatusOptions = [
+  {
+    value: "active",
+    label: "Active",
+  },
+  {
+    value: "expired",
+    label: "Expired",
+  },
+  {
+    value: "inactive",
+    label: "Inactive",
+  },
+  {
+    value: "cancelled",
+    label: "Cancelled",
+  },
+]
+
+export { paymentTypeOptions, durationOptions,payementStatusOptions,subscriptionStatusOptions};

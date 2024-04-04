@@ -7,60 +7,63 @@ import Loading from "../../Loading";
 import { Refresh } from "../../../utils/refresh";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
-import { payementStatusOptions } from "../../../utils";
-
-const paymentDefaultValues = {
+import { subscriptionStatusOptions } from "../../../utils";
+const membershipDefaultValues = {
   username: "",
   subscription_type: "",
   label: "",
-  amount: "",
+  paid: "",
   status: "",
   outstanding: "",
+  plan: "",
+  payment_type: "",
 };
 
-const PaymentEditPopup = ({ paymentId }) => {
-  const [paymentLoading, setpaymentLoading] = useState(false);
+const MembershipEditPopup = ({ membershipId }) => {
+  const [membershipLoading, setmembershipLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
-  const [paymentDate, setPaymentDate] = useState(null);
+  const [startDate, setStartDate] = useState(null);
+  const [endDate, setEndDate] = useState(null);
   const { register, handleSubmit, reset, control, setValue } = useForm({
-    defaultValues: paymentDefaultValues,
+    defaultValues: membershipDefaultValues,
   });
-  const { data: paymentData, refetch } = useQuery({
-    queryKey: ["payment-data"],
+  const { data: membershipData, refetch } = useQuery({
+    queryKey: ["membership-data"],
     queryFn: async () => {
-      setpaymentLoading(true);
-      if (paymentId) {
-        const res = await request.findOne("payment", paymentId, {
-          populate: ["user", "subscription"],
+      setmembershipLoading(true);
+      if (membershipId) {
+        const res = await request.findOne("subscription", membershipId, {
+          populate: ["user", "plan"],
         });
         reset({
-          amount: res.data.attributes.amount,
+          paid: res.data.attributes.paid,
           status: res.data.attributes.status,
           outstanding: res.data.attributes.outstanding,
           label: res.data.attributes.label,
           username: `${res.data.attributes.user.data.attributes.firstname} ${res.data.attributes.user.data.attributes.lastname}`,
-          subscription_type: `${res.data.attributes?.subscription?.data?.attributes?.type
-            ?.split("-")
-            .join(" ")}`,
+          subscription_type: res.data.attributes.type,
+          payment_type: res.data.attributes.payment_type,
+          plan: res.data.attributes.plan.data.attributes.title,
         });
-        setPaymentDate(res.data.attributes.payment_date);
-        setpaymentLoading(false);
+        setStartDate(res.data.attributes.start);
+        setEndDate(res.data.attributes.end);
+        setmembershipLoading(false);
         return res.data;
       }
-      reset(paymentDefaultValues);
+      reset(membershipDefaultValues);
       return null;
     },
   });
-  console.log(paymentData);
+  console.log(membershipData);
 
   const onSubmit = async (dt) => {
     setSubmitLoading(true);
-    const { outstanding, status } = dt;
+    const { outstanding, status, paid } = dt;
     try {
-      await request.update("payment", paymentId, {
-        data: { outstanding, status },
+      await request.update("subscription", membershipId, {
+        data: { outstanding, status, paid },
       });
-      toast.success("Payment updated");
+      toast.success("membership updated");
       Refresh();
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
@@ -72,15 +75,19 @@ const PaymentEditPopup = ({ paymentId }) => {
 
   useEffect(() => {
     refetch();
-  }, [paymentId, refetch, reset]);
+  }, [membershipId, refetch, reset]);
 
   return (
     <>
-      <div id="edit_payment" className="modal custom-modal fade" role="dialog">
+      <div
+        id="edit_subscription"
+        className="modal custom-modal fade"
+        role="dialog"
+      >
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">Edit Payment</h5>
+              <h5 className="modal-title">Edit membership</h5>
               <button
                 type="button"
                 className="btn-close"
@@ -92,7 +99,7 @@ const PaymentEditPopup = ({ paymentId }) => {
             </div>
 
             <div className="modal-body">
-              {paymentLoading ? (
+              {membershipLoading ? (
                 <>
                   <Loading />
                 </>
@@ -119,14 +126,14 @@ const PaymentEditPopup = ({ paymentId }) => {
                       <div className="col-sm-6">
                         <div className="input-block mb-3">
                           <label className="col-form-label">
-                            Label <span className="text-danger">*</span>
+                            Plan <span className="text-danger">*</span>
                           </label>
                           <input
                             className="form-control"
                             type="text"
                             required
                             disabled
-                            {...register("label", {
+                            {...register("plan", {
                               required: "This input is required.",
                             })}
                           />
@@ -152,11 +159,29 @@ const PaymentEditPopup = ({ paymentId }) => {
                       <div className="col-sm-6">
                         <div className="input-block mb-3">
                           <label className="col-form-label">
-                            Payment Date <span className="text-danger">*</span>
+                            Payment Type
+                            <span className="text-danger">*</span>
+                          </label>
+                          <input
+                            className="form-control"
+                            type="text"
+                            required
+                            disabled
+                            {...register("payment_type", {
+                              required: "This input is required.",
+                            })}
+                          />
+                        </div>
+                      </div>
+                      <div className="col-sm-6">
+                        <div className="input-block mb-3">
+                          <label className="col-form-label">
+                            Start Date
+                            <span className="text-danger">*</span>
                           </label>
                           <div className="cal-icon">
                             <DatePicker
-                              selected={paymentDate}
+                              selected={startDate}
                               //     onChange={(date) => setBirthDate(date)}
                               className="form-control floating datetimepicker"
                               type="date"
@@ -170,14 +195,32 @@ const PaymentEditPopup = ({ paymentId }) => {
                       <div className="col-sm-6">
                         <div className="input-block mb-3">
                           <label className="col-form-label">
-                            Amount <span className="text-danger">*</span>
+                            End Date
+                            <span className="text-danger">*</span>
+                          </label>
+                          <div className="cal-icon">
+                            <DatePicker
+                              selected={endDate}
+                              //     onChange={(date) => setBirthDate(date)}
+                              className="form-control floating datetimepicker"
+                              type="date"
+                              required={true}
+                              disabled
+                              dateFormat="dd-MM-yyyy"
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="col-sm-6">
+                        <div className="input-block mb-3">
+                          <label className="col-form-label">
+                            Paid <span className="text-danger">*</span>
                           </label>
                           <input
                             className="form-control"
                             type="text"
                             required
-                            disabled
-                            {...register("amount", { required: true })}
+                            {...register("paid", { required: true })}
                           />
                         </div>
                       </div>
@@ -201,15 +244,17 @@ const PaymentEditPopup = ({ paymentId }) => {
                             control={control}
                             render={({ onChange, value, ref }) => (
                               <Select
-                                options={payementStatusOptions}
-                                placeholder={paymentData?.attributes?.status}
-                                value={payementStatusOptions.find(
+                                options={subscriptionStatusOptions}
+                                placeholder={membershipData?.attributes?.status}
+                                value={subscriptionStatusOptions.find(
                                   (c) => c.value === value
                                 )}
                                 onChange={(val) =>
                                   setValue("status", val.value)
                                 }
-                                defaultValue={paymentData?.attributes?.status}
+                                defaultValue={
+                                  membershipData?.attributes?.status
+                                }
                               />
                             )}
                           />
@@ -239,4 +284,4 @@ const PaymentEditPopup = ({ paymentId }) => {
   );
 };
 
-export default PaymentEditPopup;
+export default MembershipEditPopup;
