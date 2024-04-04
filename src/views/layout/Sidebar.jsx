@@ -7,27 +7,32 @@ import Scrollbars from "react-custom-scrollbars-2";
 import { useTranslation } from "react-i18next";
 // import { withRouter } from "react-router-dom";
 import { Link, useLocation } from "react-router-dom";
-import { SidebarData } from "./sidebardata";
-import * as Icon from 'react-feather';
-
+import { useSession } from "../../Hook/useSession";
+import {
+  sidebarDefaultData,
+  sidebarOwnerData,
+  sidebarTrainerData,
+  sidebarUserData
+} from "./sidebarDataHelios";
 
 const Sidebar = () => {
   const location = useLocation();
   // const pathname = location.pathname.split("/")[1];
+  const { getUserDataToCookie } = useSession();
+  const user = getUserDataToCookie()?.user;
   const pathname = location.pathname;
-  // console.log("pageurl", pathname);
+  
 
-  const [sidebarData, setSidebarData] = useState(SidebarData); 
+  //const [sidebarData, setSidebarData] = useState(SidebarData);
+  const [sidebarData, setSidebarData] = useState([]);
   const [isSidebarExpanded, setSidebarExpanded] = useState(false);
   const [isMouseOverSidebar, setMouseOverSidebar] = useState(false);
-  const [submenuDrop ,setSubmenudrop,] = useState(false);
+  const [submenuDrop, setSubmenudrop] = useState(false);
 
   const [isSideMenu, setSideMenu] = useState("");
   const [level2Menu, setLevel2Menu] = useState("");
   const [level3Menu, setLevel3Menu] = useState("");
   const [isSideMenunew, setSideMenuNew] = useState("dashboard");
-
-  
 
   useEffect(() => {
     if (
@@ -40,8 +45,18 @@ const Sidebar = () => {
     document.body.classList.remove("expand-menu");
   }, [isMouseOverSidebar]);
 
-
-  
+  /*  insert sidebar owner data if owner is logged in */
+  useEffect(() => {
+    if (user?.type === "owner") {
+      setSidebarData([...sidebarData, sidebarOwnerData]);
+    } else if (user?.type === "client") {
+      setSidebarData([...sidebarData, sidebarUserData]);
+    } else if (user?.type === "trainer") {
+      setSidebarData([...sidebarData, sidebarTrainerData]);
+    } else {
+      setSidebarData([sidebarDefaultData]);
+    }
+  }, []);
 
   const handleMouseEnter = () => {
     setMouseOverSidebar(true);
@@ -52,9 +67,8 @@ const Sidebar = () => {
   };
   const { t } = useTranslation();
 
-
   const expandSubMenus = (menu) => {
-    sessionStorage.setItem('menuValue', menu.menuValue);
+    sessionStorage.setItem("menuValue", menu.menuValue);
     const updatedAdminSidebar = sidebarData.map((section) => {
       const updatedSection = { ...section };
       updatedSection.menu = section.menu.map((menuItem) =>
@@ -66,7 +80,7 @@ const Sidebar = () => {
           : {
               ...menuItem,
               showSubRoute: !menu.showSubRoute,
-            },
+            }
       );
       return updatedSection;
     });
@@ -75,18 +89,15 @@ const Sidebar = () => {
 
   const activeRouterPath = (routesArray) => {
     return (routesArray = Location.pathname);
-
   };
-
 
   const activeRouterMenu = (menu) => {
     return Location.pathname.includes(menu.toLowerCase());
   };
-  
-  const arrowDrop=()=>{
-    setSubmenudrop(!submenuDrop);
-  }
 
+  const arrowDrop = () => {
+    setSubmenudrop(!submenuDrop);
+  };
 
   const toggleSidebar = (value) => {
     setSideMenu(value);
@@ -100,7 +111,6 @@ const Sidebar = () => {
     setLevel3Menu(value);
   };
 
-
   const MenuMore = () => {
     document.getElementById("more-menu-hidden").classList.toggle("hidden");
   };
@@ -112,10 +122,9 @@ const Sidebar = () => {
       onMouseLeave={handleMouseLeave}
     >
       <div className="sidebar-inner slimscroll" style={{ overflow: false }}>
-        <div id="sidebar-menu" className="sidebar-menu">  
-        <nav className="greedys sidebar-horizantal" id="horizantal-sidebar">
-
-        <ul className="list-inline-item list-unstyled links">
+        <div id="sidebar-menu" className="sidebar-menu">
+          <nav className="greedys sidebar-horizantal" id="horizantal-sidebar">
+            <ul className="list-inline-item list-unstyled links">
               <li className="menu-title">
                 <span> {t("main")}</span>
               </li>
@@ -163,9 +172,7 @@ const Sidebar = () => {
                     <li>
                       <Link
                         className={
-                          pathname.includes("deals-dashboard")
-                            ? "active"
-                            : ""
+                          pathname.includes("deals-dashboard") ? "active" : ""
                         }
                         to="/deals-dashboard"
                       >
@@ -175,9 +182,7 @@ const Sidebar = () => {
                     <li>
                       <Link
                         className={
-                          pathname.includes("leads-dashboard")
-                            ? "active"
-                            : ""
+                          pathname.includes("leads-dashboard") ? "active" : ""
                         }
                         to="/leads-dashboard"
                       >
@@ -564,9 +569,7 @@ const Sidebar = () => {
                     </li>
                     <li>
                       <Link
-                        className={
-                          pathname.includes("deals") ? "active" : ""
-                        }
+                        className={pathname.includes("deals") ? "active" : ""}
                         to="/deals"
                       >
                         {t("Deals")}
@@ -574,9 +577,7 @@ const Sidebar = () => {
                     </li>
                     <li>
                       <Link
-                        className={
-                          pathname.includes("leads") ? "active" : ""
-                        }
+                        className={pathname.includes("leads") ? "active" : ""}
                         to="/leads"
                       >
                         {t("Leads")}
@@ -608,7 +609,7 @@ const Sidebar = () => {
                   ""
                 )}
               </li>
-             
+
               <li
                 className={
                   pathname.includes("tickets")
@@ -1756,7 +1757,7 @@ const Sidebar = () => {
                 )}
               </li>
             </ul>
-          </nav>     
+          </nav>
           <Scrollbars
             autoHide={false}
             autoHideTimeout={1000}
@@ -1768,138 +1769,148 @@ const Sidebar = () => {
             universal={false}
             hideTracksWhenNotNeeded={true}
           >
-         <ul className="sidebar-vertical" id="veritical-sidebar"> 
-         
+            <ul className="sidebar-vertical" id="veritical-sidebar">
               {sidebarData.map((mainTittle, index) => {
                 return (
                   <>
                     <li className="menu-title" key={index + 1}>
-
                       <span>{t(mainTittle.tittle)}</span>
                       {mainTittle?.tittle === "CRM" ? (
-                        <small class="newly-added-features">New</small>):("")
-                      }
+                        <small class="newly-added-features">New</small>
+                      ) : (
+                        ""
+                      )}
                     </li>
-                    {mainTittle.menu.map(
-                      (menu, menuIndex) => {
-                        return (
-                          <>
-                            {menu.hasSubRoute === false ? (
-                              <li key={menuIndex + 1}  className={pathname == menu.route ? "active" : ""}>
-                                <Link
-                                  to={menu.route}
-                                 
-                                >
-                                  {/* {menu.icon} */}
-                                  <i className={menu?.icon}/>
-                                   <span>{t(menu.menuValue)}</span>
-                                </Link>
-                              </li>
-                            ) : (
-                              <li className="submenu">
-                                <Link
-                                  to="#"
-                                  onClick={() => expandSubMenus(menu)}
-                                  
+                    {mainTittle.menu.map((menu, menuIndex) => {
+                      return (
+                        <>
+                          {menu.hasSubRoute === false ? (
+                            <li
+                              key={menuIndex + 1}
+                              className={pathname == menu.route ? "active" : ""}
+                            >
+                              <Link to={menu.route}>
+                                {/* {menu.icon} */}
+                                <i className={menu?.icon} />
+                                <span>{t(menu.menuValue)}</span>
+                              </Link>
+                            </li>
+                          ) : (
+                            <li className="submenu">
+                              <Link
+                                to="#"
+                                onClick={() => expandSubMenus(menu)}
+                                className={menu.showSubRoute ? "subdrop" : ""}
+                              >
+                                <i className={menu?.icon} />
+                                <span
                                   className={
-                                    menu.showSubRoute  ? 'subdrop' : ''
-                                  } 
+                                    menu?.menuValue == "Employees"
+                                      ? "noti-dot"
+                                      : ""
+                                  }
                                 >
-                                 
-                                  <i className={menu?.icon}/>
-                                  <span className={menu?.menuValue == "Employees" ? "noti-dot" : ""}>{t(menu.menuValue)}</span>
-                                  <span className="menu-arrow">
-                                  
-                                  </span>
-                                </Link>
-                                <ul
-                                  style={{
-                                    display: menu.showSubRoute
-                                      ? 'block'
-                                      : 'none',
-                                  }}
-                                >
-                                  {menu.subMenus.map(
-                                    (
-                                      subMenus,
-                                      subMenu,
-                                    ) => {
-                                      return (
-                                        <>
-                                      
+                                  {t(menu.menuValue)}
+                                </span>
+                                <span className="menu-arrow"></span>
+                              </Link>
+                              <ul
+                                style={{
+                                  display: menu.showSubRoute ? "block" : "none",
+                                }}
+                              >
+                                {menu.subMenus.map((subMenus, subMenu) => {
+                                  return (
+                                    <>
                                       {/* {console.log(subMenus?.showMenuRoute)} */}
                                       {subMenus?.showMenuRoute === true ? (
-                                          <li key={subMenu + 1}>
-                                            <Link
-                                              to={subMenus.route}
-                                            
-
-                                              className={submenuDrop ? "subdrop":""}
-                                              onClick={arrowDrop}
-                                              
-                                            >
-                                              {t(subMenus.menuValue)}
-                                              <span className="menu-arrow" ></span>
-                                            </Link>
-
-                                            <ul style={{display: submenuDrop ? "block":"none"}}>
-                                              {subMenus?.subMenusValues?.map((value,index)=>{
-                                                return(
-                                            <li key={index}>
-                                              <span>
-                                            <Link to={value.route}><span>{t(value.menuValue)} </span></Link>
-                                            </span>
-                                            </li>)})
-                                      }
-                                      </ul>
-                                               </li>) :(
-                                                                                      
-                                              <li key={subMenu + 1}>
-                                              <Link
-                                                to={subMenus.route}
-                                                
-                                                className={pathname== subMenus?.route ? "active" : ""}
-                                              >
-                                                {t(subMenus.menuValue)}
-                                              </Link>
-                                              
-                                              <ul>
-                                              {subMenus?.subMenusValues?.map((value,index)=>{
-                                                return(
-                                            <li key={index}>
-
-                                            <Link to={value.route} className={pathname== value?.route ? "active" : ""}
-                                                >{t(value.menuValue)}</Link>
-                                            </li>)})
+                                        <li key={subMenu + 1}>
+                                          <Link
+                                            to={subMenus.route}
+                                            className={
+                                              submenuDrop ? "subdrop" : ""
                                             }
-                                            </ul>
-                                            </li>
-                                          )
+                                            onClick={arrowDrop}
+                                          >
+                                            {t(subMenus.menuValue)}
+                                            <span className="menu-arrow"></span>
+                                          </Link>
 
-                                    }
+                                          <ul
+                                            style={{
+                                              display: submenuDrop
+                                                ? "block"
+                                                : "none",
+                                            }}
+                                          >
+                                            {subMenus?.subMenusValues?.map(
+                                              (value, index) => {
+                                                return (
+                                                  <li key={index}>
+                                                    <span>
+                                                      <Link to={value.route}>
+                                                        <span>
+                                                          {t(value.menuValue)}{" "}
+                                                        </span>
+                                                      </Link>
+                                                    </span>
+                                                  </li>
+                                                );
+                                              }
+                                            )}
+                                          </ul>
+                                        </li>
+                                      ) : (
+                                        <li key={subMenu + 1}>
+                                          <Link
+                                            to={subMenus.route}
+                                            className={
+                                              pathname == subMenus?.route
+                                                ? "active"
+                                                : ""
+                                            }
+                                          >
+                                            {t(subMenus.menuValue)}
+                                          </Link>
 
-                                          
-                                        </>
-                                      );
-                                    },
-                                  )}
-                                </ul>
-                              </li>
-                            )}
-                          </>
-                        );
-                      },
-                    )}
+                                          <ul>
+                                            {subMenus?.subMenusValues?.map(
+                                              (value, index) => {
+                                                return (
+                                                  <li key={index}>
+                                                    <Link
+                                                      to={value.route}
+                                                      className={
+                                                        pathname == value?.route
+                                                          ? "active"
+                                                          : ""
+                                                      }
+                                                    >
+                                                      {t(value.menuValue)}
+                                                    </Link>
+                                                  </li>
+                                                );
+                                              }
+                                            )}
+                                          </ul>
+                                        </li>
+                                      )}
+                                    </>
+                                  );
+                                })}
+                              </ul>
+                            </li>
+                          )}
+                        </>
+                      );
+                    })}
                   </>
                 );
               })}
             </ul>
-
           </Scrollbars>
         </div>
       </div>
-
-    
 
       <div className="two-col-bar" id="two-col-bar">
         <div className="sidebar sidebar-twocol">
@@ -3031,23 +3042,25 @@ const Sidebar = () => {
                 >
                   <p>CRM</p>
                   <ul>
-                    <li className={pathname.includes("contact-list") ? "active" : ""}>
+                    <li
+                      className={
+                        pathname.includes("contact-list") ? "active" : ""
+                      }
+                    >
                       <Link to="/contact-list">
-                       
                         <span>{t("Contacts")}</span>
                       </Link>
                     </li>
-                    <li className={pathname.includes("companies") ? "active" : ""}>
+                    <li
+                      className={pathname.includes("companies") ? "active" : ""}
+                    >
                       <Link to="/companies">
-                       
                         <span>{t("Companies")}</span>
                       </Link>
                     </li>
                     <li>
                       <Link
-                        className={
-                          pathname.includes("deals") ? "active" : ""
-                        }
+                        className={pathname.includes("deals") ? "active" : ""}
                         to="/deals"
                       >
                         {t("Deals")}
@@ -3055,9 +3068,7 @@ const Sidebar = () => {
                     </li>
                     <li>
                       <Link
-                        className={
-                          pathname.includes("leads") ? "active" : ""
-                        }
+                        className={pathname.includes("leads") ? "active" : ""}
                         to="/leads"
                       >
                         {t("Leads")}
@@ -3083,8 +3094,6 @@ const Sidebar = () => {
                         {t("Analytics")}
                       </Link>
                     </li>
-
-
                   </ul>
                 </div>
               ) : (
@@ -4314,7 +4323,6 @@ const Sidebar = () => {
           </div>
         </div>
       </div>
-
     </div>
   );
 };
