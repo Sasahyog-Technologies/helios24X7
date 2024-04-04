@@ -6,9 +6,8 @@ import toast from "react-hot-toast";
 import Select from "react-select";
 import request from "../../../sdk/functions";
 import { Refresh } from "../../../utils/refresh";
-import { paymentTypeOptions } from "../../../utils";
+import { AvatarImageSize, paymentTypeOptions } from "../../../utils";
 import CropperModal from "../ImageModal/AvatarCropModal";
- 
 
 function generatePassword(length = 8) {
   const charset =
@@ -143,6 +142,17 @@ const ClientAddPopup = ({ refetch }) => {
 
   /* avatar change handler */
   const handleAvatarChange = (e) => {
+    console.log(e.target.files[0]);
+    if (e.target.files[0].size > AvatarImageSize) {
+      toast.error("File is too big!");
+      e.target.value = "";
+      return;
+    }
+    if (!e.target.files[0].type.includes("image/")) {
+      toast.error("You can choose only image");
+      e.target.value = "";
+      return;
+    }
     setAvatarSrc(URL.createObjectURL(e.target.files[0]));
     setCropModalOpen(true);
   };
@@ -399,13 +409,22 @@ const ClientAddPopup = ({ refetch }) => {
                         <input
                           className="form-control"
                           type="file"
+                          accept="image/*"
                           onChange={handleAvatarChange}
                         />
                       )}
                     </div>
                   </div>
 
-                  {avatarSrc && !cropModalOpen ? <img src={avatarSrc} alt="" className="w-25 h-25 rounded-circle" /> : ""}
+                  {avatarSrc && !cropModalOpen ? (
+                    <img
+                      src={avatarSrc}
+                      alt=""
+                      className="w-25 h-25 rounded-circle"
+                    />
+                  ) : (
+                    ""
+                  )}
 
                   {/* body details  */}
 

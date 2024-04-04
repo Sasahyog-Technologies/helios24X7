@@ -67,4 +67,6 @@ const subscriptionStatusOptions = [
   },
 ]
 
-export { paymentTypeOptions, durationOptions,payementStatusOptions,subscriptionStatusOptions};
+const AvatarImageSize = 100000;
+
+export { paymentTypeOptions, durationOptions,payementStatusOptions,subscriptionStatusOptions,AvatarImageSize};
