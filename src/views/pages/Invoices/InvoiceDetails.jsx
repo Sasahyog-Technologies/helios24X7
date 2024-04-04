@@ -1,84 +1,25 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 import Loading from "../../../components/Loading";
 import request from "../../../sdk/functions";
-import ClientProfileTab from "./ClientProfileTap";
-import AttendenceClient from "./ClientAttendence";
+import InvoiceDetailsTab from "./InvoiceDetailsTab";
 
-const ClientProfile = () => {
+const InvoiceDetials = () => {
   const path = window.location.pathname;
-  const userId = path.split("/")[path.split("/").length - 1];
- 
-  const { data: clientData, isLoading: userLoading } = useQuery({
-    queryKey: ["client-profile-data"],
+  const invoiceId = path.split("/")[path.split("/").length - 1];
+
+  const { data: invoiceData, isLoading: invoiceLoading } = useQuery({
+    queryKey: ["invoice-data"],
     queryFn: async () => {
-      if (userId) {
-        const data = await request.findOne("users", userId, {
-          populate: [
-            "branch",
-            "body_detail",
-            "subscription",
-            "subscription.plan",
-          ],
+      if (invoiceId) {
+        const data = await request.findOne("invoice", invoiceId, {
+          populate: ["user", "payment", "subscription", "subscription.plan"],
         });
-        return data;
-      }
-      return null;
-    },
-  });
-  const { data: clientSubscriptionData, isLoading: subscriptionLoading } =
-    useQuery({
-      queryKey: ["client-subscription-data"],
-      queryFn: async () => {
-        if (userId) {
-          const data = await request.findMany("subscription", {
-            populate: "plan",
-            filters: {
-              user: userId,
-              type: "gym-subscription",
-              end: {
-                $gte: new Date().toISOString(),
-              },
-            },
-            sort: "id:desc",
-          });
-          return data.data.map((item) => {
-            return {
-              ...item?.attributes,
-              id: item?.id,
-            };
-          });
-        }
-        return null;
-      },
-    });
-  const { data: clientPTPData, isLoading: isPtpLoading } = useQuery({
-    queryKey: ["client-ptp-data"],
-    queryFn: async () => {
-      if (userId) {
-        const data = await request.findMany("ptp", {
-          populate: {
-            subscription: {
-              sort: ["id:desc"],
-              filters: {
-                end: {
-                  $gte: new Date().toISOString(),
-                },
-              },
-            },
-            trainer: {
-              sort: ["id:desc"],
-            },
-          },
-          filters: {
-            trainee: userId,
-          },
-        });
-        return data.data.map((item) => {
+        return data.data.attributes; /* .map((item) => {
           return {
             ...item?.attributes,
             id: item?.id,
@@ -89,29 +30,30 @@ const ClientProfile = () => {
               };
             }),
           };
-        });
+        }); */
       }
       return null;
     },
   });
 
-  // console.log(clientPTPData);
+  // console.log(invoiceData);
+
   return (
     <>
       <div className="page-wrapper">
         <div className="content container-fluid">
           <Breadcrumbs
-            maintitle="Profile"
+            maintitle="Invoice"
             title="Dashboard"
-            subtitle="Client"
+            subtitle="Details"
           />
-          {userLoading ? (
+          {invoiceLoading ? (
             <>
               <Loading />
             </>
           ) : (
             <>
-              {clientData ? (
+              {invoiceData ? (
                 <>
                   <div className="card mb-0">
                     <div className="card-body">
@@ -120,36 +62,48 @@ const ClientProfile = () => {
                           <div className="profile-view">
                             <div className="profile-img-wrap">
                               <div className="profile-img text-uppercase bg-info rounded-circle d-flex justify-content-center align-items-center display-3">
-                                {`${clientData.firstname.split("")[0]}`}
+                                {`${
+                                  invoiceData?.user?.data?.attributes?.firstname?.split(
+                                    ""
+                                  )[0]
+                                }`}
                               </div>
                             </div>
                             <div className="profile-basic">
                               <div className="row d-flex justify-content-center align-items-center">
                                 <div className="col-md-5">
                                   <div className="profile-info-left">
-                                    <h3 className="user-name m-t-0 mb-0 text-capitalize">
-                                      {clientData.firstname}{" "}
-                                      {clientData.lastname}
+                                    <h3 className="invoice-name m-t-0 mb-0 text-capitalize">
+                                      {
+                                        invoiceData?.user?.data?.attributes
+                                          ?.firstname
+                                      }{" "}
+                                      {
+                                        invoiceData?.user?.data?.attributes
+                                          ?.lastname
+                                      }
                                     </h3>
-                                    <h6 className="text-muted">
-                                      {clientData.username}
+                                    <h6 className="text-muted mt-2">
+                                      Invoice Number:{" "}
+                                      {invoiceData.invoice_number}
                                     </h6>
                                     {/* <div className="staff-id">Plan :</div> */}
                                     <div className="small doj text-muted">
-                                      Date of Join :{" "}
+                                      Invoice Date :{" "}
                                       {format(
-                                        new Date(clientData.createdAt),
+                                        new Date(invoiceData.invoice_date),
                                         "dd MMM yyyy"
                                       )}
                                     </div>
-                                    {/* <div className="staff-msg">
+
+                                    <div className="staff-msg">
                                       <Link
                                         className="btn btn-custom"
                                         to="/call/chat"
                                       >
-                                        Send Message
+                                        Send Invoice
                                       </Link>
-                                    </div> */}
+                                    </div>
                                   </div>
                                 </div>
                                 <div className="col-md-7">
@@ -157,8 +111,13 @@ const ClientProfile = () => {
                                     <li>
                                       <div className="title">Phone:</div>
                                       <div className="text">
-                                        <Link to={`tel:${clientData.mobile}`}>
-                                          {clientData.mobile}
+                                        <Link
+                                          to={`tel:${invoiceData?.user?.data?.attributes?.mobile}`}
+                                        >
+                                          {
+                                            invoiceData?.user?.data?.attributes
+                                              ?.mobile
+                                          }
                                         </Link>
                                       </div>
                                     </li>
@@ -167,7 +126,9 @@ const ClientProfile = () => {
                                       <div className="title">Birthday:</div>
                                       <div className="text">
                                         {format(
-                                          new Date(clientData.birthdate),
+                                          new Date(
+                                            invoiceData?.user?.data?.attributes?.birthdate
+                                          ),
                                           "dd MMM yyyy"
                                         )}
                                       </div>
@@ -175,15 +136,18 @@ const ClientProfile = () => {
                                     <li>
                                       <div className="title">Gender:</div>
                                       <div className="text text-capitalize">
-                                        {clientData.gender}
+                                        {
+                                          invoiceData?.user?.data?.attributes
+                                            ?.gender
+                                        }
                                       </div>
                                     </li>
-                                    <li>
+                                    {/*    <li>
                                       <div className="title">Branch:</div>
                                       <div className="text">
-                                        {clientData.branch.name}
+                                        {invoiceData.branch.name}
                                       </div>
-                                    </li>
+                                    </li> */}
                                   </ul>
                                 </div>
                               </div>
@@ -203,17 +167,11 @@ const ClientProfile = () => {
                       </div>
                     </div>
                   </div>
-
-                  {/* Profile Info Tab */}
-                  <ClientProfileTab
-                    bodyDetails={clientData?.body_detail}
-                    userId={userId}
-                    subscriptionLoading={subscriptionLoading}
-                    subscription={clientSubscriptionData}
-                    ptpLoading={isPtpLoading}
-                    ptp={clientPTPData}
+                  <InvoiceDetailsTab
+                    invoice={invoiceData}
+                    invoiceLoading={invoiceLoading}
+                    subscription={invoiceData?.subscription?.data?.attributes}
                   />
-                  <AttendenceClient />
                 </>
               ) : (
                 <>
@@ -228,4 +186,4 @@ const ClientProfile = () => {
   );
 };
 
-export default ClientProfile;
+export default InvoiceDetials;

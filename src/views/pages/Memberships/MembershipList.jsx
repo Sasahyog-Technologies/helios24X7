@@ -172,10 +172,6 @@ const MembershipList = () => {
             maintitle="Membership"
             title="Dashboard"
             subtitle="Membership"
-            modal="#add_membership"
-            name="Add Membership"
-            Linkname="/membership"
-            Linkname1="/membership-list"
           />
           {/* /Page Header */}
           <MembershipListFilter query={query} setQuery={setQuery} />

@@ -135,11 +135,7 @@ const Breadcrumbs = (props) => {
     location.pathname === "/projects" ||
     location.pathname === "/clients" ||
     location.pathname === "/clients-list" ||
-    location.pathname === "/project-list" ||
-    location.pathname === "/client" ||
-    location.pathname === "/client-list" || 
-    location.pathname === "/trainer" ||
-    location.pathname === "/trainer-list" 
+    location.pathname === "/project-list"
   ) {
     addButton = (
       <div className="row align-items-center">
@@ -317,7 +313,14 @@ const Breadcrumbs = (props) => {
         </div>
       </div>
     );
-  } else {
+  } 
+  /*   -----------------------------------------------------------   */
+  else if (
+    location.pathname === "/owner/client-list" ||
+    location.pathname === "/owner/plans-list" ||
+    location.pathname === "/owner/event-list" ||
+    location.pathname === "/owner/trainer-list"
+  ) {
     addButton = (
       <div className="row align-items-center">
         <div className="col">
@@ -336,9 +339,22 @@ const Breadcrumbs = (props) => {
             data-bs-toggle="modal"
             data-bs-target={props.modal}
           >
-            <i className="fa fa-plus" />
-            {props.name}
+            <i className="fa fa-plus" /> {props.name}
           </Link>
+        </div>
+      </div>
+    );
+  } else {
+    addButton = (
+      <div className="row align-items-center">
+        <div className="col">
+          <h3 className="page-title">{props.maintitle}</h3>
+          <ul className="breadcrumb">
+            <li className="breadcrumb-item">
+              <Link to="/admin-dashboard">{props.title}</Link>
+            </li>
+            <li className="breadcrumb-item active">{props.subtitle}</li>
+          </ul>
         </div>
       </div>
     );

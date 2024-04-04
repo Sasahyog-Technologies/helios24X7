@@ -207,6 +207,8 @@ import TrainerProfile from "../../views/pages/Trainer/TrainerProfile.jsx";
 import { useSession } from "../../Hook/useSession.jsx";
 import MyProfile from "../../views/pages/User/MyProfile.jsx";
 import PaymentList from "../../views/pages/payment/PaymentList.jsx";
+import InvoiceList from "../../views/pages/Invoices/InvoiceList.jsx";
+import InvoiceDetails from "../../views/pages/Invoices/InvoiceDetails.jsx";
 
 const AppContainer = () => {
   useEffect(() => {
@@ -1170,17 +1172,17 @@ const AppContainer = () => {
     },
     {
       id: 2,
-      path: `client-profile/:clientid`,
+      path: `client-profile/:clientId`,
       element: <UserProfile />,
     },
     {
       id: 3,
-      path: `trainer-profile/:trainerid`,
+      path: `trainer-profile/:trainerId`,
       element: <TrainerProfile />,
     },
     {
       id: 4,
-    path: "trainer-list",
+      path: "trainer-list",
       element: <TrainerList />,
     },
     {
@@ -1199,9 +1201,19 @@ const AppContainer = () => {
       element: <MembershipList />,
     },
     {
-      id: 7,
+      id: 8,
       path: "payment-list",
       element: <PaymentList />,
+    },
+    {
+      id: 9,
+      path: "invoice-list",
+      element: <InvoiceList />,
+    },
+    {
+      id: 10,
+      path: "/owner/invoice-details/:invoiceId",
+      element: <InvoiceDetails />,
     },
   ];
   const ClientRoutingObjects = [

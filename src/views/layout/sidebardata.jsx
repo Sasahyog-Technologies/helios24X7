@@ -38,6 +38,10 @@ export const SidebarData = [
             menuValue: "Payments",
             route: "/owner/payment-list",
           },
+          {
+            menuValue: "Invoices",
+            route: "/owner/invoice-list",
+          },
         ],
       },
       {

@@ -8,4 +8,5 @@ export const routes = {
   ptp: "/personal-training-programs",
   event:"/events",
   payment:"/payments",
+  invoice:"/invoices",
 };

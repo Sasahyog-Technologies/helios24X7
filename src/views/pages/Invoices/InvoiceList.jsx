@@ -4,22 +4,20 @@ import { format } from "date-fns";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Breadcrumbs from "../../../components/Breadcrumbs";
-import PaymentListFilter from "../../../components/ClientListFilters";
-import ClientDeletePopup from "../../../components/modelpopup/Client/ClientDeletePopup";
-import PaymentDeletePopup from "../../../components/modelpopup/payment/DeletePaymentPopup";
+import InvoiceListFilter from "../../../components/ClientListFilters";
 import request from "../../../sdk/functions";
-import PaymentEditPopup from "../../../components/modelpopup/payment/EditPaymentPopup";
+import InvoiceDeletePopup from "../../../components/modelpopup/Invoice/DeleteInvoicePopup";
+import InvoiceEditPopup from "../../../components/modelpopup/Invoice/EditInvoicePopup";
 
-const PaymentList = () => {
-  const [paymentsId, setpaymentsId] = useState(null);
+const InvoiceList = () => {
+  const [invoiceId, setinvoiceId] = useState(null);
   const columns = [
     {
       title: "User Name",
       dataIndex: "username",
       render: (text, record) => (
         <span className="w-100 text-capitalize">
-          {text}
-          {/*  <Link to={`/owner/client-profile/${record.id}`}>{text}</Link> */}
+          <Link to={`/owner/invoice-details/${record.id}`}>{text}</Link>
         </span>
       ),
     },
@@ -27,11 +25,8 @@ const PaymentList = () => {
       title: "Label",
       dataIndex: "label",
       render: (text, record) => (
-        <span className="table-avatar">
-          {text}
-          {/*     <Link to={`/owner/client-profile/${record.id}`}>
-            {text}
-          </Link> */}
+        <span className="table-avatar text-capitalize">
+          <Link to={`/owner/invoice-details/${record.id}`}>{text}</Link>
         </span>
       ),
     },
@@ -41,8 +36,7 @@ const PaymentList = () => {
       dataIndex: "subscriptionType",
       render: (text, record) => (
         <span className="w-100 text-capitalize">
-          {text}
-          {/*    <Link to={`/owner/client-profile/${record.id}`}>{text}</Link> */}
+          <Link to={`/owner/invoice-details/${record.id}`}>{text}</Link>
         </span>
       ),
     },
@@ -52,53 +46,35 @@ const PaymentList = () => {
       dataIndex: "amount",
       render: (text, record) => (
         <span>
-          {/*    <Link to={`/owner/client-profile/${record.id}`}>
-            {" "}
-            {format(new Date(text), "dd/MM/yyyy")}
-          </Link> */}
-          {text}
+          <Link to={`/owner/invoice-details/${record.id}`}>{text}</Link>
         </span>
       ),
     },
     {
-      title: "Payment Date",
-      dataIndex: "payment_date",
+      title: "Invoice Date",
+      dataIndex: "invoice_date",
       render: (text, record) => (
         <span>
-          {format(new Date(text), "dd/MM/yyyy")}
-          {/*   <Link to={`/owner/client-profile/${record.id}`}>
-            {" "}
+          <Link to={`/owner/invoice-details/${record.id}`}>
             {format(new Date(text), "dd/MM/yyyy")}
-          </Link> */}
+          </Link>
         </span>
       ),
     },
-    {
-      title: "Status",
-      dataIndex: "status",
-      render: (text, record) => (
-        <span>
-          {/*    <Link to={`/owner/client-profile/${record.id}`}>{text?.name}</Link> */}
-          {text}
-        </span>
-      ),
-    },
+
     {
       title: "Outstanding",
       dataIndex: "outstanding",
       render: (text, record) => (
         <span>
-          {/*    <Link to={`/owner/client-profile/${record.id}`}>{text?.name}</Link> */}
-          {text}
+          <Link to={`/owner/invoice-details/${record.id}`}>{text}</Link>
         </span>
       ),
     },
     {
       title: "Action",
       render: (user) => (
-        <div
-          className="dropdown dropdown-action text-end" /* style={{zIndex:100}} */
-        >
+        <div className="dropdown dropdown-action text-end">
           <Link
             to="#"
             className="action-icon dropdown-toggle"
@@ -113,8 +89,8 @@ const PaymentList = () => {
               className="dropdown-item"
               to="#"
               data-bs-toggle="modal"
-              data-bs-target="#edit_payment"
-              onClick={() => setpaymentsId(user.id)}
+              data-bs-target="#edit_invoice"
+              onClick={() => setinvoiceId(user.id)}
             >
               <i className="fa fa-pencil m-r-5" /> Edit
             </Link>
@@ -122,8 +98,8 @@ const PaymentList = () => {
               className="dropdown-item"
               to="#"
               data-bs-toggle="modal"
-              data-bs-target="#delete_payment"
-              onClick={() => setpaymentsId(user.id)}
+              data-bs-target="#delete_invoice"
+              onClick={() => setinvoiceId(user.id)}
             >
               <i className="fa fa-trash m-r-5" /> Delete
             </Link>
@@ -147,14 +123,14 @@ const PaymentList = () => {
   });
 
   const {
-    data: paymentsData,
-    isLoading: paymentsIsLoading,
+    data: InvoicesData,
+    isLoading: InvoicesIsLoading,
     refetch,
   } = useQuery({
-    queryKey: ["payment-list"],
+    queryKey: ["Invoice-list"],
     queryFn: async () => {
-      const data = await request.findMany("payment", {
-        populate: ["user", "subscription"],
+      const data = await request.findMany("invoice", {
+        populate: ["user", "subscription", "payment"],
       });
       setTableParams({
         ...tableParams,
@@ -174,7 +150,7 @@ const PaymentList = () => {
     },
   });
 
-  //console.log(paymentsData);
+  //console.log(InvoicesData);
 
   const handleTableChange = (pagination, filters, sorter) => {
     //console.log("handleTableChange");
@@ -197,20 +173,20 @@ const PaymentList = () => {
         <div className="content container-fluid">
           {/* Page Header */}
           <Breadcrumbs
-            maintitle="Payments"
+            maintitle="Invoices"
             title="Dashboard"
-            subtitle="Payments"
+            subtitle="Invoices"
           />
           {/* /Page Header */}
-          <PaymentListFilter query={query} setQuery={setQuery} />
+          <InvoiceListFilter query={query} setQuery={setQuery} />
           <div className="row">
             <div className="col-md-12">
               <div className="table-responsive">
                 <Table
-                  loading={paymentsIsLoading}
+                  loading={InvoicesIsLoading}
                   className="table-striped"
                   columns={columns}
-                  dataSource={paymentsData}
+                  dataSource={InvoicesData}
                   pagination={{
                     total: tableParams.pagination.total,
                     showSizeChanger: true,
@@ -230,11 +206,13 @@ const PaymentList = () => {
         </div>
         {/* /Page Content */}
 
-        <PaymentDeletePopup paymentId={paymentsId}  />
-        <PaymentEditPopup paymentId={paymentsId} />
+        {/*   <InvoiceDeletePopup InvoiceId={invoiceId}  />
+        <InvoiceEditPopup InvoiceId={invoiceId} /> */}
+        <InvoiceDeletePopup invoiceId={invoiceId} />
+        <InvoiceEditPopup invoiceId={invoiceId} />
       </div>
     </div>
   );
 };
 
-export default PaymentList;
+export default InvoiceList;
