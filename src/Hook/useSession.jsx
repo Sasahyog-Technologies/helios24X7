@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useCookies } from "react-cookie";
+import { useNavigate } from "react-router-dom";
 
 export const useSession = () => {
   const [cookies, setCookie] = useCookies(["encodedData"]);
+  const navigate = useNavigate();
 
   const setUserInfoToCookies = (user) => {
     const encodedData = encodeURIComponent(JSON.stringify(user));
@@ -18,5 +20,11 @@ export const useSession = () => {
     }
     return null;
   };
-  return { setUserInfoToCookies, getUserDataToCookie };
+
+  const logoutHandler = () => {
+    setCookie("userSession", null, { path: "/" });
+    navigate("/");
+
+  };
+  return { setUserInfoToCookies, getUserDataToCookie,logoutHandler };
 };

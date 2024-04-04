@@ -25,7 +25,7 @@ const TestLogin = () => {
       setUserInfoToCookies(data);
       setIdentifier("");
       setPassword("");
-      navigate("/admin-dashboard");
+      navigate("/client/my-profile");
     } catch (error) {
       console.log("Login Error", error);
     } finally {
