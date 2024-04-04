@@ -7,6 +7,8 @@ import Select from "react-select";
 import request from "../../../sdk/functions";
 import { Refresh } from "../../../utils/refresh";
 import { paymentTypeOptions } from "../../../utils";
+import CropperModal from "../ImageModal/AvatarCropModal";
+ 
 
 function generatePassword(length = 8) {
   const charset =
@@ -62,6 +64,8 @@ const ClientAddPopup = ({ refetch }) => {
   const [planOptions, setPlanOptions] = useState([]);
   const [loading, setLoading] = useState(false);
   const [plans, setPlans] = useState([]);
+  const [cropModalOpen, setCropModalOpen] = useState(false);
+  const [avatarSrc, setAvatarSrc] = useState(null);
   const genderOptions = [
     { value: "male", label: "Male" },
     { value: "female", label: "Female" },
@@ -135,6 +139,12 @@ const ClientAddPopup = ({ refetch }) => {
     } finally {
       setLoading(false);
     }
+  };
+
+  /* avatar change handler */
+  const handleAvatarChange = (e) => {
+    setAvatarSrc(URL.createObjectURL(e.target.files[0]));
+    setCropModalOpen(true);
   };
 
   useEffect(() => {
@@ -376,6 +386,26 @@ const ClientAddPopup = ({ refetch }) => {
                       />
                     </div>
                   </div>
+                  <div className="col-sm-6">
+                    <div className="input-block mb-3">
+                      <label className="col-form-label">Avatar</label>
+                      {cropModalOpen ? (
+                        <CropperModal
+                          src={avatarSrc}
+                          setCropModalOpen={setCropModalOpen}
+                          setPreview={setAvatarSrc}
+                        />
+                      ) : (
+                        <input
+                          className="form-control"
+                          type="file"
+                          onChange={handleAvatarChange}
+                        />
+                      )}
+                    </div>
+                  </div>
+
+                  {avatarSrc && !cropModalOpen ? <img src={avatarSrc} alt="" className="w-25 h-25 rounded-circle" /> : ""}
 
                   {/* body details  */}
 
