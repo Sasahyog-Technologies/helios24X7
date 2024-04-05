@@ -4,14 +4,14 @@ import { format } from "date-fns";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Breadcrumbs from "../../../components/Breadcrumbs";
-import PaymentListFilter from "../../../components/ClientListFilters";
-import ClientDeletePopup from "../../../components/modelpopup/Client/ClientDeletePopup";
 import PaymentDeletePopup from "../../../components/modelpopup/payment/DeletePaymentPopup";
-import request from "../../../sdk/functions";
 import PaymentEditPopup from "../../../components/modelpopup/payment/EditPaymentPopup";
+import request from "../../../sdk/functions";
+import PaymentListFilter from "./PaymentListFilter";
 
 const PaymentList = () => {
   const [paymentsId, setpaymentsId] = useState(null);
+  const [paymentsIsLoading, setPaymentsIsLoading] = useState(false);
   const columns = [
     {
       title: "User Name",
@@ -142,24 +142,30 @@ const PaymentList = () => {
   });
 
   const [query, setQuery] = useState({
-    search: "",
-    branch: "",
+    name: "",
   });
 
   const {
     data: paymentsData,
-    isLoading: paymentsIsLoading,
+    isLoading,
     refetch,
   } = useQuery({
     queryKey: ["payment-list"],
     queryFn: async () => {
+      setPaymentsIsLoading(true);
       const data = await request.findMany("payment", {
         populate: ["user", "subscription"],
+        filters: {
+          user: {
+            firstname: { $containsi: query.name },
+          },
+        },
       });
       setTableParams({
         ...tableParams,
         pagination: { ...tableParams.pagination, total: data.length },
       });
+      setPaymentsIsLoading(false);
       // return formetter(data);
       return data.data.map((itm) => {
         return {
@@ -202,7 +208,11 @@ const PaymentList = () => {
             subtitle="Payments"
           />
           {/* /Page Header */}
-          <PaymentListFilter query={query} setQuery={setQuery} />
+          <PaymentListFilter
+            refetch={refetch}
+            query={query}
+            setQuery={setQuery}
+          />
           <div className="row">
             <div className="col-md-12">
               <div className="table-responsive">
@@ -230,7 +240,7 @@ const PaymentList = () => {
         </div>
         {/* /Page Content */}
 
-        <PaymentDeletePopup paymentId={paymentsId}  />
+        <PaymentDeletePopup paymentId={paymentsId} />
         <PaymentEditPopup paymentId={paymentsId} />
       </div>
     </div>
