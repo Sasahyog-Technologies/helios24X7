@@ -4,7 +4,6 @@ import { format } from "date-fns";
 import React, { useState } from "react";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 import MembershipListFilter from "../../../components/ClientListFilters";
-import { useSession } from "../../../Hook/useSession";
 import request from "../../../sdk/functions";
 import { Link } from "react-router-dom";
 import MembershipDeletePopup from "../../../components/modelpopup/Membership/DeleteMembershipPopup";
@@ -50,11 +49,16 @@ const MembershipList = () => {
     {
       title: "Plan",
       dataIndex: "plan",
+      render: (text, record) => (
+        <span className="text-capitalize">
+          {text ? text : "Personal Training Program"}
+        </span>
+      ),
     },
-    {
-      title: "Status",
-      dataIndex: "status",
-    },
+    // {
+    //   title: "Status",
+    //   dataIndex: "status",
+    // },
     {
       title: "Payment Type",
       dataIndex: "payment_type",
