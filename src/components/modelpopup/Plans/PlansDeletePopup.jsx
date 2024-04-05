@@ -1,14 +1,13 @@
+import toast from "react-hot-toast";
 import React, { useState } from "react";
 import request from "../../../sdk/functions";
-import toast from "react-hot-toast";
 import { Refresh } from "../../../utils/refresh";
 const PlansDeletePopup = ({ planId }) => {
   const [loading, setLoading] = useState(false);
   const removeHandler = async () => {
     try {
       setLoading(true);
-      const data = await request.remove("plan", planId);
-      //  console.log(data);
+      await request.remove("plan", planId);
       toast.success("Plan deleted");
       Refresh();
     } catch (error) {
@@ -36,8 +35,8 @@ const PlansDeletePopup = ({ planId }) => {
               <span aria-hidden="true">×</span>
             </button>
           </div>
-          <div className="modal-body">
-            <div className="d-flex justify-content-start gap-5">
+          <div className="modal-body pt-3">
+            <div className="d-flex justify-content-start gap-3">
               <button
                 className="btn btn-primary submit-btn"
                 // data-bs-dismiss="modal"
