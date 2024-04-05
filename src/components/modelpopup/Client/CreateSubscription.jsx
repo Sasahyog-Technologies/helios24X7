@@ -7,6 +7,7 @@ import Select from "react-select";
 import DatePicker from "react-datepicker";
 import TimePicker from "react-time-picker";
 import { calculateEndDate } from "../../../utils/calculateEndDate";
+import { InvoiceNumberGenerator } from "../../../utils/invoiceNumberGenerate";
 
 const formDataDefaultValues = {
   plan: "",
@@ -18,8 +19,7 @@ const CreateSubscriptionPopup = ({ userId }) => {
   const [loading, setLoading] = useState(false);
   const [startDate, setStartDate] = useState(Date.now());
   const [planOptions, setPlanOptions] = useState([]);
-  const [plans,setPlans] = useState([])
- 
+  const [plans, setPlans] = useState([]);
 
   const {
     register,
@@ -35,17 +35,38 @@ const CreateSubscriptionPopup = ({ userId }) => {
     try {
       setLoading(true);
       const planDuration = plans.find((pt) => pt.id == data.plan)?.attributes
-      .duration;
-      await request.create("subscription", {
+        .duration;
+      let subsRes = await request.create("subscription", {
         data: {
           user: userId,
           plan: data.plan,
           paid: data.paid,
-          outstanding: data.outstanding,
+          outstanding: data.outstanding || null,
           start: startDate,
           end: calculateEndDate(startDate, planDuration),
           payment_type: "cash",
           type: "gym-subscription",
+        },
+      });
+      let paymentRes = await request.create("payment", {
+        data: {
+          user: userId,
+          subscription: subsRes.data.id,
+          amount: data.paid,
+          outstanding: data.outstanding || null,
+          payment_date: new Date().toISOString(),
+          status: "success",
+        },
+      });
+      await request.create("invoice", {
+        data: {
+          user: userId,
+          subscription: subsRes.data.id,
+          payment: paymentRes.data.id,
+          invoice_number: InvoiceNumberGenerator(),
+          invoice_date: new Date().toISOString(),
+          amount: data.paid,
+          outstanding: data.outstanding || null,
         },
       });
       toast.success("Subscription created");
@@ -130,14 +151,11 @@ const CreateSubscriptionPopup = ({ userId }) => {
 
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
-                      <label className="col-form-label">
-                        Outstanding <span className="text-danger">*</span>
-                      </label>
+                      <label className="col-form-label">Outstanding</label>
                       <input
                         className="form-control"
                         type="text"
-                        required
-                        {...register("outstanding", { required: true })}
+                        {...register("outstanding")}
                       />
                     </div>
                   </div>

@@ -7,6 +7,7 @@ import request from "../../../sdk/functions";
 import { durationOptions, paymentTypeOptions } from "../../../utils";
 import { calculateEndDate } from "../../../utils/calculateEndDate";
 import { Refresh } from "../../../utils/refresh";
+import { InvoiceNumberGenerator } from "../../../utils/invoiceNumberGenerate";
 
 const formDataDefaultValues = {
   paid: "",
@@ -15,11 +16,15 @@ const formDataDefaultValues = {
   paymentType: "",
 };
 
-const ExtendPTPSubscriptionPopup = ({ userId, ptpId, activePlanEndDate,setActivePlanEndDate }) => {
+const ExtendPTPSubscriptionPopup = ({
+  userId,
+  ptpId,
+  activePlanEndDate,
+  setActivePlanEndDate,
+}) => {
   const [loading, setLoading] = useState(false);
- 
 
-   //console.log(activePlanEndDate, `ptp : ${ptpId}` , `userid: ${userId}`);
+  //console.log(activePlanEndDate, `ptp : ${ptpId}` , `userid: ${userId}`);
 
   const {
     register,
@@ -33,11 +38,11 @@ const ExtendPTPSubscriptionPopup = ({ userId, ptpId, activePlanEndDate,setActive
 
   const onSubmit = async (data) => {
     //if (!activePlanEndDate) return null;
-    
+
     const endDate = calculateEndDate(activePlanEndDate, data.duration);
     try {
       setLoading(true);
-      await request.create("subscription", {
+      const subsRes = await request.create("subscription", {
         data: {
           user: userId,
           paid: data.paid,
@@ -49,8 +54,29 @@ const ExtendPTPSubscriptionPopup = ({ userId, ptpId, activePlanEndDate,setActive
           personal_training_program: ptpId,
         },
       });
+      let paymentRes = await request.create("payment", {
+        data: {
+          user: userId,
+          subscription: subsRes.data.id,
+          amount: data.paid,
+          outstanding: data.outstanding || null,
+          payment_date: new Date().toISOString(),
+          status: "success",
+        },
+      });
+      await request.create("invoice", {
+        data: {
+          user: userId,
+          subscription: subsRes.data.id,
+          payment: paymentRes.data.id,
+          invoice_number: InvoiceNumberGenerator(),
+          invoice_date: new Date().toISOString(),
+          amount: data.paid,
+          outstanding: data.outstanding || null,
+        },
+      });
       toast.success("Subscription extended");
-      setActivePlanEndDate(null)
+      setActivePlanEndDate(null);
       Refresh();
     } catch (error) {
       toast.error(error?.response?.data?.error?.message, { duration: 4000 });
@@ -96,7 +122,7 @@ const ExtendPTPSubscriptionPopup = ({ userId, ptpId, activePlanEndDate,setActive
                       />
                     </div>
                   </div>
-                
+
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">

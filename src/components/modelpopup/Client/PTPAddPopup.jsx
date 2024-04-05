@@ -7,7 +7,8 @@ import Select from "react-select";
 import DatePicker from "react-datepicker";
 import TimePicker from "react-time-picker";
 import { calculateEndDate } from "../../../utils/calculateEndDate";
-import {durationOptions} from "../../../utils/index"
+import { durationOptions } from "../../../utils/index";
+import { InvoiceNumberGenerator } from "../../../utils/invoiceNumberGenerate";
 
 const formDataDefaultValues = {
   paid: "",
@@ -41,14 +42,14 @@ const PtpAddPopup = ({ userId }) => {
         data: {
           user: userId,
           paid: data.paid,
-          outstanding: data.outstanding,
+          outstanding: data.outstanding || null,
           start: startDate,
           payment_type: "cash",
           type: "trainer-subscription",
           end: calculateEndDate(startDate.toString(), parseInt(data.duration)),
         },
       });
-      const response = await request.create("ptp", {
+      await request.create("ptp", {
         data: {
           trainee: userId,
           trainer: data.trainer,
@@ -57,7 +58,28 @@ const PtpAddPopup = ({ userId }) => {
           session_to: sessionTo,
         },
       });
-      console.log(response);
+      let paymentRes = await request.create("payment", {
+        data: {
+          user: userId,
+          subscription: subscriptionRes.data.id,
+          amount: data.paid,
+          outstanding: data.outstanding || null,
+          payment_date: new Date().toISOString(),
+          status: "success",
+        },
+      });
+      await request.create("invoice", {
+        data: {
+          user: userId,
+          subscription: subscriptionRes.data.id,
+          payment: paymentRes.data.id,
+          invoice_number: InvoiceNumberGenerator(),
+          invoice_date: new Date().toISOString(),
+          amount: data.paid,
+          outstanding: data.outstanding || null,
+        },
+      });
+      // console.log(response);
       toast.success("PTP created");
       Refresh();
     } catch (error) {
@@ -177,14 +199,11 @@ const PtpAddPopup = ({ userId }) => {
                   </div>
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
-                      <label className="col-form-label">
-                        Outstanding <span className="text-danger">*</span>
-                      </label>
+                      <label className="col-form-label">Outstanding</label>
                       <input
                         className="form-control"
                         type="text"
-                        required
-                        {...register("outstanding", { required: true })}
+                        {...register("outstanding")}
                       />
                     </div>
                   </div>

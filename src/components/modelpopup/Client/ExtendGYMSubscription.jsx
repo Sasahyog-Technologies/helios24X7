@@ -7,6 +7,7 @@ import request from "../../../sdk/functions";
 import { paymentTypeOptions } from "../../../utils";
 import { calculateEndDate } from "../../../utils/calculateEndDate";
 import { Refresh } from "../../../utils/refresh";
+import { InvoiceNumberGenerator } from "../../../utils/invoiceNumberGenerate";
 
 const formDataDefaultValues = {
   plan: "",
@@ -41,7 +42,7 @@ const ExtendGYMSubscriptionPopup = ({ userId, activeGYMPlanEndDate }) => {
     const endDate = calculateEndDate(activeGYMPlanEndDate, planDuration);
     try {
       setLoading(true);
-      await request.create("subscription", {
+      const subsRes = await request.create("subscription", {
         data: {
           user: userId,
           paid: data.paid,
@@ -50,8 +51,28 @@ const ExtendGYMSubscriptionPopup = ({ userId, activeGYMPlanEndDate }) => {
           end: endDate,
           payment_type: data.paymentType,
           type: "gym-subscription",
-          plan:data.plan
-        
+          plan: data.plan,
+        },
+      });
+      let paymentRes = await request.create("payment", {
+        data: {
+          user: userId,
+          subscription: subsRes.data.id,
+          amount: data.paid,
+          outstanding: data.outstanding || null,
+          payment_date: new Date().toISOString(),
+          status: "success",
+        },
+      });
+      await request.create("invoice", {
+        data: {
+          user: userId,
+          subscription: subsRes.data.id,
+          payment: paymentRes.data.id,
+          invoice_number: InvoiceNumberGenerator(),
+          invoice_date: new Date().toISOString(),
+          amount: data.paid,
+          outstanding: data.outstanding || null,
         },
       });
       toast.success("GYM Subscription extended");

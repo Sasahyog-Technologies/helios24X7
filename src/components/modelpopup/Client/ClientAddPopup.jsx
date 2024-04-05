@@ -8,6 +8,7 @@ import request from "../../../sdk/functions";
 import { Refresh } from "../../../utils/refresh";
 import { AvatarImageSize, paymentTypeOptions } from "../../../utils";
 import CropperModal from "../ImageModal/AvatarCropModal";
+import { InvoiceNumberGenerator } from "../../../utils/invoiceNumberGenerate";
 
 function generatePassword(length = 8) {
   const charset =
@@ -117,7 +118,7 @@ const ClientAddPopup = ({ refetch }) => {
         type: "client",
       });
 
-      await request.create("subscription", {
+      let subsRes = await request.create("subscription", {
         data: {
           user: createRes.user.id,
           plan: data.plan,
@@ -127,6 +128,27 @@ const ClientAddPopup = ({ refetch }) => {
           end: calculateEndDate(startDate, planDuration),
           payment_type: data.paymentType,
           type: "gym-subscription",
+        },
+      });
+      let paymentRes = await request.create("payment", {
+        data: {
+          user: createRes.user.id,
+          subscription: subsRes.data.id,
+          amount: data.paid,
+          outstanding: data.outstanding || null,
+          payment_date: new Date().toISOString(),
+          status: "success",
+        },
+      });
+      await request.create("invoice", {
+        data: {
+          user: createRes.user.id,
+          subscription: subsRes.data.id,
+          payment: paymentRes.data.id,
+          invoice_number: InvoiceNumberGenerator(),
+          invoice_date: new Date().toISOString(),
+          amount: data.paid,
+          outstanding: data.outstanding || null,
         },
       });
       toast.success("client created");

@@ -13,7 +13,7 @@ const MyProfile = () => {
   const { getUserDataToCookie } = useSession();
   const session = getUserDataToCookie();
   const userId = session?.user?.id;
-  const isClient = session.user.type !== "trainer";
+  const isClient = session?.user?.type !== "trainer";
 
   const { data: clientData, isLoading: userLoading } = useQuery({
     queryKey: ["client-profile-data"],
@@ -179,7 +179,7 @@ const MyProfile = () => {
                                     <li>
                                       <div className="title">Branch:</div>
                                       <div className="text">
-                                        {clientData.branch.name}
+                                        {clientData?.branch?.name}
                                       </div>
                                     </li>
                                   </ul>
@@ -193,16 +193,16 @@ const MyProfile = () => {
                   </div>
 
                   {/* Profile Info Tab */}
-                  {isClient && (
-                    <MyProfileTab
-                      userId={userId}
-                      ptp={clientPTPData}
-                      ptpLoading={isPtpLoading}
-                      bodyDetails={clientData?.body_detail}
-                      subscription={clientSubscriptionData}
-                      subscriptionLoading={subscriptionLoading}
-                    />
-                  )}
+                  {/*  {isClient && ( */}
+                  <MyProfileTab
+                    userId={userId}
+                    ptp={clientPTPData}
+                    ptpLoading={isPtpLoading}
+                    bodyDetails={clientData?.body_detail}
+                    subscription={clientSubscriptionData}
+                    subscriptionLoading={subscriptionLoading}
+                  />
+                  {/*       )} */}
                 </>
               ) : (
                 <>
