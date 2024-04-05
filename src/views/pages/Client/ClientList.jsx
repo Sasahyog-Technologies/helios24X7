@@ -4,14 +4,16 @@ import { format } from "date-fns";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Breadcrumbs from "../../../components/Breadcrumbs";
-import ClientListFilter from "../../../components/ClientListFilters";
+
 import ClientAddPopup from "../../../components/modelpopup/Client/ClientAddPopup";
 import ClientDeletePopup from "../../../components/modelpopup/Client/ClientDeletePopup";
 import ClientEditPopup from "../../../components/modelpopup/Client/ClientEditPopup";
 import request from "../../../sdk/functions";
+import ClientListFilter from "./ClientListFilter";
 
 const ClientList = () => {
   const [userId, setUserId] = useState(null);
+  const [usersIsLoading, setUsersIsLoading] = useState(false);
   const columns = [
     {
       title: "First Name",
@@ -120,26 +122,33 @@ const ClientList = () => {
 
   const {
     data: usersData,
-    isLoading: usersIsLoading,
+    isLoading,
     refetch,
   } = useQuery({
     queryKey: ["client-list"],
     queryFn: async () => {
+      setUsersIsLoading(true);
       const data = await request.findMany("users", {
         populate: "branch",
-        //  "filters[id][$ne]": loggedinUserId,
+       //  "filters[lastname][$containsi]": query.branch,
         filters: {
           type: "client",
+          firstname: { $containsi: query.search },
+          branch: {
+            name:{ $containsi: query.branch}
+          },
         },
       });
       setTableParams({
         ...tableParams,
         pagination: { ...tableParams.pagination, total: data.length },
       });
+      setUsersIsLoading(false);
       // return formetter(data);
       return data;
     },
-  });
+    
+  },);
 
   const handleTableChange = (pagination, filters, sorter) => {
     //console.log("handleTableChange");
@@ -171,7 +180,11 @@ const ClientList = () => {
             Linkname1="/client-list"
           />
           {/* /Page Header */}
-          <ClientListFilter query={query} setQuery={setQuery} />
+          <ClientListFilter
+            query={query}
+            setQuery={setQuery}
+            refetch={refetch}
+          />
           <div className="row">
             <div className="col-md-12">
               <div className="table-responsive">

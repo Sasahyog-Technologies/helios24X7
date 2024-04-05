@@ -103,7 +103,7 @@ const ClientProfile = () => {
           <Breadcrumbs
             maintitle="Profile"
             title="Dashboard"
-            subtitle="Client"
+            subtitle="Profile"
           />
           {userLoading ? (
             <>
