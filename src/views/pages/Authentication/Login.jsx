@@ -3,7 +3,6 @@ import { Link, useNavigate } from "react-router-dom";
 import { Applogo, hlogo } from "../../../Routes/ImagePath";
 import { useSession } from "../../../Hook/useSession";
 import strapiAxios from "../../../sdk";
- 
 
 const TestLogin = () => {
   const [identifier, setIdentifier] = useState("1010101010");
@@ -21,7 +20,7 @@ const TestLogin = () => {
         password,
       });
       let data = res.data;
-     // console.log(data)
+      // console.log(data)
       setUserInfoToCookies(data);
       setIdentifier("");
       setPassword("");
@@ -32,7 +31,6 @@ const TestLogin = () => {
       setIsloading(false);
     }
   };
-  
 
   return (
     <div>
@@ -46,14 +44,18 @@ const TestLogin = () => {
               {/* Account Logo */}
               <div className="account-logo">
                 <Link to="/admin-dashboard">
-                  <img src={hlogo} alt="Dreamguy's Technologies" className="w-50" />
+                  <img
+                    src={hlogo}
+                    alt="Dreamguy's Technologies"
+                    className="w-50"
+                  />
                 </Link>
               </div>
               {/* /Account Logo */}
               <div className="account-box">
                 <div className="account-wrapper">
-                  <h3 className="account-title">Client Login</h3>
-                  <p className="account-subtitle">Access to our dashboard</p>
+                  <h3 className="account-title">Login</h3>
+                  <p className="account-subtitle">Access to Dashboard</p>
                   {/* Account Form */}
                   <div>
                     <form onSubmit={handleSubmit}>
@@ -86,17 +88,6 @@ const TestLogin = () => {
                             value={password}
                             autoComplete="true"
                           />
-                          {/*    <span
-                            style={{
-                              position: "absolute",
-                              right: "5%",
-                              top: "30%",
-                            }}
-                            onClick={onEyeClick}
-                            className={`fa-solid ${
-                              eye ? "fa-eye-slash" : "fa-eye"
-                            } `}
-                          /> */}
                         </div>
                       </div>
                       <div className="input-block text-center">
@@ -109,14 +100,7 @@ const TestLogin = () => {
                         </button>
                       </div>
                     </form>
-                    <div className="account-footer">
-                      <p>
-                        Don't have an account yet?{" "}
-                        <Link to="/register">Register</Link>
-                      </p>
-                    </div>
                   </div>
-                  {/* /Account Form */}
                 </div>
               </div>
             </div>
@@ -128,29 +112,3 @@ const TestLogin = () => {
 };
 
 export default TestLogin;
-
-/* 
-
- const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      setIsloading(true);
-      await strapi.login({
-        identifier,
-        password,
-      });
-      console.log(strapi.user)
-      setUserInfoToCookies(strapi.user);
-      setIdentifier("");
-      setPassword("");
-      navigate("/admin-dashboard");
-    } catch (error) {
-      console.log("Login Error", error);
-    } finally {
-      setIsloading(false);
-    }
-  };
-
-
-
-*/
