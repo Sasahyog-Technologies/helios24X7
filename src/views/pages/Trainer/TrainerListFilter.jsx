@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import Select from "react-select";
 import request from "../../../sdk/functions";
 
-const ClientListFilter = ({ query, setQuery, refetch }) => {
+const TrainerListFilter = ({ query, setQuery, refetch }) => {
   const [branchOptions, setBranchOptions] = useState([]);
   const customStyles = {
     option: (provided, state) => ({
@@ -69,7 +69,7 @@ const ClientListFilter = ({ query, setQuery, refetch }) => {
               }}
             />
             <label className="focus-label" onClick={handleLabelClick2}>
-              Client Name
+              Trainer Name
             </label>
           </div>
         </div>
@@ -98,4 +98,4 @@ const ClientListFilter = ({ query, setQuery, refetch }) => {
   );
 };
 
-export default ClientListFilter;
+export default TrainerListFilter;

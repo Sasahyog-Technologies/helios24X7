@@ -3,12 +3,12 @@ import { Table } from "antd";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Breadcrumbs from "../../../components/Breadcrumbs";
-import PlansListFilter from "../../../components/ClientListFilters";
 import PlansAddPopup from "../../../components/modelpopup/Plans/PlansAddPopup";
 import PlansDeletePopup from "../../../components/modelpopup/Plans/PlansDeletePopup";
 import PlanEditPopup from "../../../components/modelpopup/Plans/PlansEditPopup";
 import { useSession } from "../../../Hook/useSession";
 import request from "../../../sdk/functions";
+import PlansListFilter from "./PlansListFilter";
 
 const PlansList = () => {
   const [planId, setPlanId] = useState(null);
@@ -74,8 +74,9 @@ const PlansList = () => {
   });
 
   const [query, setQuery] = useState({
-    search: "",
-    branch: "",
+    title: "",
+    price: "",
+    duration: "",
   });
   const {
     data: plansData,
@@ -84,7 +85,13 @@ const PlansList = () => {
   } = useQuery({
     queryKey: ["plans-list"],
     queryFn: async () => {
-      const data = await request.findMany("plan");
+      const data = await request.findMany("plan", {
+        filters: {
+          title: { $containsi: query.title },
+          price: { $containsi: query.price },
+          duration: { $containsi: query.duration },
+        },
+      });
       setTableParams({
         ...tableParams,
         pagination: { ...tableParams.pagination, total: data.length },
@@ -129,7 +136,11 @@ const PlansList = () => {
             Linkname1="/plans-list"
           />
           {/* /Page Header */}
-          <PlansListFilter query={query} setQuery={setQuery} />
+          <PlansListFilter
+            query={query}
+            setQuery={setQuery}
+            refetch={refetch}
+          />
           <div className="row">
             <div className="col-md-12">
               <div className="table-responsive">

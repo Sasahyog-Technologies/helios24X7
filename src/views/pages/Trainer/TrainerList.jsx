@@ -4,11 +4,11 @@ import { format } from "date-fns";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Breadcrumbs from "../../../components/Breadcrumbs";
-import ClientListFilter from "../../../components/ClientListFilters";
 import TrainerAddPopup from "../../../components/modelpopup/Trainer/TrainerAddPopup";
 import TrianerDeletePopup from "../../../components/modelpopup/Trainer/TrainerDeletePopup";
 import TrianerEditPopup from "../../../components/modelpopup/Trainer/TrainerEditPopup";
 import request from "../../../sdk/functions";
+import TrainerListFilter from "./TrainerListFilter";
 
 const TrainerList = () => {
   const [userId, setUserId] = useState(null);
@@ -117,6 +117,7 @@ const TrainerList = () => {
     data: trainersData,
     isLoading: usersIsLoading,
     error,
+    refetch,
   } = useQuery({
     queryKey: ["trainer-list"],
     queryFn: async () => {
@@ -124,9 +125,13 @@ const TrainerList = () => {
         populate: "branch",
         filters: {
           type: "trainer",
+          firstname: { $containsi: query.search },
+          branch: {
+            name: { $containsi: query.branch },
+          },
         },
       });
-     // console.log(data);
+      // console.log(data);
       setTableParams({
         ...tableParams,
         pagination: { ...tableParams.pagination, total: data.length },
@@ -166,7 +171,11 @@ const TrainerList = () => {
             Linkname1="/trainer-list"
           />
           {/* /Page Header */}
-          <ClientListFilter query={query} setQuery={setQuery} />
+          <TrainerListFilter
+            query={query}
+            setQuery={setQuery}
+            refetch={refetch}
+          />
           <div className="row">
             <div className="col-md-12">
               <div className="table-responsive">
