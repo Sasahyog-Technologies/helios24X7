@@ -1,16 +1,17 @@
+import { useQuery } from "@tanstack/react-query";
 import { Table } from "antd";
 import { format } from "date-fns";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import request from "../../../sdk/functions";
-import { useQuery } from "@tanstack/react-query";
 import Breadcrumbs from "../../../components/Breadcrumbs";
-import InvoiceListFilter from "../../../components/ClientListFilters";
 import InvoiceDeletePopup from "../../../components/modelpopup/Invoice/DeleteInvoicePopup";
 import InvoiceEditPopup from "../../../components/modelpopup/Invoice/EditInvoicePopup";
+import request from "../../../sdk/functions";
+import InvoiceListFilter from "./InvoiceListFilter";
 
 const InvoiceList = () => {
   const [invoiceId, setinvoiceId] = useState(null);
+  const [InvoicesIsLoading, setInvoicesIsLoading] = useState(false);
   const columns = [
     {
       title: "User Name",
@@ -118,24 +119,30 @@ const InvoiceList = () => {
   });
 
   const [query, setQuery] = useState({
-    search: "",
-    branch: "",
+    name: "",
   });
 
   const {
     data: InvoicesData,
-    isLoading: InvoicesIsLoading,
+    isLoading,
     refetch,
   } = useQuery({
     queryKey: ["Invoice-list"],
     queryFn: async () => {
+      setInvoicesIsLoading(true);
       const data = await request.findMany("invoice", {
         populate: ["user", "subscription", "payment"],
+        filters: {
+          user: {
+            firstname: { $containsi: query.name },
+          },
+        },
       });
       setTableParams({
         ...tableParams,
         pagination: { ...tableParams.pagination, total: data.length },
       });
+      setInvoicesIsLoading(false);
       // return formetter(data);
       return data.data.map((itm) => {
         return {
@@ -178,7 +185,11 @@ const InvoiceList = () => {
             subtitle="Invoices"
           />
           {/* /Page Header */}
-          <InvoiceListFilter query={query} setQuery={setQuery} />
+          <InvoiceListFilter
+            refetch={refetch}
+            query={query}
+            setQuery={setQuery}
+          />
           <div className="row">
             <div className="col-md-12">
               <div className="table-responsive">
