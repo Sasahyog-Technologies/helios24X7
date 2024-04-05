@@ -2,12 +2,12 @@ import { useQuery } from "@tanstack/react-query";
 import { Table } from "antd";
 import { format } from "date-fns";
 import React, { useState } from "react";
-import Breadcrumbs from "../../../components/Breadcrumbs";
-import MembershipListFilter from "../../../components/ClientListFilters";
-import request from "../../../sdk/functions";
 import { Link } from "react-router-dom";
+import Breadcrumbs from "../../../components/Breadcrumbs";
 import MembershipDeletePopup from "../../../components/modelpopup/Membership/DeleteMembershipPopup";
 import MembershipEditPopup from "../../../components/modelpopup/Membership/EditMembershipPopup";
+import request from "../../../sdk/functions";
+import MembershipListFilter from "./MembershipListFilter";
 
 const MembershipList = () => {
   const [subscriptionId, setsubscriptionId] = useState(null);
@@ -118,14 +118,22 @@ const MembershipList = () => {
   });
 
   const [query, setQuery] = useState({
-    search: "",
-    branch: "",
+    name: "",
   });
-  const { data: subscriptionData, isLoading: usersIsLoading } = useQuery({
+  const {
+    data: subscriptionData,
+    isLoading: usersIsLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["membership-list"],
     queryFn: async () => {
       const data = await request.findMany("subscription", {
         populate: ["user", "plan"],
+        filters: {
+          user: {
+            firstname: { $containsi: query.name },
+          },
+        },
       });
       setTableParams({
         ...tableParams,
@@ -178,7 +186,11 @@ const MembershipList = () => {
             subtitle="Membership"
           />
           {/* /Page Header */}
-          <MembershipListFilter query={query} setQuery={setQuery} />
+          <MembershipListFilter
+            query={query}
+            setQuery={setQuery}
+            refetch={refetch}
+          />
           <div className="row">
             <div className="col-md-12">
               <div className="table-responsive">
