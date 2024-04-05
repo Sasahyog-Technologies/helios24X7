@@ -1,20 +1,20 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
-import { useQuery } from "@tanstack/react-query";
+import React from "react";
 import { format } from "date-fns";
-import React, { useState } from "react";
-import { Link, Navigate } from "react-router-dom";
-import Breadcrumbs from "../../../components/Breadcrumbs";
-import Loading from "../../../components/Loading";
-import request from "../../../sdk/functions";
-
+import { Link } from "react-router-dom";
 import MyProfileTab from "./MyProfileTab";
+import request from "../../../sdk/functions";
+import { useQuery } from "@tanstack/react-query";
+import Loading from "../../../components/Loading";
 import { useSession } from "../../../Hook/useSession";
+import Breadcrumbs from "../../../components/Breadcrumbs";
 
 const MyProfile = () => {
   const { getUserDataToCookie } = useSession();
   const session = getUserDataToCookie();
   const userId = session?.user?.id;
-  
+  const isClient = session.user.type !== "trainer";
+
   const { data: clientData, isLoading: userLoading } = useQuery({
     queryKey: ["client-profile-data"],
     queryFn: async () => {
@@ -92,7 +92,6 @@ const MyProfile = () => {
     },
   });
 
-  // console.log(clientPTPData);
   return (
     <>
       <div className="page-wrapper">
@@ -194,14 +193,16 @@ const MyProfile = () => {
                   </div>
 
                   {/* Profile Info Tab */}
-                  <MyProfileTab
-                    bodyDetails={clientData?.body_detail}
-                    userId={userId}
-                    subscriptionLoading={subscriptionLoading}
-                    subscription={clientSubscriptionData}
-                    ptpLoading={isPtpLoading}
-                    ptp={clientPTPData}
-                  />
+                  {isClient && (
+                    <MyProfileTab
+                      userId={userId}
+                      ptp={clientPTPData}
+                      ptpLoading={isPtpLoading}
+                      bodyDetails={clientData?.body_detail}
+                      subscription={clientSubscriptionData}
+                      subscriptionLoading={subscriptionLoading}
+                    />
+                  )}
                 </>
               ) : (
                 <>

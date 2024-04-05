@@ -6,16 +6,16 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSession } from "../../../Hook/useSession";
 
 const routes = {
-  trainer: "",
   owner: "/owner/client-list",
+  trainer: "/client/my-profile",
   client: "/client/my-profile",
 };
 
 const TestLogin = () => {
-  const [identifier, setIdentifier] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoading, setIsloading] = useState(false);
   const navigate = useNavigate();
+  const [password, setPassword] = useState("");
+  const [identifier, setIdentifier] = useState("");
+  const [isLoading, setIsloading] = useState(false);
   const { setUserInfoToCookies } = useSession();
 
   const handleSubmit = async (e) => {
@@ -34,7 +34,7 @@ const TestLogin = () => {
       setIdentifier("");
       navigate(nextRoute);
     } catch (error) {
-      toast.error(error.response.data.error.message, { duration: 4000 });
+      toast.error(error?.response?.data?.error?.message, { duration: 4000 });
       console.log("Login Error", error);
     } finally {
       setIsloading(false);
