@@ -3,11 +3,11 @@ import { Table } from "antd";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Breadcrumbs from "../../../components/Breadcrumbs";
-import EventsListFilter from "../../../components/ClientListFilters";
 import EventsAddPopup from "../../../components/modelpopup/events/EventsAddPopup";
-import request from "../../../sdk/functions";
 import EventsDeletePopup from "../../../components/modelpopup/events/EventsDeletePopup";
 import EventEditPopup from "../../../components/modelpopup/events/EventsEditPopup";
+import request from "../../../sdk/functions";
+import EventsListFilter from "./EventsListFilter";
 
 const EventsList = () => {
   const [eventId, seteventId] = useState(null);
@@ -89,15 +89,21 @@ const EventsList = () => {
   });
 
   const [query, setQuery] = useState({
-    search: "",
-    branch: "",
+    title: "",
   });
 
-  const { data: eventsData, isLoading: eventIsLoading } = useQuery({
+  const {
+    data: eventsData,
+    isLoading: eventIsLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["event-list"],
     queryFn: async () => {
       const data = await request.findMany("event", {
         populate: "media",
+        filters: {
+          title: { $containsi: query.title },
+        },
       });
       setTableParams({
         ...tableParams,
@@ -145,7 +151,11 @@ const EventsList = () => {
             Linkname1="/events-list"
           />
           {/* /Page Header */}
-          <EventsListFilter query={query} setQuery={setQuery} />
+          <EventsListFilter
+            query={query}
+            setQuery={setQuery}
+            refetch={refetch}
+          />
           <div className="row">
             <div className="col-md-12">
               <div className="table-responsive">
