@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Applogo, hlogo } from "../../../Routes/ImagePath";
 import { useSession } from "../../../Hook/useSession";
 import strapiAxios from "../../../sdk";
+import toast from "react-hot-toast";
 
 const TestLogin = () => {
-  const [identifier, setIdentifier] = useState("1010101010");
-  const [password, setPassword] = useState("123123");
+  const [identifier, setIdentifier] = useState("");
+  const [password, setPassword] = useState("");
   const [isLoading, setIsloading] = useState(false);
   const navigate = useNavigate();
   const { setUserInfoToCookies } = useSession();
@@ -20,12 +21,12 @@ const TestLogin = () => {
         password,
       });
       let data = res.data;
-      // console.log(data)
       setUserInfoToCookies(data);
-      setIdentifier("");
       setPassword("");
+      setIdentifier("");
       navigate("/client/my-profile");
     } catch (error) {
+      toast.error(error.response.data.error.message, { duration: 4000 });
       console.log("Login Error", error);
     } finally {
       setIsloading(false);
@@ -62,6 +63,7 @@ const TestLogin = () => {
                       <div className="input-block mb-4">
                         <label className="col-form-label">Phone Number</label>
                         <input
+                          required
                           className={`form-control`}
                           type="text"
                           onChange={(e) => setIdentifier(e.target.value)}
@@ -82,6 +84,7 @@ const TestLogin = () => {
                         </div>
                         <div style={{ position: "relative" }}>
                           <input
+                            required
                             className={`form-control`}
                             type="text"
                             onChange={(e) => setPassword(e.target.value)}
