@@ -1,9 +1,15 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { Applogo, hlogo } from "../../../Routes/ImagePath";
-import { useSession } from "../../../Hook/useSession";
-import strapiAxios from "../../../sdk";
 import toast from "react-hot-toast";
+import strapiAxios from "../../../sdk";
+import React, { useState } from "react";
+import { hlogo } from "../../../Routes/ImagePath";
+import { Link, useNavigate } from "react-router-dom";
+import { useSession } from "../../../Hook/useSession";
+
+const routes = {
+  trainer: "",
+  owner: "/owner/client-list",
+  client: "/client/my-profile",
+};
 
 const TestLogin = () => {
   const [identifier, setIdentifier] = useState("");
@@ -16,15 +22,17 @@ const TestLogin = () => {
     e.preventDefault();
     try {
       setIsloading(true);
-      let res = await strapiAxios.post("/auth/local", {
+      const res = await strapiAxios.post("/auth/local", {
         identifier,
         password,
       });
-      let data = res.data;
+      const data = res.data;
+      const userType = data?.user?.type;
+      const nextRoute = routes[userType];
       setUserInfoToCookies(data);
       setPassword("");
       setIdentifier("");
-      navigate("/client/my-profile");
+      navigate(nextRoute);
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log("Login Error", error);
