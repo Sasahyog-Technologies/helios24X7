@@ -52,13 +52,20 @@ const sidebarOwnerData = {
       route: "/owner/invoice-list",
       icon: "la la-users",
     },
-    // {
-    //   menuValue: "My Profile",
-    //   hasSubRoute: false,
-    //   showSubRoute: false,
-    //   route: "/client/my-profile",
-    //   //icon: "la la-users",
-    // },
+    {
+      menuValue: "Personal Trainings",
+      hasSubRoute: false,
+      showSubRoute: false,
+      route: "/owner/invoice-list",
+      icon: "la la-users",
+    },
+    {
+      menuValue: "Walkins",
+      hasSubRoute: false,
+      showSubRoute: false,
+      route: "/owner/invoice-list",
+      icon: "la la-users",
+    },
   ],
 };
 const sidebarUserData = {
@@ -71,7 +78,21 @@ const sidebarUserData = {
       hasSubRoute: false,
       showSubRoute: false,
       route: "/client/my-profile",
-      //icon: "la la-users",
+      icon: "la la-users",
+    },
+    {
+      menuValue: "My Payments",
+      hasSubRoute: false,
+      showSubRoute: false,
+      route: "/owner/payment-list",
+      icon: "la la-users",
+    },
+    {
+      menuValue: "Events & Sessions",
+      hasSubRoute: false,
+      showSubRoute: false,
+      route: "/owner/payment-list",
+      icon: "la la-users",
     },
   ],
 };
@@ -85,7 +106,14 @@ const sidebarTrainerData = {
       hasSubRoute: false,
       showSubRoute: false,
       route: "/client/my-profile",
-      //icon: "la la-users",
+      icon: "la la-users",
+    },
+    {
+      menuValue: "My Trainnes",
+      hasSubRoute: false,
+      showSubRoute: false,
+      route: "/owner/payment-list",
+      icon: "la la-users",
     },
   ],
 };
