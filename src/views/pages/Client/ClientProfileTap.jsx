@@ -8,6 +8,7 @@ import ClientEditPopup from "../../../components/modelpopup/Client/ClientEditPop
 import CreateSubscriptionPopup from "../../../components/modelpopup/Client/CreateSubscription";
 import ExtendPTPSubscriptionPopup from "../../../components/modelpopup/Client/ExtendPTPSubscription";
 import ExtendGYMSubscriptionPopup from "../../../components/modelpopup/Client/ExtendGYMSubscription";
+ 
 
 function convertToReadableTime(timeString) {
   // Split the time string into hours, minutes, and seconds
@@ -47,7 +48,7 @@ const ClientProfileTab = ({
     <>
       <div className="tab-content">
         <div
-          id="emp_profile"
+          id="client_profile"
           className="pro-overview tab-pane fade show active"
         >
           <div className="row">
@@ -344,6 +345,7 @@ const ClientProfileTab = ({
           userId={userId}
           activeGYMPlanEndDate={activeGYMPlanEndDate}
         />
+      
       </div>
     </>
   );

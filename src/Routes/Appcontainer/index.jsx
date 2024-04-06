@@ -210,6 +210,7 @@ import PaymentList from "../../views/pages/payment/PaymentList.jsx";
 import InvoiceList from "../../views/pages/Invoices/InvoiceList.jsx";
 import InvoiceDetails from "../../views/pages/Invoices/InvoiceDetails.jsx";
 import PTPList from "../../views/pages/PTP/PTPList.jsx";
+import MyPayments from "../../views/pages/User/MyPayments.jsx";
 
 const AppContainer = () => {
   useEffect(() => {
@@ -1227,6 +1228,11 @@ const AppContainer = () => {
       id: 1,
       path: "my-profile",
       element: <MyProfile />,
+    },
+    {
+      id: 2,
+      path: "my-payments",
+      element: <MyPayments />,
     },
   ];
 

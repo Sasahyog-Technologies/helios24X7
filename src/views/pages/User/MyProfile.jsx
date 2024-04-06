@@ -192,8 +192,6 @@ const MyProfile = () => {
                     </div>
                   </div>
 
-                  {/* Profile Info Tab */}
-                  {/*  {isClient && ( */}
                   <MyProfileTab
                     userId={userId}
                     ptp={clientPTPData}

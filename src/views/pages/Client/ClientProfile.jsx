@@ -1,18 +1,18 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 import Loading from "../../../components/Loading";
 import request from "../../../sdk/functions";
-import ClientProfileTab from "./ClientProfileTap";
 import AttendenceClient from "./ClientAttendence";
+import ClientProfileTab from "./ClientProfileTap";
 
 const ClientProfile = () => {
   const path = window.location.pathname;
   const userId = path.split("/")[path.split("/").length - 1];
- 
+
   const { data: clientData, isLoading: userLoading } = useQuery({
     queryKey: ["client-profile-data"],
     queryFn: async () => {
@@ -203,6 +203,7 @@ const ClientProfile = () => {
                       </div>
                     </div>
                   </div>
+
 
                   {/* Profile Info Tab */}
                   <ClientProfileTab
