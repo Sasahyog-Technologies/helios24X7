@@ -1,23 +1,27 @@
-import toast from "react-hot-toast";
 import React, { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm,Controller } from "react-hook-form";
+import toast from "react-hot-toast";
+import Select from "react-select";
 import request from "../../../sdk/functions";
-import { useQueryClient } from "@tanstack/react-query";
+import { Refresh } from "../../../utils/refresh";
+import { useQuery } from "@tanstack/react-query";
 
 const formDataDefaultValues = {
   title: "",
   price: "",
   duration: "",
   description: "",
+  branch:""
 };
 
 const PlansAddPopup = ({ refetch }) => {
   const [loading, setLoading] = useState(false);
-  const { register, handleSubmit } = useForm({
+  const [branchOptions, setBranchOptions] = useState([]);
+  const { register, handleSubmit,control,setValue } = useForm({
     defaultValues: formDataDefaultValues,
   });
 
-  const onSubmit = async ({ title, price, duration, description }) => {
+  const onSubmit = async ({ title, price, duration, description,branch }) => {
     try {
       setLoading(true);
       await request.create("plan", {
@@ -26,9 +30,11 @@ const PlansAddPopup = ({ refetch }) => {
           price: price,
           desc: description,
           duration: duration,
+          branch:branch
         },
       });
-      refetch();
+     // refetch();
+      Refresh()
       toast.success("Plan Created");
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
@@ -37,6 +43,17 @@ const PlansAddPopup = ({ refetch }) => {
       setLoading(false);
     }
   };
+  useQuery({
+    queryKey: ["fetch-branch"],
+    queryFn: async () => {
+      let branches = await request.findMany("branch");
+      let branchesArr = branches?.data?.map((branch) => ({
+        value: branch.id,
+        label: branch.attributes.name,
+      }));
+      setBranchOptions(branchesArr);
+    },
+  });
 
   return (
     <>
@@ -98,6 +115,27 @@ const PlansAddPopup = ({ refetch }) => {
                       />
                     </div>
                   </div>
+                  <div className="col-md-6">
+                    <div className="input-block mb-3">
+                      <label className="col-form-label">
+                        Branch <span className="text-danger">*</span>
+                      </label>
+                      <Controller
+                        name="branch"
+                        control={control}
+                        render={({ onChange, value, ref }) => (
+                          <Select
+                            options={branchOptions}
+                            placeholder="Select"
+                            value={branchOptions.find((c) => c.value === value)}
+                            onChange={(val) => setValue("branch", val.value)}
+                            required
+                          />
+                        )}
+                        rules={{ required: true }}
+                      />
+                    </div>
+                  </div>
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">Description</label>
@@ -113,9 +151,9 @@ const PlansAddPopup = ({ refetch }) => {
                 <div className="submit-section">
                   <button
                     type="submit"
-                    aria-label="Close"
+                   // aria-label="Close"
                     disabled={loading}
-                    data-bs-dismiss="modal"
+                 //   data-bs-dismiss="modal"
                     className="btn btn-primary submit-btn"
                   >
                     {loading ? " Submitting..." : " Submit"}

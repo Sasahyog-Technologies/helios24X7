@@ -26,6 +26,10 @@ const PlansList = () => {
       title: "Duration",
       dataIndex: "duration",
     },
+    {
+      title: "Branch",
+      dataIndex: "branch",
+    },
 
     {
       title: "Action",
@@ -74,23 +78,40 @@ const PlansList = () => {
   });
 
   const [query, setQuery] = useState({
-    title: "",
-    price: "",
-    duration: "",
+    search: "",
+    branch: "",
   });
   const {
     data: plansData,
     isLoading: usersIsLoading,
     refetch,
-    isRefetching
+    isRefetching,
   } = useQuery({
     queryKey: ["plans-list"],
     queryFn: async () => {
       const data = await request.findMany("plan", {
+        populate: ["branch"],
         filters: {
-          title: { $containsi: query.title },
-          price: { $containsi: query.price },
-          duration: { $containsi: query.duration },
+          $or: [
+            {
+              title: {
+                $containsi: query.search,
+              },
+            },
+            {
+              price: {
+                $containsi: query.search,
+              },
+            },
+            {
+              duration: {
+                $containsi: query.search,
+              },
+            },
+          ],
+          branch: {
+            name: { $containsi: query.branch },
+          },
         },
       });
       setTableParams({
@@ -102,10 +123,13 @@ const PlansList = () => {
         return {
           ...item.attributes,
           id: item.id,
+          branch: item.attributes?.branch?.data?.attributes?.name || "",
         };
       });
     },
   });
+
+ // console.log(plansData);
 
   const handleTableChange = (pagination, filters, sorter) => {
     //console.log("handleTableChange");
