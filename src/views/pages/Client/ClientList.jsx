@@ -120,22 +120,34 @@ const ClientList = () => {
     branch: "",
   });
 
-  const {
-    data: usersData,
-    isLoading,
-    refetch,
-  } = useQuery({
+  const { data: usersData, refetch } = useQuery({
     queryKey: ["client-list"],
     queryFn: async () => {
       setUsersIsLoading(true);
       const data = await request.findMany("users", {
         populate: "branch",
-       //  "filters[lastname][$containsi]": query.branch,
         filters: {
           type: "client",
-          firstname: { $containsi: query.search },
+          $or: [
+            {
+              firstname: {
+                $containsi: query.search,
+              },
+            },
+            {
+              lastname: {
+                $containsi: query.search,
+              },
+            },
+            {
+              mobile: {
+                $containsi: query.search,
+              },
+            },
+          ],
+
           branch: {
-            name:{ $containsi: query.branch}
+            name: { $containsi: query.branch },
           },
         },
       });
@@ -147,8 +159,7 @@ const ClientList = () => {
       // return formetter(data);
       return data;
     },
-    
-  },);
+  });
 
   const handleTableChange = (pagination, filters, sorter) => {
     //console.log("handleTableChange");

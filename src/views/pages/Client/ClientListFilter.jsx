@@ -69,7 +69,7 @@ const ClientListFilter = ({ query, setQuery, refetch }) => {
               }}
             />
             <label className="focus-label" onClick={handleLabelClick2}>
-              Client Name
+              Name or Mobile
             </label>
           </div>
         </div>
