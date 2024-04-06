@@ -209,6 +209,7 @@ import MyProfile from "../../views/pages/User/MyProfile.jsx";
 import PaymentList from "../../views/pages/payment/PaymentList.jsx";
 import InvoiceList from "../../views/pages/Invoices/InvoiceList.jsx";
 import InvoiceDetails from "../../views/pages/Invoices/InvoiceDetails.jsx";
+import PTPList from "../../views/pages/PTP/PTPList.jsx";
 
 const AppContainer = () => {
   useEffect(() => {
@@ -1214,6 +1215,11 @@ const AppContainer = () => {
       id: 10,
       path: "/owner/invoice-details/:invoiceId",
       element: <InvoiceDetails />,
+    },
+    {
+      id: 11,
+      path: "/owner/ptp-list",
+      element: <PTPList />,
     },
   ];
   const ClientRoutingObjects = [

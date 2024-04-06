@@ -32,6 +32,13 @@ const sidebarOwnerData = {
       icon: "la la-users",
     },
     {
+      menuValue: "Personal Training Program",
+      hasSubRoute: false,
+      showSubRoute: false,
+      route: "/owner/ptp-list",
+      icon: "la la-users",
+    },
+    {
       menuValue: "Subscriptions",
       hasSubRoute: false,
       showSubRoute: false,

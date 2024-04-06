@@ -3,34 +3,34 @@ import { Table } from "antd";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Breadcrumbs from "../../../components/Breadcrumbs";
-import PlansAddPopup from "../../../components/modelpopup/Plans/PlansAddPopup";
-import PlansDeletePopup from "../../../components/modelpopup/Plans/PlansDeletePopup";
-import PlanEditPopup from "../../../components/modelpopup/Plans/PlansEditPopup";
 import { useSession } from "../../../Hook/useSession";
 import request from "../../../sdk/functions";
-import PlansListFilter from "./PlansListFilter";
+import PTPListFilter from "./PTPListFilter";
+import { render } from "@testing-library/react";
+import { FormatTime } from "../../../utils/timeFormater";
 
-const PlansList = () => {
+const PTPList = () => {
   const [planId, setPlanId] = useState(null);
   const columns = [
     {
-      title: "Title",
-      dataIndex: "title",
+      title: "Trainee",
+      dataIndex: "trainee",
     },
     {
-      title: "Price",
-      dataIndex: "price",
+      title: "Trainer",
+      dataIndex: "trainer",
     },
 
     {
-      title: "Duration",
-      dataIndex: "duration",
+      title: "Session From",
+      dataIndex: "session_from",
+      render: (session_from) => <span>{`${session_from}`}</span>,
     },
     {
-      title: "Branch",
-      dataIndex: "branch",
+      title: "Session To",
+      dataIndex: "session_to",
     },
-
+    /* 
     {
       title: "Action",
       render: (plan) => (
@@ -66,7 +66,7 @@ const PlansList = () => {
           </div>
         </div>
       ),
-    },
+    }, */
   ];
 
   const [tableParams, setTableParams] = useState({
@@ -82,35 +82,49 @@ const PlansList = () => {
     branch: "",
   });
   const {
-    data: plansData,
-    isLoading: PlansIsLoading,
+    data: PTPData,
+    isLoading: PTPIsLoading,
     refetch,
     isRefetching,
   } = useQuery({
-    queryKey: ["plans-list"],
+    queryKey: ["ptp-list"],
     queryFn: async () => {
-      const data = await request.findMany("plan", {
-        populate: ["branch"],
+      const data = await request.findMany("ptp", {
+        populate: ["trainee", "trainer"],
         filters: {
-          $or: [
-            {
-              title: {
-                $containsi: query.search,
+          trainer: {
+            $or: [
+              {
+                firstname: {
+                  $containsi: query.search.split(" ")[0],
+                },
+                lastname: {
+                  $containsi: query.search.split(" ")[1] || "",
+                },
               },
-            },
-            {
-              price: {
-                $containsi: query.search,
+              {
+                mobile: {
+                  $containsi: query.search,
+                },
               },
-            },
-            {
-              duration: {
-                $containsi: query.search,
+            ],
+          },
+          trainee: {
+            $or: [
+              {
+                firstname: {
+                  $containsi: query.search.split(" ")[0],
+                },
+                lastname: {
+                  $containsi: query.search.split(" ")[1] || "",
+                },
               },
-            },
-          ],
-          branch: {
-            name: { $containsi: query.branch },
+              {
+                mobile: {
+                  $containsi: query.search,
+                },
+              },
+            ],
           },
         },
       });
@@ -123,13 +137,13 @@ const PlansList = () => {
         return {
           ...item.attributes,
           id: item.id,
-          branch: item.attributes?.branch?.data?.attributes?.name || "",
+          trainer: `${item.attributes?.trainer?.data?.attributes?.firstname} ${item.attributes?.trainer?.data?.attributes?.lastname}`,
+          trainee: `${item.attributes?.trainee?.data?.attributes?.firstname} ${item.attributes?.trainee?.data?.attributes?.lastname}`,
         };
       });
     },
   });
-
- // console.log(plansData);
+  // console.log(PTPData);
 
   const handleTableChange = (pagination, filters, sorter) => {
     //console.log("handleTableChange");
@@ -152,28 +166,24 @@ const PlansList = () => {
         <div className="content container-fluid">
           {/* Page Header */}
           <Breadcrumbs
-            maintitle="Plans"
+            maintitle="PTP"
             title="Dashboard"
-            subtitle="Plans"
+            subtitle="PTP"
             modal="#add_plan"
             name="Add Plan"
             Linkname="/plan"
-            Linkname1="/plans-list"
+            Linkname1="/PTP-list"
           />
           {/* /Page Header */}
-          <PlansListFilter
-            query={query}
-            setQuery={setQuery}
-            refetch={refetch}
-          />
+          <PTPListFilter query={query} setQuery={setQuery} refetch={refetch} />
           <div className="row">
             <div className="col-md-12">
               <div className="table-responsive">
                 <Table
-                  loading={PlansIsLoading || isRefetching}
+                  loading={PTPIsLoading || isRefetching}
                   className="table-striped"
                   columns={columns}
-                  dataSource={plansData}
+                  dataSource={PTPData}
                   pagination={{
                     total: tableParams.pagination.total,
                     showSizeChanger: true,
@@ -186,12 +196,12 @@ const PlansList = () => {
           </div>
         </div>
         {/* /Page Content */}
-        <PlansAddPopup refetch={refetch} />
+        {/*         <PTPAddPopup refetch={refetch} />
         <PlanEditPopup planId={planId} />
-        <PlansDeletePopup planId={planId} />
+        <PTPDeletePopup planId={planId} /> */}
       </div>
     </div>
   );
 };
 
-export default PlansList;
+export default PTPList;
