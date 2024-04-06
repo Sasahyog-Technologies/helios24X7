@@ -126,11 +126,6 @@ const Header = (props) => {
           <span />
         </span>
       </Link>
-      {/* Header Title */}
-      <div className="page-title-box">
-        <h3>Sasahayog Technologies</h3>
-      </div>
-      {/* /Header Title */}
       <Link
         id="mobile_btn"
         className="mobile_btn"
