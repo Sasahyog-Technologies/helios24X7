@@ -7,7 +7,7 @@ import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import notifications from "../../assets/json/notifications";
 import message from "../../assets/json/message";
-import {useSession} from "../../Hook/useSession"
+import { useSession } from "../../Hook/useSession";
 
 import {
   Applogo,
@@ -33,9 +33,9 @@ const Header = (props) => {
   const [isOpen, setIsOpen] = useState(false);
   const [profile, setProfile] = useState(false);
   const [flagImage, setFlagImage] = useState(lnEnglish);
-  const {getUserDataToCookie,logoutHandler} = useSession()
+  const { getUserDataToCookie, logoutHandler } = useSession();
 
-  const user = getUserDataToCookie()?.user
+  const user = getUserDataToCookie()?.user;
 
   const handlesidebar = () => {
     document.body.classList.toggle("mini-sidebar");
@@ -204,7 +204,7 @@ const Header = (props) => {
         </li> */}
         {/* /Flag */}
         {/* Notifications */}
-    {/*     <li className="nav-item dropdown">
+        {/*     <li className="nav-item dropdown">
           <Link
             to="#"
             className="dropdown-toggle nav-link"
@@ -280,7 +280,7 @@ const Header = (props) => {
         </li> */}
         {/* /Notifications */}
         {/* Message Notifications */}
-      {/*   <li className={`nav-item dropdown ${isOpen ? "show" : ""}`}>
+        {/*   <li className={`nav-item dropdown ${isOpen ? "show" : ""}`}>
           <Link
             to="#"
             className="dropdown-toggle nav-link"
@@ -369,12 +369,12 @@ const Header = (props) => {
             <Link className="dropdown-item" to="/client/my-profile">
               My Profile
             </Link>
-         {/*    <Link className="dropdown-item" to="/settings/companysetting">
-              Settings
-            </Link> */}
-            <button className="dropdown-item btn" onClick={logoutHandler} >
+            <button className="dropdown-item btn" onClick={logoutHandler}>
               Logout
             </button>
+            <Link className="dropdown-item" to="/settings/companysetting">
+              Contact Gym
+            </Link>
           </div>
         </li>
       </ul>
@@ -393,7 +393,7 @@ const Header = (props) => {
           <Link className="dropdown-item" to="/client/my-profile">
             My Profile
           </Link>
-      {/*     <Link className="dropdown-item" to="/settings/companysetting">
+          {/*     <Link className="dropdown-item" to="/settings/companysetting">
             Settings
           </Link> */}
           <button className="dropdown-item btn" onClick={logoutHandler}>
