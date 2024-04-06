@@ -94,32 +94,15 @@ const sidebarUserData = {
       route: "/client/my-payments",
       icon: "la la-users",
     },
-
     {
       menuValue: "Events & Sessions",
-      hasSubRoute: true,
-      showSubRoute: true,
-      route: "#",
-      icon: "la la-dashcube",
-      subMenus: [
-        {
-          menuValue: "Todays Event",
-          route: "/client/todays-event",
-        },
-        {
-          menuValue: "Todays Session",
-          route: "/client/todays-session",
-        },
-        {
-          menuValue: "Upcoming Events",
-          route: "/client/upcoming-events",
-        },
-        {
-          menuValue: "Upcoming Sessions",
-          route: "/client/upcoming-sessions",
-        },
-      ],
+      hasSubRoute: false,
+      showSubRoute: false,
+      route: "/client/events",
+      icon: "la la-users",
     },
+
+  
   ],
 };
 const sidebarTrainerData = {

@@ -2,7 +2,6 @@
 
 // Customized
 import CustomClientList from "../../views/pages/Client/ClientList.jsx";
-import TestPage from "../../components/Test/TestPage.jsx";
 
 import React, { useEffect } from "react";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
@@ -32,6 +31,7 @@ import TablesBasic from "../../views/pages/Ui_Interface/Tables/TablesBasic";
 
 // import EmployeeProfile from "../../views/pages/Pages/profile/employeeprofile";
 import OffCanvas from "../../components/OffCanvas";
+import { useSession } from "../../Hook/useSession.jsx";
 import Activities from "../../views/pages/Administration/Activities";
 import Assets from "../../views/pages/Administration/Assets";
 import AptitudeResults from "../../views/pages/Administration/Jobs/AptitudeResults";
@@ -70,6 +70,7 @@ import Settings from "../../views/pages/Administration/Settings/Settings";
 import ThemeSettings from "../../views/pages/Administration/Settings/ThemeSettings";
 import ToxboxSetting from "../../views/pages/Administration/Settings/ToxboxSetting";
 import Users from "../../views/pages/Administration/Users";
+import UserProfile from "../../views/pages/Client/ClientProfile.jsx";
 import Analytics from "../../views/pages/Crm/Analytics.jsx";
 import Companies from "../../views/pages/Crm/companies.jsx";
 import CompaniesGrid from "../../views/pages/Crm/CompaniesGrid.jsx";
@@ -109,6 +110,7 @@ import ShiftList from "../../views/pages/Employees/ShiftList";
 import Ticket from "../../views/pages/Employees/Ticket";
 import TicketDetails from "../../views/pages/Employees/TicketDetails.jsx";
 import TimeSheet from "../../views/pages/Employees/TimeSheet";
+import EventsList from "../../views/pages/events/EventsList.jsx";
 import BudgetExpenses from "../../views/pages/HR/Accounting/BudgetExpenses";
 import BudgetRevenues from "../../views/pages/HR/Accounting/BudgetRevenue";
 import Budgets from "../../views/pages/HR/Accounting/Budgets.jsx";
@@ -140,6 +142,8 @@ import InvoiceView from "../../views/pages/HR/Sales/Invoices/invoiceView";
 import Payments from "../../views/pages/HR/Sales/payments";
 import ProvidentFund from "../../views/pages/HR/Sales/ProvidentFund";
 import Taxes from "../../views/pages/HR/Sales/Taxes";
+import InvoiceDetails from "../../views/pages/Invoices/InvoiceDetails.jsx";
+import InvoiceList from "../../views/pages/Invoices/InvoiceList.jsx";
 import Calendar from "../../views/pages/MainPages/Apps/calendar";
 import IncomingCall from "../../views/pages/MainPages/Apps/calls/incomingCall";
 import Outgoing from "../../views/pages/MainPages/Apps/calls/outgoingCall";
@@ -155,20 +159,25 @@ import AdminDashboard from "../../views/pages/MainPages/Dashboard/AdminDashboard
 import DealsDashboard from "../../views/pages/MainPages/Dashboard/DealsDashboard/index.jsx";
 import EmployeeDashboard from "../../views/pages/MainPages/Dashboard/EmployeeDashboard";
 import LeadsDashboard from "../../views/pages/MainPages/Dashboard/LeadsDashboard/index.jsx";
+import MembershipList from "../../views/pages/Memberships/MembershipList.jsx";
 import BlankPage from "../../views/pages/Pages/BlankPage";
 import Faq from "../../views/pages/Pages/Faq";
 import PrivacyPolicy from "../../views/pages/Pages/PrivacyPolicy";
 import Search from "../../views/pages/Pages/Search/Search";
 import Terms from "../../views/pages/Pages/Terms";
+import PaymentList from "../../views/pages/payment/PaymentList.jsx";
 import Promotion from "../../views/pages/Performance/Promotion";
 import Resignation from "../../views/pages/Performance/Resignation";
 import Termination from "../../views/pages/Performance/Termination";
+import PlansList from "../../views/pages/Plans/PlansList.jsx";
 import ClientProfile from "../../views/pages/Profile/ClientProfile";
 import Profile from "../../views/pages/Profile/Profile";
+import PTPList from "../../views/pages/PTP/PTPList.jsx";
 import SubscribedCompany from "../../views/pages/Subscribtions/SubscribedCompany";
 import Subscribtions from "../../views/pages/Subscribtions/Subscribtions";
 import SubscribtionsCompany from "../../views/pages/Subscribtions/SubscribtionsCompany";
 import TrainerList from "../../views/pages/Trainer/TrainerList.jsx";
+import TrainerProfile from "../../views/pages/Trainer/TrainerProfile.jsx";
 import Apexchart from "../../views/pages/Ui_Interface/Charts/Apexcharts.jsx";
 import C3Charts from "../../views/pages/Ui_Interface/Charts/C3charts.jsx";
 import ChartJs from "../../views/pages/Ui_Interface/Charts/Chartjs.jsx";
@@ -199,18 +208,9 @@ import SimpleLine from "../../views/pages/Ui_Interface/Icons/Simpleicons.jsx";
 import Themifyicons from "../../views/pages/Ui_Interface/Icons/Themifyicons.jsx";
 import Typicons from "../../views/pages/Ui_Interface/Icons/Typicons.jsx";
 import WeatherIcons from "../../views/pages/Ui_Interface/Icons/Weathericons.jsx";
-import PlansList from "../../views/pages/Plans/PlansList.jsx";
-import MembershipList from "../../views/pages/Memberships/MembershipList.jsx";
-import UserProfile from "../../views/pages/Client/ClientProfile.jsx";
-import EventsList from "../../views/pages/events/EventsList.jsx";
-import TrainerProfile from "../../views/pages/Trainer/TrainerProfile.jsx";
-import { useSession } from "../../Hook/useSession.jsx";
-import MyProfile from "../../views/pages/User/MyProfile.jsx";
-import PaymentList from "../../views/pages/payment/PaymentList.jsx";
-import InvoiceList from "../../views/pages/Invoices/InvoiceList.jsx";
-import InvoiceDetails from "../../views/pages/Invoices/InvoiceDetails.jsx";
-import PTPList from "../../views/pages/PTP/PTPList.jsx";
 import MyPayments from "../../views/pages/User/MyPayments.jsx";
+import MyProfile from "../../views/pages/User/MyProfile.jsx";
+import EventsListClient from "../../views/pages/UserEvents/EventsListClient.jsx";
 
 const AppContainer = () => {
   useEffect(() => {
@@ -1233,6 +1233,11 @@ const AppContainer = () => {
       id: 2,
       path: "my-payments",
       element: <MyPayments />,
+    },
+    {
+      id: 23,
+      path: "events",
+      element: <EventsListClient />,
     },
   ];
 
