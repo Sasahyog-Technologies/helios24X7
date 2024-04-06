@@ -57,7 +57,6 @@ const InvoiceView = ({
                           </strong>
                         </h5>
                       </li>
-                      <li>United States</li>
                       <li>{userMobile}</li>
                     </ul>
                   </div>
