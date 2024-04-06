@@ -11,7 +11,7 @@ import InvoiceListFilter from "./InvoiceListFilter";
 
 const InvoiceList = () => {
   const [invoiceId, setinvoiceId] = useState(null);
-  const [InvoicesIsLoading, setInvoicesIsLoading] = useState(false);
+
   const columns = [
     {
       title: "User Name",
@@ -119,22 +119,36 @@ const InvoiceList = () => {
   });
 
   const [query, setQuery] = useState({
-    name: "",
+    search: "",
   });
 
   const {
     data: InvoicesData,
-    isLoading,
+    isLoading: InvoicesIsLoading,
     refetch,
+    isRefetching,
   } = useQuery({
     queryKey: ["Invoice-list"],
     queryFn: async () => {
-      setInvoicesIsLoading(true);
       const data = await request.findMany("invoice", {
         populate: ["user", "subscription", "payment"],
         filters: {
           user: {
-            firstname: { $containsi: query.name },
+            $or: [
+              {
+                firstname: {
+                  $containsi: query.search.split(" ")[0],
+                },
+                lastname: {
+                  $containsi: query.search.split(" ")[1] || "",
+                },
+              },
+              {
+                mobile: {
+                  $containsi: query.search,
+                },
+              },
+            ],
           },
         },
       });
@@ -142,7 +156,7 @@ const InvoiceList = () => {
         ...tableParams,
         pagination: { ...tableParams.pagination, total: data.length },
       });
-      setInvoicesIsLoading(false);
+
       // return formetter(data);
       return data.data.map((itm) => {
         return {
@@ -194,7 +208,7 @@ const InvoiceList = () => {
             <div className="col-md-12">
               <div className="table-responsive">
                 <Table
-                  loading={InvoicesIsLoading}
+                  loading={InvoicesIsLoading || isRefetching}
                   className="table-striped"
                   columns={columns}
                   dataSource={InvoicesData}

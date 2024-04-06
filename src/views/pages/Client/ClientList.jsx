@@ -13,7 +13,7 @@ import ClientListFilter from "./ClientListFilter";
 
 const ClientList = () => {
   const [userId, setUserId] = useState(null);
-  const [usersIsLoading, setUsersIsLoading] = useState(false);
+
   const columns = [
     {
       title: "First Name",
@@ -120,10 +120,14 @@ const ClientList = () => {
     branch: "",
   });
 
-  const { data: usersData, refetch } = useQuery({
+  const {
+    data: usersData,
+    refetch,
+    isLoading: usersIsLoading,
+    isRefetching,
+  } = useQuery({
     queryKey: ["client-list"],
     queryFn: async () => {
-      setUsersIsLoading(true);
       const data = await request.findMany("users", {
         populate: "branch",
         filters: {
@@ -131,12 +135,10 @@ const ClientList = () => {
           $or: [
             {
               firstname: {
-                $containsi: query.search,
+                $containsi: query.search.split(" ")[0],
               },
-            },
-            {
               lastname: {
-                $containsi: query.search,
+                $containsi: query.search.split(" ")[1] || "",
               },
             },
             {
@@ -155,7 +157,6 @@ const ClientList = () => {
         ...tableParams,
         pagination: { ...tableParams.pagination, total: data.length },
       });
-      setUsersIsLoading(false);
       // return formetter(data);
       return data;
     },
@@ -200,7 +201,7 @@ const ClientList = () => {
             <div className="col-md-12">
               <div className="table-responsive">
                 <Table
-                  loading={usersIsLoading}
+                  loading={usersIsLoading || isRefetching}
                   className="table-striped"
                   columns={columns}
                   dataSource={usersData}

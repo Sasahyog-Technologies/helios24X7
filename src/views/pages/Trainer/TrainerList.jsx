@@ -116,6 +116,7 @@ const TrainerList = () => {
   const {
     data: trainersData,
     isLoading: usersIsLoading,
+    isRefetching,
     error,
     refetch,
   } = useQuery({
@@ -125,7 +126,21 @@ const TrainerList = () => {
         populate: "branch",
         filters: {
           type: "trainer",
-          firstname: { $containsi: query.search },
+          $or: [
+            {
+              firstname: {
+                $containsi: query.search.split(" ")[0],
+              },
+              lastname: {
+                $containsi: query.search.split(" ")[1] || "",
+              },
+            },
+            {
+              mobile: {
+                $containsi: query.search,
+              },
+            },
+          ],
           branch: {
             name: { $containsi: query.branch },
           },
@@ -180,7 +195,7 @@ const TrainerList = () => {
             <div className="col-md-12">
               <div className="table-responsive">
                 <Table
-                  loading={usersIsLoading}
+                  loading={usersIsLoading || isRefetching}
                   className="table-striped"
                   columns={columns}
                   dataSource={trainersData}

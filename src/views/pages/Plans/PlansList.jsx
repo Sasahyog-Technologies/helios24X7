@@ -82,6 +82,7 @@ const PlansList = () => {
     data: plansData,
     isLoading: usersIsLoading,
     refetch,
+    isRefetching
   } = useQuery({
     queryKey: ["plans-list"],
     queryFn: async () => {
@@ -145,7 +146,7 @@ const PlansList = () => {
             <div className="col-md-12">
               <div className="table-responsive">
                 <Table
-                  loading={usersIsLoading}
+                  loading={usersIsLoading || isRefetching}
                   className="table-striped"
                   columns={columns}
                   dataSource={plansData}

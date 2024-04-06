@@ -8,7 +8,7 @@ const MembershipListFilter = ({ query, setQuery, refetch }) => {
   };
 
   const handleInputBlur1 = () => {
-    if (query.name === "") {
+    if (query.search === "") {
       setFocused(false);
     }
   };
@@ -23,7 +23,7 @@ const MembershipListFilter = ({ query, setQuery, refetch }) => {
         <div className="col-sm-6 col-md-3">
           <div
             className={
-              focused || query.name !== ""
+              focused || query.search !== ""
                 ? "input-block form-focus focused"
                 : "input-block form-focus"
             }
@@ -31,16 +31,16 @@ const MembershipListFilter = ({ query, setQuery, refetch }) => {
             <input
               type="text"
               className="form-control floating"
-              value={query.name}
+              value={query.search}
               onFocus={handleLabelClick1}
               onBlur={handleInputBlur1}
-              onChange={(e) => setQuery({ ...query, name: e.target.value })}
+              onChange={(e) => setQuery({ ...query, search: e.target.value })}
               onKeyDown={(e) => {
                 if (e.key === "Enter") handleSearch();
               }}
             />
             <label className="focus-label" onClick={handleLabelClick1}>
-              Client Name
+              Client Name or Mobile
             </label>
           </div>
         </div>

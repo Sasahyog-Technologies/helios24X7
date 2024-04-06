@@ -69,7 +69,7 @@ const TrainerListFilter = ({ query, setQuery, refetch }) => {
               }}
             />
             <label className="focus-label" onClick={handleLabelClick2}>
-              Trainer Name
+              Trainer Name or Mobile
             </label>
           </div>
         </div>

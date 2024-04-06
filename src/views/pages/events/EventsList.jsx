@@ -96,6 +96,7 @@ const EventsList = () => {
     data: eventsData,
     isLoading: eventIsLoading,
     refetch,
+    isRefetching
   } = useQuery({
     queryKey: ["event-list"],
     queryFn: async () => {
@@ -160,7 +161,7 @@ const EventsList = () => {
             <div className="col-md-12">
               <div className="table-responsive">
                 <Table
-                  loading={eventIsLoading}
+                  loading={eventIsLoading || isRefetching}
                   className="table-striped"
                   columns={columns}
                   dataSource={eventsData}

@@ -118,12 +118,13 @@ const MembershipList = () => {
   });
 
   const [query, setQuery] = useState({
-    name: "",
+    search: "",
   });
   const {
     data: subscriptionData,
     isLoading: usersIsLoading,
     refetch,
+    isRefetching
   } = useQuery({
     queryKey: ["membership-list"],
     queryFn: async () => {
@@ -131,7 +132,21 @@ const MembershipList = () => {
         populate: ["user", "plan"],
         filters: {
           user: {
-            firstname: { $containsi: query.name },
+            $or: [
+              {
+                firstname: {
+                  $containsi: query.search.split(" ")[0],
+                },
+                lastname: {
+                  $containsi: query.search.split(" ")[1] || "",
+                },
+              },
+              {
+                mobile: {
+                  $containsi: query.search,
+                },
+              },
+            ],
           },
         },
       });
@@ -195,7 +210,7 @@ const MembershipList = () => {
             <div className="col-md-12">
               <div className="table-responsive">
                 <Table
-                  loading={usersIsLoading}
+                  loading={usersIsLoading || isRefetching}
                   className="table-striped"
                   columns={columns}
                   dataSource={subscriptionData}

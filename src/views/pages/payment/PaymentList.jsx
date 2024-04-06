@@ -11,7 +11,7 @@ import PaymentListFilter from "./PaymentListFilter";
 
 const PaymentList = () => {
   const [paymentsId, setpaymentsId] = useState(null);
-  const [paymentsIsLoading, setPaymentsIsLoading] = useState(false);
+
   const columns = [
     {
       title: "User Name",
@@ -142,22 +142,36 @@ const PaymentList = () => {
   });
 
   const [query, setQuery] = useState({
-    name: "",
+    search: "",
   });
 
   const {
     data: paymentsData,
-    isLoading,
+    isLoading: paymentsIsLoading,
     refetch,
+    isRefetching,
   } = useQuery({
     queryKey: ["payment-list"],
     queryFn: async () => {
-      setPaymentsIsLoading(true);
       const data = await request.findMany("payment", {
         populate: ["user", "subscription"],
         filters: {
           user: {
-            firstname: { $containsi: query.name },
+            $or: [
+              {
+                firstname: {
+                  $containsi: query.search.split(" ")[0],
+                },
+                lastname: {
+                  $containsi: query.search.split(" ")[1] || "",
+                },
+              },
+              {
+                mobile: {
+                  $containsi: query.search,
+                },
+              },
+            ],
           },
         },
       });
@@ -165,7 +179,7 @@ const PaymentList = () => {
         ...tableParams,
         pagination: { ...tableParams.pagination, total: data.length },
       });
-      setPaymentsIsLoading(false);
+
       // return formetter(data);
       return data.data.map((itm) => {
         return {
@@ -217,7 +231,7 @@ const PaymentList = () => {
             <div className="col-md-12">
               <div className="table-responsive">
                 <Table
-                  loading={paymentsIsLoading}
+                  loading={paymentsIsLoading || isRefetching}
                   className="table-striped"
                   columns={columns}
                   dataSource={paymentsData}
