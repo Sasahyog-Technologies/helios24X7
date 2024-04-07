@@ -3,7 +3,7 @@ import Charts from "./charts";
 import Reports from "./Reports";
 import Statistics from "./statistics";
 import request from "../../../../../sdk/functions";
-
+import InvoiceTable from "./invoiceTable";
 import { useQuery } from "@tanstack/react-query";
 import Breadcrumbs from "../../../../../components/Breadcrumbs";
 
@@ -99,8 +99,7 @@ const AdminDashboard = () => {
             </div>
           </div>
           <Charts />
-          <Reports />
-          <Statistics />
+          <InvoiceTable />
         </div>
       </div>
     </div>
