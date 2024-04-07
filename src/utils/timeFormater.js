@@ -9,13 +9,8 @@ export function FormatTime(timeString) {
   date.setMinutes(minutes);
   date.setSeconds(seconds);
 
-  let formattedTime = date.toLocaleTimeString([], {
-    hour12: false,
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-  });
+  let formattedTime = date.toLocaleTimeString([],{hour: '2-digit', minute: '2-digit'});
 
-  console.log(formattedTime);
+ // console.log(formattedTime);
   return formattedTime;
 }

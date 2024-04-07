@@ -1,10 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
+/* import { useQuery } from "@tanstack/react-query";
 import Select from "react-select";
-import request from "../../../sdk/functions";
+import request from "../../../sdk/functions"; */
 
 const MyTraineesFilter = ({ query, setQuery, refetch }) => {
-  const [branchOptions, setBranchOptions] = useState([]);
+/*   const [branchOptions, setBranchOptions] = useState([]);
   const customStyles = {
     option: (provided, state) => ({
       ...provided,
@@ -14,7 +14,7 @@ const MyTraineesFilter = ({ query, setQuery, refetch }) => {
         backgroundColor: "#ff9b44",
       },
     }),
-  };
+  }; */
   const [focused, setFocused] = useState(false);
   const handleLabelClick2 = () => {
     setFocused(true);
@@ -30,7 +30,7 @@ const MyTraineesFilter = ({ query, setQuery, refetch }) => {
     refetch();
   };
 
-  useQuery({
+/*   useQuery({
     queryKey: ["find-branch"],
     queryFn: async () => {
       let branches = await request.findMany("branch");
@@ -44,7 +44,7 @@ const MyTraineesFilter = ({ query, setQuery, refetch }) => {
       });
       setBranchOptions(branchesArr);
     },
-  });
+  }); */
 
   return (
     <div>
@@ -69,11 +69,11 @@ const MyTraineesFilter = ({ query, setQuery, refetch }) => {
               }}
             />
             <label className="focus-label" onClick={handleLabelClick2}>
-              Trainer Name or Mobile
+              Trainee Name or Mobile
             </label>
           </div>
         </div>
-        <div className="col-sm-6 col-md-3">
+   {/*      <div className="col-sm-6 col-md-3">
           <div className="input-block form-focus select-focus">
             <Select
               options={branchOptions}
@@ -83,7 +83,7 @@ const MyTraineesFilter = ({ query, setQuery, refetch }) => {
             />
             <label className="focus-label">Branch</label>
           </div>
-        </div>
+        </div> */}
         <div className="col-sm-6 col-md-3">
           <button
             type="button"
