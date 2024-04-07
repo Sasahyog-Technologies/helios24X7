@@ -6,6 +6,7 @@ import request from "../../../sdk/functions";
 import Loading from "../../Loading";
 import { Refresh } from "../../../utils/refresh";
 import Select from "react-select";
+import { durationOptions } from "../../../utils";
 
 const planDefaultValues = {
   title: "",
@@ -140,13 +141,25 @@ const PlanEditPopup = ({ planId }) => {
                       <div className="col-sm-6">
                         <div className="input-block mb-3">
                           <label className="col-form-label">
-                            Duration <span className="text-danger">*</span>
+                            Duration (Month)
+                            <span className="text-danger">*</span>
                           </label>
-                          <input
-                            className="form-control"
-                            type="text"
-                            required
-                            {...register("duration", { required: true })}
+                          <Controller
+                            name="trainer"
+                            control={control}
+                            render={({ onChange, value, ref }) => (
+                              <Select
+                                options={durationOptions}
+                                placeholder={`${planData?.attributes?.duration}`}
+                                value={durationOptions.find(
+                                  (c) => c.value === value
+                                )}
+                                onChange={(val) =>
+                                  setValue("duration", val.value)
+                                }
+                                required
+                              />
+                            )}
                           />
                         </div>
                       </div>
