@@ -2518,7 +2518,7 @@
     body{
         .header{
             background: $primary;
-            background: linear-gradient(to right, $primary 0%, #fc6075 100%);
+            background: linear-gradient(to right, $secondary-900 0%, #fc6075 100%);
               .header-left .logo {
                   display: block;
                   line-height: 60px;
