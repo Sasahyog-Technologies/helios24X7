@@ -12,7 +12,9 @@ import Breadcrumbs from "../../../components/Breadcrumbs";
 const MyProfile = () => {
   const { getUserDataToCookie } = useSession();
   const session = getUserDataToCookie();
-  const userId = session?.user?.id;
+  const user = session?.user;
+  const userId = user?.id;
+  //console.log(user);
 
   const { data: clientData, isLoading: userLoading } = useQuery({
     queryKey: ["client-profile-data"],
@@ -190,15 +192,20 @@ const MyProfile = () => {
                     </div>
                   </div>
 
-                  <MyProfileTab
-                    userId={userId}
-                    ptp={clientPTPData}
-                    ptpLoading={isPtpLoading}
-                    bodyDetails={clientData?.body_detail}
-                    subscription={clientSubscriptionData}
-                    subscriptionLoading={subscriptionLoading}
-                  />
-                  {/*       )} */}
+                  {user?.type === "client" ? (
+                    <>
+                      <MyProfileTab
+                        userId={userId}
+                        ptp={clientPTPData}
+                        ptpLoading={isPtpLoading}
+                        bodyDetails={clientData?.body_detail}
+                        subscription={clientSubscriptionData}
+                        subscriptionLoading={subscriptionLoading}
+                      />
+                    </>
+                  ) : (
+                    ""
+                  )}
                 </>
               ) : (
                 <>
