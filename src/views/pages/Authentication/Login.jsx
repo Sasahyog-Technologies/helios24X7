@@ -46,9 +46,9 @@ const TestLogin = () => {
       <div className="account-page">
         <div className="main-wrapper">
           <div className="account-content">
-            <Link to="/job-list" className="btn btn-primary apply-btn">
+            {/* <Link to="/job-list" className="btn btn-primary apply-btn">
               Apply Job
-            </Link>
+            </Link> */}
             <div className="container">
               {/* Account Logo */}
               <div className="account-logo">
@@ -64,7 +64,7 @@ const TestLogin = () => {
               <div className="account-box">
                 <div className="account-wrapper">
                   <h3 className="account-title">Login</h3>
-                  <p className="account-subtitle">Access to Dashboard</p>
+                  <p className="account-subtitle">Welcome to Helios</p>
                   {/* Account Form */}
                   <div>
                     <form onSubmit={handleSubmit}>
@@ -73,7 +73,7 @@ const TestLogin = () => {
                         <input
                           required
                           className={`form-control`}
-                          type="text"
+                          type="number"
                           onChange={(e) => setIdentifier(e.target.value)}
                           value={identifier}
                           autoComplete="true"
@@ -84,11 +84,11 @@ const TestLogin = () => {
                           <div className="col">
                             <label className="col-form-label">Password</label>
                           </div>
-                          <div className="col-auto">
+                          {/* <div className="col-auto">
                             <Link className="text-muted" to="/forgot-password">
                               Forgot password?
                             </Link>
-                          </div>
+                          </div> */}
                         </div>
                         <div style={{ position: "relative" }}>
                           <input
