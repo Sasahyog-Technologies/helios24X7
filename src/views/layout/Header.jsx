@@ -8,11 +8,10 @@ import { Link } from "react-router-dom";
 import notifications from "../../assets/json/notifications";
 import message from "../../assets/json/message";
 import { useSession } from "../../Hook/useSession";
-
+import request from "../../sdk/functions";
 import {
   Applogo,
   Avatar_02,
-  headerlogo,
   hlogo,
   lnEnglish,
   lnFrench,
@@ -20,11 +19,9 @@ import {
   lnSpanish,
 } from "../../Routes/ImagePath";
 
-import { FaRegBell, FaRegComment } from "react-icons/fa";
-import { useLocation } from "react-router-dom/dist";
 import { useTranslation } from "react-i18next";
-import i18n from "../../i18n";
-
+import { useLocation } from "react-router-dom/dist";
+import { useQueries, useQuery } from "@tanstack/react-query";
 const Header = (props) => {
   const data = notifications.notifications;
   const datas = message.message;
@@ -53,12 +50,6 @@ const Header = (props) => {
     setflag(false);
   };
 
-  // const handleFlags = () => {
-  //   setflag(!flag);
-  //   setIsOpen(false);
-  //   setNotifications(false);
-  //   setProfile(false);
-  // };
   const handleNotification = () => {
     setNotifications(!notification);
     setflag(false);
@@ -145,10 +136,11 @@ const Header = (props) => {
             onClick={handleProfile}
           >
             {" "}
-            <span className="user-img me-1">
+            <UserProfile userId={user.id} />
+            {/* <span className="user-img me-1">
               <img src={Avatar_02} alt="img" />
               <span className="status online" />
-            </span>
+            </span> */}
             <span className="text-capitalize">{user?.type}</span>
           </Link>
           <div
@@ -197,3 +189,26 @@ const Header = (props) => {
 };
 
 export default Header;
+
+const UserProfile = ({ userId }) => {
+  const { data } = useQuery({
+    staleTime: 5000000,
+    refetchOnMount: false,
+    queryKey: ["userimage", userId],
+    refetchOnWindowFocus: false,
+    refetchIntervalInBackground: false,
+    queryFn: async () => {
+      const user = request.findOne("users", userId, {
+        populate: "profile",
+        field: ["profile"],
+      });
+      return user;
+    },
+  });
+
+  return (
+    <span className="user-img me-1">
+      <img src={data?.profile?.url ?? Avatar_02} alt="img" />
+    </span>
+  );
+};
