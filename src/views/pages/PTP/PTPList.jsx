@@ -24,11 +24,12 @@ const PTPList = () => {
     {
       title: "Session From",
       dataIndex: "session_from",
-      render: (session_from) => <span>{`${session_from}`}</span>,
+      render: (session_from) => <span>{`${FormatTime(session_from)}`}</span>,
     },
     {
       title: "Session To",
       dataIndex: "session_to",
+      render: (session_to) => <span>{`${FormatTime(session_to)}`}</span>,
     },
     /* 
     {
