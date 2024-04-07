@@ -361,13 +361,13 @@ const Header = (props) => {
               profile ? "show" : ""
             }`}
           >
-            <Link className="dropdown-item" to="/client/my-profile">
+            <Link className="dropdown-item" to={`/${user.type}/my-profile`}>
               My Profile
             </Link>
             <button className="dropdown-item btn" onClick={logoutHandler}>
               Logout
             </button>
-            <Link className="dropdown-item" to="/settings/companysetting">
+            <Link className="dropdown-item" to="#">
               Contact Gym
             </Link>
           </div>

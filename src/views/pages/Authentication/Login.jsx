@@ -7,7 +7,7 @@ import { useSession } from "../../../Hook/useSession";
 
 const routes = {
   owner: "/owner/client-list",
-  trainer: "/client/my-profile",
+  trainer: "/trainer/my-profile",
   client: "/client/my-profile",
 };
 

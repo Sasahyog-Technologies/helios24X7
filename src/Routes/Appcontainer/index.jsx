@@ -212,6 +212,7 @@ import MyPayments from "../../views/pages/User/MyPayments.jsx";
 import MyProfile from "../../views/pages/User/MyProfile.jsx";
 import EventsListClient from "../../views/pages/UserEvents/EventsListClient.jsx";
 import WalkinsList from "../../views/pages/Walkins/WalkinsList.jsx";
+import MyTraineesList from "../../views/pages/Trainer/MyTraineesList.jsx";
 
 const AppContainer = () => {
   useEffect(() => {
@@ -1215,18 +1216,23 @@ const AppContainer = () => {
     },
     {
       id: 10,
-      path: "/owner/invoice-details/:invoiceId",
+      path: "invoice-details/:invoiceId",
       element: <InvoiceDetails />,
     },
     {
       id: 11,
-      path: "/owner/ptp-list",
+      path: "ptp-list",
       element: <PTPList />,
     },
     {
       id: 11,
-      path: "/owner/walkins-list",
+      path: "walkins-list",
       element: <WalkinsList />,
+    },
+    {
+      id: 12,
+      path: "my-profile",
+      element: <MyProfile />,
     },
   ];
   const ClientRoutingObjects = [
@@ -1244,6 +1250,19 @@ const AppContainer = () => {
       id: 23,
       path: "events",
       element: <EventsListClient />,
+    },
+  ];
+  const TrainerRoutingObjects = [
+    {
+      id: 1,
+      path: "my-profile",
+      element: <MyProfile />,
+    },
+
+    {
+      id: 23,
+      path: "my-trainees",
+      element: <MyTraineesList />,
     },
   ];
 
@@ -1312,20 +1331,25 @@ const AppContainer = () => {
       if (user?.user.type === "owner") {
         return children;
       }
-      return <Navigate to={"/client/my-profile"} replace={true} />;
+      return <Navigate to={"/"} replace={true} />;
+    }
+    return <Navigate replace={true} to="/" />;
+  };
+  const TrainerProtectedRoute = ({ children }) => {
+    if (user || user?.jwt) {
+      if (user?.user.type === "trainer") {
+        return children;
+      }
+      return <Navigate to={"/"} replace={true} />;
     }
     return <Navigate replace={true} to="/" />;
   };
   const ClientProtectedRoute = ({ children }) => {
     if (user || user?.jwt || user?.user?.id) {
-      /*    if (
-        user?.user.type === "client" ||
-        user?.user.type === "trainer" ||
-        user?.user.type === "owner"
-      ) {
-      } */
-      return children;
-      // return <Navigate to={"/owner/client-list"} replace={true} />;
+      if (user?.user.type === "client") {
+        return children;
+      }
+      return <Navigate to={"/"} replace={true} />;
     }
     return <Navigate replace={true} to="/" />;
   };
@@ -1369,6 +1393,22 @@ const AppContainer = () => {
               />
             ))}
           </Route>
+          <Route path={"/trainer"} element={<SidebarLayout />}>
+            {TrainerRoutingObjects.map((item) => (
+              <Route
+                key={item.id}
+                path={item.path}
+                element={
+                  <TrainerProtectedRoute>{item.element}</TrainerProtectedRoute>
+                }
+              />
+            ))}
+          </Route>
+          <Route path={"/user"} element={<SidebarLayout />}>
+            <Route path={"my-profile"} element={<MyProfile />} />
+          </Route>
+
+          {/* ------------------------------ */}
 
           <Route path={"/*"} element={<SidebarLayout />}>
             {routingObjects.map((item) => (
