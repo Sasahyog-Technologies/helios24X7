@@ -63,9 +63,6 @@ const EventsListClient = () => {
             {
               start: { $lte: new Date() },
             },
-            {
-              end: { $gte: new Date() },
-            },
           ],
         };
       }
@@ -91,8 +88,6 @@ const EventsListClient = () => {
     refetch();
   }, [active]);
 
-  //console.log(EventsData);
-
   return (
     <>
       <div className="page-wrapper">
@@ -103,7 +98,7 @@ const EventsListClient = () => {
               <div className="file-wrap">
                 <div className="file-sidebar">
                   <div className="file-header justify-content-center">
-                    <span>Events</span>
+                    <span>Events & Sessions</span>
                     <Link to="#" className="file-side-close">
                       <i className="fa-solid fa-xmark" />
                     </Link>

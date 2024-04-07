@@ -7,20 +7,19 @@ import request from "../../../sdk/functions";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../../../components/Loading";
 import { useSession } from "../../../Hook/useSession";
+import ClientAvatar from "../Client/ClientAvatar";
 import Breadcrumbs from "../../../components/Breadcrumbs";
-
 const MyProfile = () => {
   const { getUserDataToCookie } = useSession();
   const session = getUserDataToCookie();
   const userId = session?.user?.id;
-  const isClient = session?.user?.type !== "trainer";
 
   const { data: clientData, isLoading: userLoading } = useQuery({
     queryKey: ["client-profile-data"],
     queryFn: async () => {
       if (userId) {
         const data = await request.findOne("users", userId, {
-          populate: ["branch", "body_detail"],
+          populate: ["branch", "body_detail", "profile"],
         });
         return data;
       }
@@ -116,11 +115,10 @@ const MyProfile = () => {
                       <div className="row">
                         <div className="col-md-12">
                           <div className="profile-view">
-                            <div className="profile-img-wrap">
-                              <div className="profile-img text-uppercase bg-info rounded-circle d-flex justify-content-center align-items-center display-3">
-                                {`${clientData.firstname.split("")[0]}`}
-                              </div>
-                            </div>
+                            <ClientAvatar
+                              userId={clientData.id}
+                              profile={clientData.profile}
+                            />
                             <div className="profile-basic">
                               <div className="row d-flex justify-content-center align-items-center">
                                 <div className="col-md-5">
