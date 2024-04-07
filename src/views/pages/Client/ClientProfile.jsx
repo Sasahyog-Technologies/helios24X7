@@ -2,20 +2,19 @@
 import React from "react";
 import { format } from "date-fns";
 import { Link } from "react-router-dom";
+import ClientAvatar from "./ClientAvatar";
 import request from "../../../sdk/functions";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../../../components/Loading";
-import AttendenceClient from "./ClientAttendence";
 import ClientProfileTab from "./ClientProfileTap";
 import Breadcrumbs from "../../../components/Breadcrumbs";
-import ClientAvatar from "./ClientAvatar";
 
 const ClientProfile = () => {
   const path = window.location.pathname;
   const userId = path.split("/")[path.split("/").length - 1];
 
   const { data: clientData, isLoading: userLoading } = useQuery({
-    queryKey: ["client-profile-data"],
+    queryKey: ["client-profile-data", userId],
     queryFn: async () => {
       if (userId) {
         const data = await request.findOne("users", userId, {
@@ -35,7 +34,7 @@ const ClientProfile = () => {
 
   const { data: clientSubscriptionData, isLoading: subscriptionLoading } =
     useQuery({
-      queryKey: ["client-subscription-data"],
+      queryKey: ["client-subscription-data", userId],
       queryFn: async () => {
         if (userId) {
           const data = await request.findMany("subscription", {
@@ -61,7 +60,7 @@ const ClientProfile = () => {
     });
 
   const { data: clientPTPData, isLoading: isPtpLoading } = useQuery({
-    queryKey: ["client-ptp-data"],
+    queryKey: ["client-ptp-data", userId],
     queryFn: async () => {
       if (userId) {
         const data = await request.findMany("ptp", {
