@@ -10,7 +10,7 @@ const formDataDefaultValues = {
   outstanding: "",
 };
 
-const PayOutstanding = ({ userId, subscription }) => {
+const PayOutstanding = ({ subscription }) => {
   const [loading, setLoading] = useState(false);
 
   const { register, handleSubmit } = useForm({
@@ -20,7 +20,6 @@ const PayOutstanding = ({ userId, subscription }) => {
   const onSubmit = async (data) => {
     try {
       setLoading(true);
-
       await request.update("subscription", subscription?.id, {
         data: {
           paid: parseInt(subscription.paid) + parseInt(data.paid),
@@ -30,7 +29,7 @@ const PayOutstanding = ({ userId, subscription }) => {
 
       let paymentRes = await request.create("payment", {
         data: {
-          user: userId,
+          user: subscription.user.id,
           amount: data.paid,
           status: "success",
           subscription: subscription?.id,
@@ -40,7 +39,7 @@ const PayOutstanding = ({ userId, subscription }) => {
       });
       await request.create("invoice", {
         data: {
-          user: userId,
+          user: subscription.user.id,
           amount: data.paid,
           payment: paymentRes.data.id,
           subscription: subscription?.id,
@@ -100,10 +99,13 @@ const PayOutstanding = ({ userId, subscription }) => {
 
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
-                      <label className="col-form-label">Outstanding</label>
+                      <label className="col-form-label">
+                        Outstanding <span className="text-danger">*</span>
+                      </label>
                       <input
                         className="form-control"
                         type="text"
+                        required
                         {...register("outstanding")}
                       />
                     </div>
