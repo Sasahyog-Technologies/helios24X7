@@ -6,7 +6,7 @@ import Breadcrumbs from "../../../components/Breadcrumbs";
 import request from "../../../sdk/functions";
 import { useSession } from "../../../Hook/useSession";
 
-const MyPayments = () => {
+const MyInvoices = () => {
   const { getUserDataToCookie } = useSession();
 
   const userId = getUserDataToCookie()?.user?.id;
@@ -17,7 +17,7 @@ const MyPayments = () => {
       dataIndex: "amount",
       render: (text, record) => (
         <span className="w-100">
-          {/*  <Link to={`/owner/Payments-profile/${record.id}`}>{text}</Link> */}
+          {/*  <Link to={`/owner/invoices-profile/${record.id}`}>{text}</Link> */}
           {text}
         </span>
       ),
@@ -29,15 +29,15 @@ const MyPayments = () => {
     },
 
     {
-      title: "Payment Date",
-      dataIndex: "payment_date",
+      title: "Invoice Date",
+      dataIndex: "invoice_date",
       render: (text, record) => (
         <span>{text ? format(new Date(text), "dd/MM/yyyy") : ""}</span>
       ),
     },
     {
-      title: "Status",
-      dataIndex: "status",
+      title: "Invoice Number",
+      dataIndex: "invoice_number",
       render: (text, record) => <span>{text}</span>,
     },
     /*   {
@@ -60,7 +60,7 @@ const MyPayments = () => {
                 className="dropdown-item"
                 to="#"
                 data-bs-toggle="modal"
-                data-bs-target="#edit_Payments"
+                data-bs-target="#edit_invoices"
                 onClick={() => setUserId(user.id)}
               >
                 <i className="fa fa-pencil m-r-5" /> Edit
@@ -69,7 +69,7 @@ const MyPayments = () => {
                 className="dropdown-item"
                 to="#"
                 data-bs-toggle="modal"
-                data-bs-target="#delete_Payments"
+                data-bs-target="#delete_invoices"
                 onClick={() => setUserId(user.id)}
               >
                 <i className="fa fa-trash m-r-5" /> Delete
@@ -94,14 +94,14 @@ const MyPayments = () => {
   });
 
   const {
-    data: paymentsData,
+    data: invoicesData,
     refetch,
-    isLoading: paymentsIsLoading,
+    isLoading: invoicesIsLoading,
     isRefetching,
   } = useQuery({
-    queryKey: ["payments-list"],
+    queryKey: ["invoices-list"],
     queryFn: async () => {
-      const data = await request.findMany("payment", {
+      const data = await request.findMany("invoice", {
         filters: {
           user: {
             id: userId,
@@ -122,7 +122,7 @@ const MyPayments = () => {
     },
   });
 
-  //  console.log(paymentsData);
+//  console.log(invoicesData);
 
   const handleTableChange = (pagination, filters, sorter) => {
     //console.log("handleTableChange");
@@ -145,12 +145,12 @@ const MyPayments = () => {
         <div className="content container-fluid">
           {/* Page Header */}
           <Breadcrumbs
-            maintitle="Payments"
+            maintitle="Invoices"
             title="Dashboard"
-            subtitle="Payments"
+            subtitle="Invoices"
           />
           {/* /Page Header */}
-          {/*      <MyPaymentsFilter
+          {/*      <MyInvoicesFilter
             query={query}
             setQuery={setQuery}
             refetch={refetch}
@@ -159,10 +159,10 @@ const MyPayments = () => {
             <div className="col-md-12">
               <div className="table-responsive">
                 <Table
-                  loading={paymentsIsLoading || isRefetching}
+                  loading={invoicesIsLoading || isRefetching}
                   className="table-striped"
                   columns={columns}
-                  dataSource={paymentsData}
+                  dataSource={invoicesData}
                   pagination={{
                     total: tableParams.pagination.total,
                     showSizeChanger: true,
@@ -172,7 +172,7 @@ const MyPayments = () => {
                   onChange={handleTableChange}
                   /*   onRow={(record, rowIndex) => {
                     return {
-                      onClick: event => {navigate(`/owner/Payments-profile/${record.id}`)}, // click row
+                      onClick: event => {navigate(`/owner/invoices-profile/${record.id}`)}, // click row
                     };
                   }} */
                 />
@@ -185,4 +185,4 @@ const MyPayments = () => {
   );
 };
 
-export default MyPayments;
+export default MyInvoices;
