@@ -59,6 +59,18 @@ const ClientProfile = () => {
       },
     });
 
+  // const {} = useQuery({
+  //   queryKey: ["training-membership", userId],
+  //   queryFn: async () => {
+  //     const subscription = await request.findMany("subscription", {
+  //       sort: ["id:desc"],
+  //       filters: {
+  //         type: "trainer-subscription",
+  //       },
+  //     });
+  //   },
+  // });
+
   const { data: clientPTPData, isLoading: isPtpLoading } = useQuery({
     queryKey: ["client-ptp-data", userId],
     queryFn: async () => {
@@ -98,7 +110,6 @@ const ClientProfile = () => {
     },
   });
 
-  // console.log(clientPTPData);
   return (
     <>
       <div className="page-wrapper">
@@ -136,7 +147,6 @@ const ClientProfile = () => {
                                     <h6 className="text-muted">
                                       {clientData.username}
                                     </h6>
-                                    {/* <div className="staff-id">Plan :</div> */}
                                     <div className="small doj text-muted">
                                       Date of Join :{" "}
                                       {format(
@@ -144,14 +154,6 @@ const ClientProfile = () => {
                                         "dd MMM yyyy"
                                       )}
                                     </div>
-                                    {/* <div className="staff-msg">
-                                      <Link
-                                        className="btn btn-custom"
-                                        to="/call/chat"
-                                      >
-                                        Send Message
-                                      </Link>
-                                    </div> */}
                                   </div>
                                 </div>
                                 <div className="col-md-7">
@@ -190,16 +192,6 @@ const ClientProfile = () => {
                                 </div>
                               </div>
                             </div>
-                            {/*   <div className="pro-edit">
-                              <Link
-                                data-bs-target="#profile_info"
-                                data-bs-toggle="modal"
-                                className="edit-icon"
-                                to="#"
-                              >
-                                <i className="fa-solid fa-pencil"></i>
-                              </Link>
-                            </div> */}
                           </div>
                         </div>
                       </div>
@@ -208,18 +200,17 @@ const ClientProfile = () => {
 
                   {/* Profile Info Tab */}
                   <ClientProfileTab
-                    bodyDetails={clientData?.body_detail}
                     userId={userId}
-                    subscriptionLoading={subscriptionLoading}
-                    subscription={clientSubscriptionData}
-                    ptpLoading={isPtpLoading}
                     ptp={clientPTPData}
+                    ptpLoading={isPtpLoading}
+                    bodyDetails={clientData?.body_detail}
+                    subscription={clientSubscriptionData}
+                    subscriptionLoading={subscriptionLoading}
                   />
-                  {/* <AttendenceClient /> */}
                 </>
               ) : (
                 <>
-                  <div>Cleint Not Found</div>
+                  <div>Client Not Found</div>
                 </>
               )}
             </>
