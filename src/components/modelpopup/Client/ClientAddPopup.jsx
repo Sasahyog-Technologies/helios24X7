@@ -418,7 +418,7 @@ const ClientAddPopup = ({ refetch }) => {
                       />
                     </div>
                   </div>
-                  <div className="col-sm-6">
+                  {/* <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">Avatar</label>
                       {cropModalOpen ? (
@@ -436,9 +436,9 @@ const ClientAddPopup = ({ refetch }) => {
                         />
                       )}
                     </div>
-                  </div>
+                  </div> */}
 
-                  {avatarSrc && !cropModalOpen ? (
+                  {/* {avatarSrc && !cropModalOpen ? (
                     <img
                       src={avatarSrc}
                       alt=""
@@ -446,100 +446,7 @@ const ClientAddPopup = ({ refetch }) => {
                     />
                   ) : (
                     ""
-                  )}
-
-                  {/* body details  */}
-
-                  {/* <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">Weight</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        {...register("weight", { required: true })}
-                      />
-                    </div>
-                  </div>
-                  {/*   <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">Height</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        {...register("height")}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">BMR</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        {...register("bmr")}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">Chest</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        {...register("chest")}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">Hip</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        {...register("hip")}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">Biceps</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        {...register("biceps")}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">Calf</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        {...register("calf")}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">Weist</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        {...register("weist")}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">Neck</label>
-                      <input
-                        className="form-control"
-                        type="text"
-                        {...register("neck")}
-                      />
-                    </div>
-                  </div> */}
+                  )} */}
                 </div>
                 <ErrorMessage
                   errors={errors}
