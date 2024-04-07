@@ -77,7 +77,23 @@ const EventCategoryOptions = [
     label: "Event",
   },
 ];
+const SubscriptionTypeOptions = [
+  {
+    value: "gym-subscription",
+    label: "GYM subscription",
+  },
+  {
+    value: "trainer-subscription",
+    label: "Trainer Subscription",
+  },
+  {
+    value: "",
+    label: "All",
+  },
+];
+
+
 
 const AvatarImageSize = 100000;
 
-export { paymentTypeOptions, durationOptions,payementStatusOptions,subscriptionStatusOptions,AvatarImageSize,EventCategoryOptions};
+export { paymentTypeOptions, durationOptions,payementStatusOptions,subscriptionStatusOptions,AvatarImageSize,EventCategoryOptions,SubscriptionTypeOptions};

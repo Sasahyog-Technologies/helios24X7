@@ -120,6 +120,7 @@ const MembershipList = () => {
 
   const [query, setQuery] = useState({
     search: "",
+    type: "",
   });
   const {
     data: subscriptionData,
@@ -132,23 +133,32 @@ const MembershipList = () => {
       const data = await request.findMany("subscription", {
         populate: ["user", "plan"],
         filters: {
-          user: {
-            $or: [
-              {
-                firstname: {
-                  $containsi: query.search.split(" ")[0],
-                },
-                lastname: {
-                  $containsi: query.search.split(" ")[1] || "",
-                },
+          $and: [
+            {
+              user: {
+                $or: [
+                  {
+                    firstname: {
+                      $containsi: query.search.split(" ")[0],
+                    },
+                    lastname: {
+                      $containsi: query.search.split(" ")[1] || "",
+                    },
+                  },
+                  {
+                    mobile: {
+                      $containsi: query.search,
+                    },
+                  },
+                ],
               },
-              {
-                mobile: {
-                  $containsi: query.search,
-                },
+            },
+            {
+              type: {
+                $containsi: query.type,
               },
-            ],
-          },
+            },
+          ],
         },
       });
       setTableParams({
