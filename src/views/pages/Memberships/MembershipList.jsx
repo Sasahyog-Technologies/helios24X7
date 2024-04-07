@@ -112,7 +112,7 @@ const MembershipList = () => {
                 data-bs-target="#pay_outstanding"
                 onClick={() => setMembership(user)}
               >
-                <i className="fa fa-pencil m-r-5" /> Pay Outstanding
+                <i className="la la-money-check-alt m-r-5" /> Pay Outstanding
               </Link>
             )}
           </div>
