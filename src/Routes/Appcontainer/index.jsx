@@ -1257,6 +1257,11 @@ const AppContainer = () => {
       path: "events",
       element: <EventsListClient />,
     },
+    {
+      id: 5,
+      path: "invoice-details/:invoiceId",
+      element: <InvoiceDetails />,
+    },
   ];
   const TrainerRoutingObjects = [
     {

@@ -16,7 +16,7 @@ const InvoiceDetials = () => {
         const data = await request.findOne("invoice", invoiceId, {
           populate: ["user", "payment", "subscription", "subscription.plan"],
         });
-        return data.data.attributes;
+        return data?.data?.attributes;
       }
       return null;
     },
@@ -38,22 +38,22 @@ const InvoiceDetials = () => {
               amount={invoiceData?.amount}
               outstanding={invoiceData?.outstanding}
               invoice_date={invoiceData?.invoice_date}
-              userMobile={invoiceData?.user.data.attributes.mobile}
-              userLastName={invoiceData?.user.data.attributes.lastname}
-              userFirstName={invoiceData?.user.data.attributes.firstname}
+              userMobile={invoiceData?.user?.data?.attributes?.mobile}
+              userLastName={invoiceData?.user?.data?.attributes?.lastname}
+              userFirstName={invoiceData?.user?.data?.attributes?.firstname}
               paymentType={
-                invoiceData?.subscription.data.attributes.payment_type
+                invoiceData?.subscription?.data?.attributes?.payment_type
               }
               planName={
-                invoiceData?.subscription.data.attributes.plan.data.attributes
+                invoiceData?.subscription?.data?.attributes?.plan?.data?.attributes
                   .title
               }
               planPrice={
-                invoiceData?.subscription.data.attributes.plan.data.attributes
+                invoiceData?.subscription?.data?.attributes?.plan?.data?.attributes
                   .price
               }
               planDuration={
-                invoiceData?.subscription.data.attributes.plan.data.attributes
+                invoiceData?.subscription?.data?.attributes?.plan?.data?.attributes
                   .title
               }
             />
