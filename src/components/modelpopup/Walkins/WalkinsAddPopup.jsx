@@ -76,7 +76,7 @@ const WalkinsAddPopup = ({ refetch }) => {
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">
-                        firstname <span className="text-danger">*</span>
+                        Firstname <span className="text-danger">*</span>
                       </label>
                       <input
                         required
@@ -91,7 +91,7 @@ const WalkinsAddPopup = ({ refetch }) => {
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">
-                        lastname <span className="text-danger">*</span>
+                        Lastname <span className="text-danger">*</span>
                       </label>
                       <input
                         required
@@ -104,7 +104,7 @@ const WalkinsAddPopup = ({ refetch }) => {
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">
-                        mobile <span className="text-danger">*</span>
+                        Mobile No <span className="text-danger">*</span>
                       </label>
                       <input
                         required
