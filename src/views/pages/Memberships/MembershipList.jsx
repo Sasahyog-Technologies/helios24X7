@@ -8,8 +8,10 @@ import MembershipDeletePopup from "../../../components/modelpopup/Membership/Del
 import MembershipEditPopup from "../../../components/modelpopup/Membership/EditMembershipPopup";
 import request from "../../../sdk/functions";
 import MembershipListFilter from "./MembershipListFilter";
+import PayOutstanding from "../../../components/modelpopup/Client/PayOutstandingPopup";
 
 const MembershipList = () => {
+  const [membership, setMembership] = useState(false);
   const [subscriptionId, setsubscriptionId] = useState(null);
 
   const columns = [
@@ -56,10 +58,6 @@ const MembershipList = () => {
         </span>
       ),
     },
-    // {
-    //   title: "Status",
-    //   dataIndex: "status",
-    // },
     {
       title: "Payment Type",
       dataIndex: "payment_type",
@@ -95,6 +93,7 @@ const MembershipList = () => {
             >
               <i className="fa fa-pencil m-r-5" /> Edit
             </Link>
+
             <Link
               className="dropdown-item"
               to="#"
@@ -104,6 +103,18 @@ const MembershipList = () => {
             >
               <i className="fa fa-trash m-r-5" /> Delete
             </Link>
+
+            {parseFloat(user.outstanding) > 0 && (
+              <Link
+                to="#"
+                data-bs-toggle="modal"
+                className="dropdown-item"
+                data-bs-target="#pay_outstanding"
+                onClick={() => setMembership(user)}
+              >
+                <i className="fa fa-pencil m-r-5" /> Pay Outstanding
+              </Link>
+            )}
           </div>
         </div>
       ),
@@ -236,10 +247,7 @@ const MembershipList = () => {
             </div>
           </div>
         </div>
-        {/* /Page Content */}
-        {/*      <ClientAddPopup />
-        <ClientEditPopup subscriptionId={subscriptionId} />
-        <ClientDeletePopup subscriptionId={subscriptionId} /> */}
+        <PayOutstanding subscription={membership} />
         <MembershipDeletePopup membershipId={subscriptionId} />
         <MembershipEditPopup membershipId={subscriptionId} />
       </div>
