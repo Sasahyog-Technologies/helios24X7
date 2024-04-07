@@ -4,6 +4,13 @@ const sidebarOwnerData = {
   separateRoute: false,
   menu: [
     {
+      menuValue: "Analytics",
+      hasSubRoute: false,
+      showSubRoute: false,
+      route: "/admin-dashboard",
+      icon: "la la-users",
+    },
+    {
       menuValue: "Clients",
       hasSubRoute: false,
       showSubRoute: false,
@@ -59,7 +66,7 @@ const sidebarOwnerData = {
       route: "/owner/invoice-list",
       icon: "la la-users",
     },
-  
+
     {
       menuValue: "Walkins",
       hasSubRoute: false,
@@ -95,8 +102,6 @@ const sidebarUserData = {
       route: "/client/events",
       icon: "la la-users",
     },
-
-  
   ],
 };
 const sidebarTrainerData = {

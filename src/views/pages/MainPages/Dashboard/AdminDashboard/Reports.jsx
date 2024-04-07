@@ -5,11 +5,11 @@ import { base_url } from "../../../../../base_urls";
 const Reports = () => {
   const [users, setUsers] = useState([]);
 
-  useEffect(() => {
-    axios
-      .get(base_url + "/api/dashreports.json")
-      .then((res) => setUsers(res.data));
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get(base_url + "/api/dashreports.json")
+  //     .then((res) => setUsers(res.data));
+  // }, []);
   return (
     <div>
       <div className="row">

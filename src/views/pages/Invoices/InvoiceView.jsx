@@ -11,6 +11,7 @@ const InvoiceView = ({
   planPrice,
   userMobile,
   paymentType,
+  invoiceNumber,
 }) => {
   return (
     <>
@@ -34,7 +35,9 @@ const InvoiceView = ({
                   </div>
                   <div className="col-sm-6 m-b-20">
                     <div className="invoice-details">
-                      <h3 className="text-uppercase">Invoice #INV-0001</h3>
+                      <h3 className="text-uppercase">
+                        Invoice #HL{invoiceNumber}
+                      </h3>
                       <ul className="list-unstyled">
                         <li>
                           Date: <span>{invoice_date}</span>
@@ -90,9 +93,9 @@ const InvoiceView = ({
                           <div className="font-weight-bold">
                             {planName} @ {planPrice}
                           </div>
-                          <div>
+                          {/* <div>
                             {invoice_date} - {invoice_date}
-                          </div>
+                          </div> */}
                         </td>
                         <td className="text-end">₹{planPrice}</td>
                       </tr>
@@ -117,28 +120,44 @@ const InvoiceView = ({
                               </tr>
                               <tr>
                                 <th>SGST@9: </th>
-                                <td className="text-end">0</td>
+                                <td className="text-end">
+                                  ₹
+                                  {percentage(parseFloat(planPrice), 9).toFixed(
+                                    2
+                                  )}
+                                </td>
                               </tr>
                               <tr>
                                 <th>CGST@9: </th>
-                                <td className="text-end">0</td>
+                                <td className="text-end">
+                                  ₹
+                                  {percentage(parseFloat(planPrice), 9).toFixed(
+                                    2
+                                  )}
+                                </td>
                               </tr>
                               <tr>
                                 <th>Grand Total:</th>
                                 <td className="text-end text-primary">
-                                  <h5>₹{planPrice}</h5>
+                                  <h5>
+                                    ₹
+                                    {(
+                                      parseFloat(planPrice) +
+                                      percentage(parseFloat(planPrice), 18)
+                                    ).toFixed(2)}
+                                  </h5>
                                 </td>
                               </tr>
                               <tr>
                                 <th>Payment:</th>
                                 <td className="text-end text-primary">
-                                  <h5>₹{amount}</h5>
+                                  <h5>₹{parseFloat(amount).toFixed(2)}</h5>
                                 </td>
                               </tr>
                               <tr>
                                 <th>Balance:</th>
                                 <td className="text-end text-primary">
-                                  <h5>₹{outstanding}</h5>
+                                  <h5>₹{parseFloat(outstanding).toFixed(2)}</h5>
                                 </td>
                               </tr>
                             </tbody>
@@ -158,3 +177,15 @@ const InvoiceView = ({
 };
 
 export default InvoiceView;
+
+const percentage = (value, percent) => {
+  if (typeof value !== "number" || typeof percent !== "number") {
+    throw new Error("Both arguments must be numbers");
+  }
+
+  if (percent < 0 || percent > 100) {
+    throw new Error("Percentage must be between 0 and 100");
+  }
+
+  return (value * percent) / 100;
+};
