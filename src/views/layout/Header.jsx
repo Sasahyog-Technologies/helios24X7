@@ -99,7 +99,7 @@ const Header = (props) => {
         </Link>
       </div>
       {/* /Logo */}
-      <Link
+      {/* <Link
         id="toggle_btn"
         to="#"
         style={{
@@ -116,7 +116,7 @@ const Header = (props) => {
           <span />
           <span />
         </span>
-      </Link>
+      </Link> */}
       <Link
         id="mobile_btn"
         className="mobile_btn"
