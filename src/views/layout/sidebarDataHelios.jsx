@@ -100,7 +100,7 @@ const sidebarUserData = {
       hasSubRoute: false,
       showSubRoute: false,
       route: "/client/my-invoices",
-      icon: "la la-wallet",
+      icon: "la la-file-alt",
     },
     {
       menuValue: "Events & Sessions",
