@@ -1,13 +1,14 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
-import { useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
 import React from "react";
+import { format } from "date-fns";
 import { Link } from "react-router-dom";
-import Breadcrumbs from "../../../components/Breadcrumbs";
-import Loading from "../../../components/Loading";
 import request from "../../../sdk/functions";
+import { useQuery } from "@tanstack/react-query";
+import Loading from "../../../components/Loading";
 import AttendenceClient from "./ClientAttendence";
 import ClientProfileTab from "./ClientProfileTap";
+import Breadcrumbs from "../../../components/Breadcrumbs";
+import ClientAvatar from "./ClientAvatar";
 
 const ClientProfile = () => {
   const path = window.location.pathname;
@@ -20,6 +21,7 @@ const ClientProfile = () => {
         const data = await request.findOne("users", userId, {
           populate: [
             "branch",
+            "profile",
             "body_detail",
             "subscription",
             "subscription.plan",
@@ -30,6 +32,7 @@ const ClientProfile = () => {
       return null;
     },
   });
+
   const { data: clientSubscriptionData, isLoading: subscriptionLoading } =
     useQuery({
       queryKey: ["client-subscription-data"],
@@ -56,6 +59,7 @@ const ClientProfile = () => {
         return null;
       },
     });
+
   const { data: clientPTPData, isLoading: isPtpLoading } = useQuery({
     queryKey: ["client-ptp-data"],
     queryFn: async () => {
@@ -118,11 +122,10 @@ const ClientProfile = () => {
                       <div className="row">
                         <div className="col-md-12">
                           <div className="profile-view">
-                            <div className="profile-img-wrap">
-                              <div className="profile-img text-uppercase bg-info rounded-circle d-flex justify-content-center align-items-center display-3">
-                                {`${clientData.firstname.split("")[0]}`}
-                              </div>
-                            </div>
+                            <ClientAvatar
+                              userId={clientData?.id}
+                              profile={clientData?.profile}
+                            />
                             <div className="profile-basic">
                               <div className="row d-flex justify-content-center align-items-center">
                                 <div className="col-md-5">
@@ -204,7 +207,6 @@ const ClientProfile = () => {
                     </div>
                   </div>
 
-
                   {/* Profile Info Tab */}
                   <ClientProfileTab
                     bodyDetails={clientData?.body_detail}
@@ -214,7 +216,7 @@ const ClientProfile = () => {
                     ptpLoading={isPtpLoading}
                     ptp={clientPTPData}
                   />
-                  <AttendenceClient />
+                  {/* <AttendenceClient /> */}
                 </>
               ) : (
                 <>
