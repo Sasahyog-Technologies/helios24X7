@@ -24,19 +24,6 @@ const PaymentList = () => {
       ),
     },
     {
-      title: "Label",
-      dataIndex: "label",
-      render: (text, record) => (
-        <span className="table-avatar">
-          {text}
-          {/*     <Link to={`/owner/client-profile/${record.id}`}>
-            {text}
-          </Link> */}
-        </span>
-      ),
-    },
-
-    {
       title: "Subscription Type",
       dataIndex: "subscriptionType",
       render: (text, record) => (
@@ -86,12 +73,7 @@ const PaymentList = () => {
     {
       title: "Outstanding",
       dataIndex: "outstanding",
-      render: (text, record) => (
-        <span>
-          {/*    <Link to={`/owner/client-profile/${record.id}`}>{text?.name}</Link> */}
-          {text}
-        </span>
-      ),
+      render: (text, record) => <span>{text ? text : "0"}</span>,
     },
     {
       title: "Action",

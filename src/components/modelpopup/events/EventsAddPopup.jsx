@@ -3,17 +3,8 @@ import toast from "react-hot-toast";
 import React, { useState } from "react";
 import request from "../../../sdk/functions";
 import { useForm, Controller } from "react-hook-form";
+import {EventCategoryOptions} from "../../../utils/index"
 
-const branchOptions = [
-  {
-    value: "session",
-    label: "Session",
-  },
-  {
-    value: "event",
-    label: "Event",
-  },
-];
 
 const formDataDefaultValues = {
   title: "",
@@ -146,16 +137,16 @@ const EventsAddPopup = () => {
                   <div className="col-md-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">
-                        Branch <span className="text-danger">*</span>
+                        Category <span className="text-danger">*</span>
                       </label>
                       <Controller
                         name="category"
                         control={control}
                         render={({ value }) => (
                           <Select
-                            options={branchOptions}
+                            options={EventCategoryOptions}
                             placeholder="Select"
-                            value={branchOptions.find((c) => c.value === value)}
+                            value={EventCategoryOptions.find((c) => c.value === value)}
                             onChange={(val) => setValue("category", val.value)}
                           />
                         )}

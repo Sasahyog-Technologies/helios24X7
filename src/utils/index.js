@@ -67,6 +67,17 @@ const subscriptionStatusOptions = [
   },
 ]
 
+const EventCategoryOptions = [
+  {
+    value: "session",
+    label: "Session",
+  },
+  {
+    value: "event",
+    label: "Event",
+  },
+];
+
 const AvatarImageSize = 100000;
 
-export { paymentTypeOptions, durationOptions,payementStatusOptions,subscriptionStatusOptions,AvatarImageSize};
+export { paymentTypeOptions, durationOptions,payementStatusOptions,subscriptionStatusOptions,AvatarImageSize,EventCategoryOptions};

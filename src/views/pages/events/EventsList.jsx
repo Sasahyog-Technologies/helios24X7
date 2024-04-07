@@ -8,6 +8,7 @@ import EventsDeletePopup from "../../../components/modelpopup/events/EventsDelet
 import EventEditPopup from "../../../components/modelpopup/events/EventsEditPopup";
 import request from "../../../sdk/functions";
 import EventsListFilter from "./EventsListFilter";
+import { format } from "date-fns";
 
 const EventsList = () => {
   const [eventId, seteventId] = useState(null);
@@ -26,9 +27,28 @@ const EventsList = () => {
       dataIndex: "title",
     },
     {
+      title: "Category",
+      dataIndex: "category",
+    },
+    {
+      title: "Start",
+      dataIndex: "start",
+      render: (text, record) => (
+        <span>{format(new Date(text), "dd/MM/yyyy")}</span>
+      ),
+    },
+    {
+      title: "End",
+      dataIndex: "end",
+      render: (text, record) => (
+        <span>{format(new Date(text), "dd/MM/yyyy")}</span>
+      ),
+    },
+    {
       title: "Description",
       dataIndex: "desc",
     },
+
     {
       title: "Media",
       dataIndex: "media",
@@ -96,7 +116,7 @@ const EventsList = () => {
     data: eventsData,
     isLoading: eventIsLoading,
     refetch,
-    isRefetching
+    isRefetching,
   } = useQuery({
     queryKey: ["event-list"],
     queryFn: async () => {
@@ -143,9 +163,9 @@ const EventsList = () => {
         <div className="content container-fluid">
           {/* Page Header */}
           <Breadcrumbs
-            maintitle="Events"
+            maintitle="Events & Sessions"
             title="Dashboard"
-            subtitle="Events"
+            subtitle="Events & Sessions"
             modal="#add_event"
             name="Add Event"
             Linkname="/event"

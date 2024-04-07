@@ -1,18 +1,25 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import toast from "react-hot-toast";
 import request from "../../../sdk/functions";
 import Loading from "../../Loading";
 import { Refresh } from "../../../utils/refresh";
+import DatePicker from "react-datepicker";
+import { EventCategoryOptions } from "../../../utils";
+import Select from "react-select";
+
 const userDefaultValues = {
   title: "",
-  desc: "",
+  description: "",
+  category: "",
 };
 
 const EventEditPopup = ({ eventId }) => {
   const [userLoading, setUserLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
   const [image, setImage] = useState();
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -20,21 +27,24 @@ const EventEditPopup = ({ eventId }) => {
       setImage(file);
     }
   };
-  const { register, handleSubmit, reset } = useForm({
+  const { register, handleSubmit, reset, control, setValue } = useForm({
     defaultValues: userDefaultValues,
   });
-  const { isLoading: userIsLoading, refetch } = useQuery({
+  const { data: eventData, refetch } = useQuery({
     queryKey: ["event-data"],
     queryFn: async () => {
       setUserLoading(true);
       if (eventId) {
         const res = await request.findOne("event", eventId);
         reset({
-          title: res.data.attributes.title,
-          desc: res.data.attributes.desc,
+          title: res?.data?.attributes?.title,
+          description: res?.data?.attributes?.desc,
+          category: res?.data?.attributes?.category,
         });
+        setStartDate(res?.data?.attributes?.start);
+        setEndDate(res?.data?.attributes?.end);
         setUserLoading(false);
-        return res;
+        return res.data;
       }
       reset(userDefaultValues);
       return null;
@@ -45,7 +55,7 @@ const EventEditPopup = ({ eventId }) => {
     setSubmitLoading(true);
     try {
       await request.update("event", eventId, {
-        data: { ...dt },
+        data: { ...dt, start: startDate, end: endDate },
       });
       toast.success("Event updated");
       Refresh();
@@ -105,11 +115,72 @@ const EventEditPopup = ({ eventId }) => {
 
                       <div className="col-sm-6">
                         <div className="input-block mb-3">
-                          <label className="col-form-label">Description</label>
+                          <label className="col-form-label">
+                            Start Date <span className="text-danger">*</span>
+                          </label>
+                          <div className="cal-icon">
+                            <DatePicker
+                              selected={startDate}
+                              onChange={(date) => setStartDate(date)}
+                              className="form-control floating datetimepicker"
+                              type="date"
+                              dateFormat="dd-MM-yyyy"
+                              required
+                            />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="col-sm-6">
+                        <div className="input-block mb-3">
+                          <label className="col-form-label">
+                            End Date <span className="text-danger">*</span>
+                          </label>
+                          <div className="cal-icon">
+                            <DatePicker
+                              selected={endDate}
+                              onChange={(date) => setEndDate(date)}
+                              className="form-control floating datetimepicker"
+                              type="date"
+                              dateFormat="dd-MM-yyyy"
+                              required
+                            />
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="col-md-6">
+                        <div className="input-block mb-3">
+                          <label className="col-form-label">
+                            Category <span className="text-danger">*</span>
+                          </label>
+                          <Controller
+                            name="category"
+                            control={control}
+                            render={({ value }) => (
+                              <Select
+                                options={EventCategoryOptions}
+                                placeholder={eventData?.attributes?.category}
+                                value={EventCategoryOptions.find(
+                                  (c) => c.value === value
+                                )}
+                                onChange={(val) =>
+                                  setValue("category", val.value)
+                                }
+                              />
+                            )}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-sm-6">
+                        <div className="input-block mb-3">
+                          <label className="col-form-label">
+                            descriptionription
+                          </label>
                           <textarea
                             className="form-control"
                             type="text"
-                            {...register("desc")}
+                            {...register("description")}
                           />
                         </div>
                       </div>
@@ -123,7 +194,6 @@ const EventEditPopup = ({ eventId }) => {
                             onChange={handleImageChange}
                             placeholder="Image"
                             className="file-input file-input-bordered  file-input-info w-full max-w-xs"
-                            required
                           />
                         </div>
                       </div>

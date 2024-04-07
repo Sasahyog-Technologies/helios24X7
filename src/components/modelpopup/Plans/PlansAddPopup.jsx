@@ -5,6 +5,7 @@ import Select from "react-select";
 import request from "../../../sdk/functions";
 import { Refresh } from "../../../utils/refresh";
 import { useQuery } from "@tanstack/react-query";
+import { durationOptions } from "../../../utils";
 
 const formDataDefaultValues = {
   title: "",
@@ -105,13 +106,22 @@ const PlansAddPopup = ({ refetch }) => {
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">
-                        Duration <span className="text-danger">*</span>
+                        Duration (Month)<span className="text-danger">*</span>
                       </label>
-                      <input
-                        required
-                        type="number"
-                        className="form-control"
-                        {...register("duration", { required: true })}
+                      <Controller
+                        name="trainer"
+                        control={control}
+                        render={({ onChange, value, ref }) => (
+                          <Select
+                            options={durationOptions}
+                            placeholder="Select"
+                            value={durationOptions.find(
+                              (c) => c.value === value
+                            )}
+                            onChange={(val) => setValue("duration", val.value)}
+                            required
+                          />
+                        )}
                       />
                     </div>
                   </div>

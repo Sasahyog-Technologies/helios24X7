@@ -1,42 +1,56 @@
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import toast from "react-hot-toast";
 import request from "../../../sdk/functions";
 import Loading from "../../Loading";
 import { Refresh } from "../../../utils/refresh";
+import Select from "react-select";
+import { durationOptions } from "../../../utils";
+
 const planDefaultValues = {
   title: "",
   price: "",
   duration: "",
   desc: "",
+  branch: "",
 };
 
 const PlanEditPopup = ({ planId }) => {
   const [planLoading, setplanLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
-  const { register, handleSubmit, reset } = useForm({
+  const [branchOptions, setBranchOptions] = useState([]);
+  const { register, handleSubmit, reset, control, setValue } = useForm({
     defaultValues: planDefaultValues,
   });
-  const { isLoading: userIsLoading, refetch } = useQuery({
+  const {
+    data: planData,
+    isLoading,
+    refetch,
+  } = useQuery({
     queryKey: ["plan-data"],
     queryFn: async () => {
       setplanLoading(true);
       if (planId) {
-        const res = await request.findOne("plan", planId);
+        const res = await request.findOne("plan", planId, {
+          populate: ["branch"],
+        });
         reset({
           title: res.data.attributes.title,
           price: res.data.attributes.price,
           duration: res.data.attributes.duration,
           desc: res.data.attributes.desc,
+          branch: res.data?.attributes?.branch?.data?.id || "",
         });
         setplanLoading(false);
-        return res;
+        return res.data;
       }
       reset(planDefaultValues);
       return null;
     },
   });
+
+  //console.log(planData)
 
   const onSubmit = async (dt) => {
     setSubmitLoading(true);
@@ -45,7 +59,7 @@ const PlanEditPopup = ({ planId }) => {
         data: { ...dt },
       });
       toast.success("plan updated");
-      Refresh()
+      Refresh();
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);
@@ -57,6 +71,18 @@ const PlanEditPopup = ({ planId }) => {
   useEffect(() => {
     refetch();
   }, [planId, refetch, reset]);
+
+  useQuery({
+    queryKey: ["fetch-branches"],
+    queryFn: async () => {
+      let branches = await request.findMany("branch");
+      let branchesArr = branches?.data?.map((branch) => ({
+        value: branch.id,
+        label: branch.attributes.name,
+      }));
+      setBranchOptions(branchesArr);
+    },
+  });
 
   return (
     <>
@@ -115,13 +141,25 @@ const PlanEditPopup = ({ planId }) => {
                       <div className="col-sm-6">
                         <div className="input-block mb-3">
                           <label className="col-form-label">
-                            Duration <span className="text-danger">*</span>
+                            Duration (Month)
+                            <span className="text-danger">*</span>
                           </label>
-                          <input
-                            className="form-control"
-                            type="text"
-                            required
-                            {...register("duration", { required: true })}
+                          <Controller
+                            name="trainer"
+                            control={control}
+                            render={({ onChange, value, ref }) => (
+                              <Select
+                                options={durationOptions}
+                                placeholder={`${planData?.attributes?.duration}`}
+                                value={durationOptions.find(
+                                  (c) => c.value === value
+                                )}
+                                onChange={(val) =>
+                                  setValue("duration", val.value)
+                                }
+                                required
+                              />
+                            )}
                           />
                         </div>
                       </div>
@@ -132,6 +170,37 @@ const PlanEditPopup = ({ planId }) => {
                             className="form-control"
                             type="text"
                             {...register("desc")}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="col-md-6">
+                        <div className="input-block mb-3">
+                          <label className="col-form-label">
+                            Branch <span className="text-danger">*</span>
+                          </label>
+                          <Controller
+                            name="branch"
+                            control={control}
+                            render={({ onChange, value, ref }) => (
+                              <Select
+                                options={branchOptions}
+                                placeholder={
+                                  planData?.attributes?.branch?.data?.attributes
+                                    ?.name
+                                }
+                                value={branchOptions.find(
+                                  (c) => c.value === value
+                                )}
+                                onChange={(val) =>
+                                  setValue("branch", val.value)
+                                }
+                                defaultValue={
+                                  planData?.attributes?.branch?.data?.attributes
+                                    ?.name
+                                }
+                              />
+                            )}
                           />
                         </div>
                       </div>
