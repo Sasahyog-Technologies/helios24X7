@@ -34,6 +34,9 @@ export const EventsFilterList = [
 
 const EventsListClient = () => {
   const [active, setActive] = useState(EventsFilterList[0]);
+  const [query, setQuery] = useState({
+    search: "",
+  });
   const {
     data: EventsData,
     isLoading,
@@ -50,10 +53,12 @@ const EventsListClient = () => {
         filters.filters = {
           category: active.category,
           start: { $gt: new Date() },
+          title: { $containsi: query.search },
         };
       } else if (active.type === "today") {
         filters.filters = {
           category: active.category,
+          title: { $containsi: query.search },
           $and: [
             {
               start: { $lte: new Date() },
@@ -76,6 +81,10 @@ const EventsListClient = () => {
   });
   const handleSetActive = (ev) => {
     setActive(ev);
+  };
+  const handleSearch = (e) => {
+    e.preventDefault();
+    refetch();
   };
 
   useEffect(() => {
@@ -123,7 +132,7 @@ const EventsListClient = () => {
                 <div className="file-cont-wrap w-100">
                   <div className="file-cont-inner">
                     <div className="file-content">
-                      <form className="file-search">
+                      <form className="file-search" onSubmit={handleSearch}>
                         <div className="input-group">
                           <div className="input-group-text">
                             <i className="fa-solid fa-magnifying-glass" />
@@ -132,6 +141,10 @@ const EventsListClient = () => {
                             type="text"
                             className="form-control rounded-pill"
                             placeholder="Search"
+                            onChange={(e) =>
+                              setQuery({ search: e.target.value })
+                            }
+                            value={query.search}
                           />
                         </div>
                       </form>
