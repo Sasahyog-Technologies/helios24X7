@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 import request from "../../../sdk/functions";
 import { useSession } from "../../../Hook/useSession";
+import { Link } from "react-router-dom";
 
 const MyInvoices = () => {
   const { getUserDataToCookie } = useSession();
@@ -16,29 +17,40 @@ const MyInvoices = () => {
       title: "Amount",
       dataIndex: "amount",
       render: (text, record) => (
-        <span className="w-100">
-          {/*  <Link to={`/owner/invoices-profile/${record.id}`}>{text}</Link> */}
-          {text}
+        <span className="w-100 text-capitalize">
+          <Link to={`/client/invoice-details/${record.id}`}>{text}</Link>
         </span>
       ),
     },
     {
       title: "Outstanding",
       dataIndex: "outstanding",
-      render: (text, record) => <span className="w-100">{text}</span>,
+      render: (text, record) => (
+        <span className="w-100 text-capitalize">
+          <Link to={`/client/invoice-details/${record.id}`}>{text}</Link>
+        </span>
+      ),
     },
 
     {
       title: "Invoice Date",
       dataIndex: "invoice_date",
       render: (text, record) => (
-        <span>{text ? format(new Date(text), "dd/MM/yyyy") : ""}</span>
+        <span className="w-100 text-capitalize">
+          <Link to={`/client/invoice-details/${record.id}`}>
+            {text ? format(new Date(text), "dd/MM/yyyy") : ""}
+          </Link>
+        </span>
       ),
     },
     {
       title: "Invoice Number",
       dataIndex: "invoice_number",
-      render: (text, record) => <span>{text}</span>,
+      render: (text, record) => (
+        <span className="w-100 text-capitalize">
+          <Link to={`/client/invoice-details/${record.id}`}>{text}</Link>
+        </span>
+      ),
     },
     /*   {
         title: "Action",
@@ -122,7 +134,7 @@ const MyInvoices = () => {
     },
   });
 
-//  console.log(invoicesData);
+  //  console.log(invoicesData);
 
   const handleTableChange = (pagination, filters, sorter) => {
     //console.log("handleTableChange");
