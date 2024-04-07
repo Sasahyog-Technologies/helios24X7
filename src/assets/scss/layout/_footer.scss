@@ -24,9 +24,6 @@
     	color: $white;
     	font-size: $font-size-24;
     	background-color: $primary;
-    	-webkit-animation:spin 4s linear infinite;
-	    -moz-animation:spin 4s linear infinite;
-	    animation:spin 4s linear infinite;
         display: -webkit-box;
         display: -ms-flexbox;
         display: flex;
