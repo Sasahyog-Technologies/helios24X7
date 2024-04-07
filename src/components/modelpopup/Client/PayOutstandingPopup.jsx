@@ -29,20 +29,20 @@ const PayOutstanding = ({ subscription }) => {
 
       let paymentRes = await request.create("payment", {
         data: {
-          user: subscription.user.id,
-          amount: data.paid,
           status: "success",
+          amount: data.paid,
           subscription: subscription?.id,
+          user: subscription.user.data.id,
           outstanding: data.outstanding || null,
           payment_date: new Date().toISOString(),
         },
       });
       await request.create("invoice", {
         data: {
-          user: subscription.user.id,
           amount: data.paid,
           payment: paymentRes.data.id,
           subscription: subscription?.id,
+          user: subscription.user.data.id,
           invoice_number: InvoiceNumberGenerator(),
           invoice_date: new Date().toISOString(),
           outstanding: data.outstanding || null,
