@@ -69,7 +69,7 @@ const WalkinsListFilter = ({ query, setQuery, refetch }) => {
               }}
             />
             <label className="focus-label" onClick={handleLabelClick1}>
-            Walkins Name
+            Walkins Name or Mobile
             </label>
           </div>
         </div>
