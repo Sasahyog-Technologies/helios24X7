@@ -32,7 +32,7 @@ const sidebarOwnerData = {
       icon: "la la-users",
     },
     {
-      menuValue: "Personal Training Program",
+      menuValue: "Personal Training",
       hasSubRoute: false,
       showSubRoute: false,
       route: "/owner/ptp-list",
@@ -59,18 +59,12 @@ const sidebarOwnerData = {
       route: "/owner/invoice-list",
       icon: "la la-users",
     },
-    {
-      menuValue: "Personal Trainings",
-      hasSubRoute: false,
-      showSubRoute: false,
-      route: "/owner/invoice-list",
-      icon: "la la-users",
-    },
+  
     {
       menuValue: "Walkins",
       hasSubRoute: false,
       showSubRoute: false,
-      route: "/owner/invoice-list",
+      route: "/owner/walkins-list",
       icon: "la la-users",
     },
   ],

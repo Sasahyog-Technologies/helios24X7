@@ -211,6 +211,7 @@ import WeatherIcons from "../../views/pages/Ui_Interface/Icons/Weathericons.jsx"
 import MyPayments from "../../views/pages/User/MyPayments.jsx";
 import MyProfile from "../../views/pages/User/MyProfile.jsx";
 import EventsListClient from "../../views/pages/UserEvents/EventsListClient.jsx";
+import WalkinsList from "../../views/pages/Walkins/WalkinsList.jsx";
 
 const AppContainer = () => {
   useEffect(() => {
@@ -1221,6 +1222,11 @@ const AppContainer = () => {
       id: 11,
       path: "/owner/ptp-list",
       element: <PTPList />,
+    },
+    {
+      id: 11,
+      path: "/owner/walkins-list",
+      element: <WalkinsList />,
     },
   ];
   const ClientRoutingObjects = [
