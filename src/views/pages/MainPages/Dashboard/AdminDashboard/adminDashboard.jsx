@@ -1,21 +1,73 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useState } from "react";
 import Charts from "./charts";
 import Reports from "./Reports";
 import Statistics from "./statistics";
-import InvoiceTable from "./invoiceTable";
-import PaymentTable from "./paymentTable";
-import ClientTable from "./clientTable";
-import RecentTable from "./recentTable";
+import request from "../../../../../sdk/functions";
+
 import Breadcrumbs from "../../../../../components/Breadcrumbs";
-import { base_url } from "../../../../../base_urls";
+import { useQuery } from "@tanstack/react-query";
+
+const users = [
+  {
+    id: 1,
+    icon: "fa fa-cubes",
+    number: 112,
+    label: "Projects",
+  },
+  {
+    id: 2,
+    icon: "fa fa-usd",
+    number: 44,
+    label: "Clients",
+  },
+  {
+    id: 3,
+    icon: "fa-regular fa-gem",
+    number: 37,
+    label: "Tasks",
+  },
+  {
+    id: 4,
+    icon: "fa fa-user",
+    number: 218,
+    label: "Employees",
+  },
+];
 
 const AdminDashboard = () => {
-  const [users, setUsers] = useState([]);
+  const { data, isLoading } = useQuery({
+    queryKey: ["admin-report"],
+    queryFn: async () => {
+      const clients = await request.findMany("users", {
+        filters: {
+          type: "client",
+        },
+        feilds: ["username"],
+      });
 
-  useEffect(() => {
-    axios.get(base_url + "/api/dash.json").then((res) => setUsers(res.data));
-  }, []);
+      const trainers = await request.findMany("users", {
+        filters: {
+          type: "trainer",
+        },
+        feilds: ["username"],
+      });
+
+      const branches = await request.findMany("branch", {
+        feilds: ["name"],
+      });
+
+      const subscriptions = await request.findMany("subscription", {
+        feilds: ["type"],
+      });
+
+      return {
+        clients: clients.length,
+        trainers: trainers.length,
+        branches: branches.data.length,
+        subscriptions: subscriptions.data.length,
+      };
+    },
+  });
 
   return (
     <div className="main-wrapper">
@@ -25,41 +77,57 @@ const AdminDashboard = () => {
           <Breadcrumbs maintitle="Welcome Admin!" title="Dashboard" />
           {/* /Page Header */}
           <div className="row">
-            {Array.isArray(users) && users.length > 0 ? (
-              users.map((item, index) => (
-                <div
-                  className="col-md-6 col-sm-6 col-lg-6 col-xl-3"
-                  key={index}
-                >
-                  <div className="card dash-widget">
-                    <div className="card-body">
-                      <span className={`dash-widget-icon ${item.icon}`} />
-                      <div className="dash-widget-info">
-                        <h3>{item.number}</h3>
-                        <span>{item.label}</span>
-                      </div>
-                    </div>
+            <div className="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+              <div className="card dash-widget">
+                <div className="card-body">
+                  <span className={`dash-widget-icon fa fa-user`} />
+                  <div className="dash-widget-info">
+                    <h3>{data?.clients}</h3>
+                    <span>Clients</span>
                   </div>
                 </div>
-              ))
-            ) : (
-              <p>No data available</p>
-            )}
+              </div>
+            </div>
+
+            <div className="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+              <div className="card dash-widget">
+                <div className="card-body">
+                  <span className={`dash-widget-icon fa fa-gem`} />
+                  <div className="dash-widget-info">
+                    <h3>{data?.trainers}</h3>
+                    <span>Trainers</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+              <div className="card dash-widget">
+                <div className="card-body">
+                  <span className={`dash-widget-icon fa fa-cubes`} />
+                  <div className="dash-widget-info">
+                    <h3>{data?.branches}</h3>
+                    <span>Branches</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="col-md-6 col-sm-6 col-lg-6 col-xl-3">
+              <div className="card dash-widget">
+                <div className="card-body">
+                  <span className={`dash-widget-icon fa fa-cubes`} />
+                  <div className="dash-widget-info">
+                    <h3>{data?.subscriptions}</h3>
+                    <span>Subscriptions</span>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          {/* /Charts */}
           <Charts />
-          {/* /Charts */}
           <Reports />
           <Statistics />
-          <div className="row">
-            <InvoiceTable />
-            <PaymentTable />
-          </div>
-
-          <div className="row">
-            <ClientTable />
-            <RecentTable />
-          </div>
         </div>
       </div>
     </div>
