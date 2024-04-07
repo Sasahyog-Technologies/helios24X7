@@ -1,13 +1,13 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
-import { useQuery } from "@tanstack/react-query";
-import { format } from "date-fns";
 import React from "react";
+import { format } from "date-fns";
 import { Link } from "react-router-dom";
-import Breadcrumbs from "../../../components/Breadcrumbs";
-import Loading from "../../../components/Loading";
 import request from "../../../sdk/functions";
+import { useQuery } from "@tanstack/react-query";
+import Loading from "../../../components/Loading";
+import ClientAvatar from "../Client/ClientAvatar";
+import Breadcrumbs from "../../../components/Breadcrumbs";
 import TrianerEditPopup from "../../../components/modelpopup/Trainer/TrainerEditPopup";
-
 const TrainerProfile = () => {
   const path = window.location.pathname;
   const userId = path.split("/")[path.split("/").length - 1];
@@ -17,7 +17,7 @@ const TrainerProfile = () => {
     queryFn: async () => {
       if (userId) {
         const data = await request.findOne("users", userId, {
-          populate: ["branch"],
+          populate: ["branch", "profile"],
         });
         return data;
       }
@@ -49,11 +49,15 @@ const TrainerProfile = () => {
                       <div className="row">
                         <div className="col-md-12">
                           <div className="profile-view">
-                            <div className="profile-img-wrap">
+                            <ClientAvatar
+                              userId={trainerData.id}
+                              profile={trainerData.profile}
+                            />
+                            {/* <div className="profile-img-wrap">
                               <div className="profile-img text-uppercase bg-info rounded-circle d-flex justify-content-center align-items-center display-3">
                                 {`${trainerData.firstname.split("")[0]}`}
                               </div>
-                            </div>
+                            </div> */}
                             <div className="profile-basic">
                               <div className="row d-flex justify-content-center align-items-center">
                                 <div className="col-md-5">
