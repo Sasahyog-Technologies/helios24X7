@@ -100,10 +100,9 @@ const EventsListClient = () => {
                   <div className="file-header justify-content-center">
                     <span>Events & Sessions</span>
                     <Link to="#" className="file-side-close">
-                      <i className="fa-solid fa-xmark" />
+                      <i className="fa-solid fa-xmark" /> X
                     </Link>
                   </div>
-
                   <div className="file-pro-list">
                     <div className="file-scroll">
                       <ul className="file-menu">
@@ -124,6 +123,30 @@ const EventsListClient = () => {
                     </div>
                   </div>
                 </div>
+
+                {/* mobile view */}
+                <div className="d-flex d-lg-none flex-col w-100 justify-content-center align-items-center">
+                <div className="file-pro-list">
+                    <div className="file-scroll">
+                      <ul className="file-menu">
+                        {EventsFilterList.map((ev, index) => (
+                          <li
+                            className={
+                              active.id == ev.id
+                                ? "active cursor-pointer"
+                                : "cursor-pointer"
+                            }
+                            key={index}
+                            onClick={() => handleSetActive(ev)}
+                          >
+                            <p className="mt-2 mb-2">{ev.text}</p>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+
                 <div className="file-cont-wrap w-100">
                   <div className="file-cont-inner">
                     <div className="file-content">
