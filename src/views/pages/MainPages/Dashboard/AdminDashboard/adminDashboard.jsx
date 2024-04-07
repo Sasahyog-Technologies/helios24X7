@@ -1,38 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import Charts from "./charts";
 import Reports from "./Reports";
 import Statistics from "./statistics";
 import request from "../../../../../sdk/functions";
 
-import Breadcrumbs from "../../../../../components/Breadcrumbs";
 import { useQuery } from "@tanstack/react-query";
-
-const users = [
-  {
-    id: 1,
-    icon: "fa fa-cubes",
-    number: 112,
-    label: "Projects",
-  },
-  {
-    id: 2,
-    icon: "fa fa-usd",
-    number: 44,
-    label: "Clients",
-  },
-  {
-    id: 3,
-    icon: "fa-regular fa-gem",
-    number: 37,
-    label: "Tasks",
-  },
-  {
-    id: 4,
-    icon: "fa fa-user",
-    number: 218,
-    label: "Employees",
-  },
-];
+import Breadcrumbs from "../../../../../components/Breadcrumbs";
 
 const AdminDashboard = () => {
   const { data, isLoading } = useQuery({
