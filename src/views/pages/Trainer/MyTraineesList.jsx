@@ -1,70 +1,59 @@
 import { useQuery } from "@tanstack/react-query";
 import { Table } from "antd";
-import { format } from "date-fns";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import Breadcrumbs from "../../../components/Breadcrumbs";
-import TrainerAddPopup from "../../../components/modelpopup/Trainer/TrainerAddPopup";
-import TrianerDeletePopup from "../../../components/modelpopup/Trainer/TrainerDeletePopup";
-import TrianerEditPopup from "../../../components/modelpopup/Trainer/TrainerEditPopup";
+import { useSession } from "../../../Hook/useSession";
 import request from "../../../sdk/functions";
 import MyTraineesFilter from "./MyTraineesFilter";
+import { FormatTime } from "../../../utils/timeFormater";
 
 const MyTraineesList = () => {
-  const [userId, setUserId] = useState(null);
+  const [traineeId, setTraineeId] = useState(null);
+
+  const { getUserDataToCookie } = useSession();
+  const user = getUserDataToCookie()?.user;
+  const trainerId = user.id;
+
   const columns = [
     {
-      title: "First Name",
-      dataIndex: "firstname",
-      render: (text, record) => (
-        <span className="table-avatar">
-          <Link to={`/owner/trainer-profile/${record.id}`}>{text}</Link>
-        </span>
-      ),
+      title: "Trainee Name",
+      dataIndex: "trainee",
+      render: (text, record) => <span className="text-capitalize">{text}</span>,
     },
-    {
-      title: "Last Name",
-      dataIndex: "lastname",
-      render: (text, record) => (
-        <span className="table-avatar">
-          <Link to={`/owner/trainer-profile/${record.id}`}>{text}</Link>
-        </span>
-      ),
-    },
-
+ 
     {
       title: "Mobile",
       dataIndex: "mobile",
       render: (text, record) => (
         <span className="table-avatar">
-          <Link to={`/owner/trainer-profile/${record.id}`}>{text}</Link>
+       {text} 
+        </span>
+      ),
+    },
+    {
+      title: "Session From",
+      dataIndex: "session_from",
+      render: (text, record) => (
+        <span className="table-avatar">
+       {FormatTime(text)} 
+        </span>
+      ),
+    },
+    {
+      title: "Session To",
+      dataIndex: "session_to",
+      render: (text, record) => (
+        <span className="table-avatar">
+       {FormatTime(text)} 
         </span>
       ),
     },
 
-    {
-      title: "Join Date",
-      dataIndex: "createdAt",
-      render: (text, record) => (
-        <span>
-          <Link to={`/owner/trainer-profile/${record.id}`}>
-            {format(new Date(text), "dd/MM/yyyy")}
-          </Link>
-        </span>
-      ),
-    },
-    {
-      title: "Branch",
-      dataIndex: "branch",
-      render: (text, record) => (
-        <span className="table-avatar">
-          <Link to={`/owner/trainer-profile/${record.id}`}>{text?.name}</Link>
-        </span>
-      ),
-    },
-    {
+  
+  /*   {
       title: "Action",
-      render: (user) => (
+      render: (trainer) => (
         <div className="dropdown dropdown-action text-end">
           <Link
             to="#"
@@ -81,7 +70,7 @@ const MyTraineesList = () => {
               to="#"
               data-bs-toggle="modal"
               data-bs-target="#edit_trainer"
-              onClick={() => setUserId(user.id)}
+              onClick={() => setTraineeId(trainer.id)}
             >
               <i className="fa fa-pencil m-r-5" /> Edit
             </Link>
@@ -90,14 +79,14 @@ const MyTraineesList = () => {
               to="#"
               data-bs-toggle="modal"
               data-bs-target="#delete_trainer"
-              onClick={() => setUserId(user.id)}
+              onClick={() => setTraineeId(trainer.id)}
             >
               <i className="fa fa-trash m-r-5" /> Delete
             </Link>
           </div>
         </div>
       ),
-    },
+    }, */
   ];
 
   const [tableParams, setTableParams] = useState({
@@ -115,35 +104,34 @@ const MyTraineesList = () => {
 
   const {
     data: trainersData,
-    isLoading: usersIsLoading,
+    isLoading: trainersIsLoading,
     isRefetching,
     error,
     refetch,
   } = useQuery({
     queryKey: ["trainer-list"],
     queryFn: async () => {
-      const data = await request.findMany("users", {
-        populate: "branch",
+      const data = await request.findMany("ptp", {
+        populate: ["trainee"],
         filters: {
-          type: "trainer",
-          $or: [
-            {
-              firstname: {
-                $containsi: query.search.split(" ")[0],
+          trainer: trainerId,
+          trainee:{
+            $or: [
+              {
+                firstname: {
+                  $containsi: query.search.split(" ")[0],
+                },
+                lastname: {
+                  $containsi: query.search.split(" ")[1] || "",
+                },
               },
-              lastname: {
-                $containsi: query.search.split(" ")[1] || "",
+              {
+                mobile: {
+                  $containsi: query.search,
+                },
               },
-            },
-            {
-              mobile: {
-                $containsi: query.search,
-              },
-            },
-          ],
-          branch: {
-            name: { $containsi: query.branch },
-          },
+            ],
+          }
         },
       });
       // console.log(data);
@@ -152,9 +140,18 @@ const MyTraineesList = () => {
         pagination: { ...tableParams.pagination, total: data.length },
       });
       // return formetter(data);
-      return data;
+      return data.data?.map((item) => {
+        return {
+          ...item.attributes,
+          id: item.id,
+          trainee: `${item?.attributes?.trainee?.data?.attributes?.firstname} ${item?.attributes?.trainee?.data?.attributes?.lastname}`,
+          mobile:item?.attributes?.trainee?.data?.attributes?.mobile
+        };
+      });
     },
   });
+
+  //console.log(trainersData);
 
   const handleTableChange = (pagination, filters, sorter) => {
     //console.log("handleTableChange");
@@ -177,16 +174,16 @@ const MyTraineesList = () => {
         <div className="content container-fluid">
           {/* Page Header */}
           <Breadcrumbs
-            maintitle="Trainer"
+            maintitle="My Trainees"
             title="Dashboard"
-            subtitle="Trainer"
-            modal="#add_trainer"
+            subtitle="Trainees"
+            /*    modal="#add_trainer"
             name="Add Trainer"
             Linkname="/trainer"
-            Linkname1="/trainer-list"
+            Linkname1="/trainer-list" */
           />
           {/* /Page Header */}
-        <MyTraineesFilter
+          <MyTraineesFilter
             query={query}
             setQuery={setQuery}
             refetch={refetch}
@@ -195,7 +192,7 @@ const MyTraineesList = () => {
             <div className="col-md-12">
               <div className="table-responsive">
                 <Table
-                  loading={usersIsLoading || isRefetching}
+                  loading={trainersIsLoading || isRefetching}
                   className="table-striped"
                   columns={columns}
                   dataSource={trainersData}
@@ -211,9 +208,9 @@ const MyTraineesList = () => {
           </div>
         </div>
         {/* /Page Content */}
-        <TrainerAddPopup />
-        <TrianerEditPopup userId={userId} />
-        <TrianerDeletePopup userId={userId} />
+        {/*     <TrainerAddPopup />
+        <TrianerEditPopup traineeId={traineeId} />
+        <TrianerDeletePopup traineeId={traineeId} /> */}
       </div>
     </div>
   );
