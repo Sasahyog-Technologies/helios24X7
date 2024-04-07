@@ -34,6 +34,7 @@ const InvoiceDetials = () => {
           {invoiceLoading && <Loading />}
           {!invoiceLoading && (
             <InvoiceView
+              invoiceNumber={invoiceId}
               amount={invoiceData?.amount}
               outstanding={invoiceData?.outstanding}
               invoice_date={invoiceData?.invoice_date}
