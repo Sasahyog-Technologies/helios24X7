@@ -86,12 +86,7 @@ const PaymentList = () => {
     {
       title: "Outstanding",
       dataIndex: "outstanding",
-      render: (text, record) => (
-        <span>
-          {/*    <Link to={`/owner/client-profile/${record.id}`}>{text?.name}</Link> */}
-          {text}
-        </span>
-      ),
+      render: (text, record) => <span>{text ? text : "0"}</span>,
     },
     {
       title: "Action",

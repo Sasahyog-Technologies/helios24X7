@@ -45,6 +45,7 @@ const MembershipList = () => {
     {
       title: "Outstanding",
       dataIndex: "outstanding",
+      render: (text, record) => <span>{text ? text : "0"}</span>,
     },
     {
       title: "Plan",
@@ -124,7 +125,7 @@ const MembershipList = () => {
     data: subscriptionData,
     isLoading: usersIsLoading,
     refetch,
-    isRefetching
+    isRefetching,
   } = useQuery({
     queryKey: ["membership-list"],
     queryFn: async () => {

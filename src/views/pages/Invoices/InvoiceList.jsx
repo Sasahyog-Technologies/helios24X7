@@ -68,7 +68,7 @@ const InvoiceList = () => {
       dataIndex: "outstanding",
       render: (text, record) => (
         <span>
-          <Link to={`/owner/invoice-details/${record.id}`}>{text}</Link>
+          <Link to={`/owner/invoice-details/${record.id}`}>{text ? text : "0"}</Link>
         </span>
       ),
     },
