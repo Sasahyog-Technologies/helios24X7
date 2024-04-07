@@ -128,7 +128,7 @@ const Header = (props) => {
       {/* Header Menu */}
       <ul className="nav user-menu">
         {/* /Message Notifications */}
-        <li className="nav-item dropdown has-arrow main-drop">
+        <li className="nav-item dropdown has-arrow main-drop d-flex d-flex justify-content-center align-items-center h-100 pt-2 mr-4">
           <Link
             to="#"
             className="dropdown-toggle nav-link"
