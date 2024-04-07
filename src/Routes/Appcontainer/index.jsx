@@ -2,7 +2,7 @@
 
 // Customized
 import CustomClientList from "../../views/pages/Client/ClientList.jsx";
-
+import FloatingButton from "../../components/FloatingBtn/index.jsx";
 import React, { useEffect } from "react";
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import ComponentSidebar from "../../components/ComponentSidebar";
@@ -1276,7 +1276,8 @@ const AppContainer = () => {
     <>
       <Header />
       <Sidebar />
-      <OffCanvas />
+      <FloatingButton />
+      {/* <OffCanvas /> */}
       <Outlet />
     </>
   );
