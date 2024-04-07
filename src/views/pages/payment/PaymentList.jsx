@@ -24,19 +24,6 @@ const PaymentList = () => {
       ),
     },
     {
-      title: "Label",
-      dataIndex: "label",
-      render: (text, record) => (
-        <span className="table-avatar">
-          {text}
-          {/*     <Link to={`/owner/client-profile/${record.id}`}>
-            {text}
-          </Link> */}
-        </span>
-      ),
-    },
-
-    {
       title: "Subscription Type",
       dataIndex: "subscriptionType",
       render: (text, record) => (

@@ -23,16 +23,6 @@ const InvoiceList = () => {
       ),
     },
     {
-      title: "Label",
-      dataIndex: "label",
-      render: (text, record) => (
-        <span className="table-avatar text-capitalize">
-          <Link to={`/owner/invoice-details/${record.id}`}>{text}</Link>
-        </span>
-      ),
-    },
-
-    {
       title: "Subscription Type",
       dataIndex: "subscriptionType",
       render: (text, record) => (
@@ -68,7 +58,9 @@ const InvoiceList = () => {
       dataIndex: "outstanding",
       render: (text, record) => (
         <span>
-          <Link to={`/owner/invoice-details/${record.id}`}>{text ? text : "0"}</Link>
+          <Link to={`/owner/invoice-details/${record.id}`}>
+            {text ? text : "0"}
+          </Link>
         </span>
       ),
     },
