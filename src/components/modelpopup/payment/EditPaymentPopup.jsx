@@ -51,7 +51,7 @@ const PaymentEditPopup = ({ paymentId }) => {
       return null;
     },
   });
-  console.log(paymentData);
+  //console.log(paymentData);
 
   const onSubmit = async (dt) => {
     setSubmitLoading(true);
@@ -187,6 +187,7 @@ const PaymentEditPopup = ({ paymentId }) => {
                           <input
                             className="form-control"
                             type="text"
+                            disabled
                             {...register("outstanding")}
                           />
                         </div>

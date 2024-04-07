@@ -125,6 +125,7 @@ const PaymentList = () => {
 
   const [query, setQuery] = useState({
     search: "",
+    type: "",
   });
 
   const {
@@ -138,23 +139,34 @@ const PaymentList = () => {
       const data = await request.findMany("payment", {
         populate: ["user", "subscription"],
         filters: {
-          user: {
-            $or: [
-              {
-                firstname: {
-                  $containsi: query.search.split(" ")[0],
-                },
-                lastname: {
-                  $containsi: query.search.split(" ")[1] || "",
+          $and: [
+            {
+              user: {
+                $or: [
+                  {
+                    firstname: {
+                      $containsi: query.search.split(" ")[0],
+                    },
+                    lastname: {
+                      $containsi: query.search.split(" ")[1] || "",
+                    },
+                  },
+                  {
+                    mobile: {
+                      $containsi: query.search,
+                    },
+                  },
+                ],
+              },
+            },
+            {
+              subscription: {
+                type: {
+                  $containsi: query.type,
                 },
               },
-              {
-                mobile: {
-                  $containsi: query.search,
-                },
-              },
-            ],
-          },
+            },
+          ],
         },
       });
       setTableParams({

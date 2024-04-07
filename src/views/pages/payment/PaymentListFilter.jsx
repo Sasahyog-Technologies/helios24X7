@@ -1,7 +1,21 @@
 import React, { useState } from "react";
+import { SubscriptionTypeOptions } from "../../../utils";
+import Select from "react-select";
 
 const PaymentListFilter = ({ query, setQuery, refetch }) => {
   const [focused, setFocused] = useState(false);
+
+  const customStyles = {
+    option: (provided, state) => ({
+      ...provided,
+      backgroundColor: state.isFocused ? "#ff9b44" : "#fff",
+      color: state.isFocused ? "#fff" : "#000",
+      "&:hover": {
+        backgroundColor: "#ff9b44",
+      },
+    }),
+  };
+
 
   const handleLabelClick1 = () => {
     setFocused(true);
@@ -42,6 +56,18 @@ const PaymentListFilter = ({ query, setQuery, refetch }) => {
             <label className="focus-label" onClick={handleLabelClick1}>
               Client Name or Mobile
             </label>
+          </div>
+        </div>
+
+        <div className="col-sm-6 col-md-3">
+          <div className="input-block form-focus select-focus">
+            <Select
+              options={SubscriptionTypeOptions}
+              placeholder="Select Type"
+              styles={customStyles}
+              onChange={(val) => setQuery({ ...query, type: val.value })}
+            />
+            <label className="focus-label">Subscription Type</label>
           </div>
         </div>
 
