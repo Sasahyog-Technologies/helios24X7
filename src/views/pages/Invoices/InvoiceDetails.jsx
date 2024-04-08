@@ -40,8 +40,11 @@ const InvoiceDetials = () => {
           />
 
           {invoiceLoading && <Loading />}
+
           {!invoiceLoading && (
             <InvoiceView
+              start={invoiceData?.subscription?.data?.attributes?.start}
+              end={invoiceData?.subscription?.data?.attributes?.end}
               subscriptionType={
                 invoiceData?.subscription?.data?.attributes?.type
               }
