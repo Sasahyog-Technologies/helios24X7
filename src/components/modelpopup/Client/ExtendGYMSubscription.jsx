@@ -12,7 +12,7 @@ import { InvoiceNumberGenerator } from "../../../utils/invoiceNumberGenerate";
 const formDataDefaultValues = {
   plan: "",
   paid: "",
-  outstanding: "",
+  outstanding: 0,
   duration: "",
   paymentType: "",
 };
@@ -128,7 +128,7 @@ const ExtendGYMSubscriptionPopup = ({ userId, activeGYMPlanEndDate }) => {
                       </label>
                       <input
                         className="form-control"
-                        type="text"
+                        type="number"
                         required
                         {...register("paid")}
                       />
@@ -202,7 +202,7 @@ const ExtendGYMSubscriptionPopup = ({ userId, activeGYMPlanEndDate }) => {
                       <label className="col-form-label">Outstanding</label>
                       <input
                         className="form-control"
-                        type="text"
+                        type="number"
                         {...register("outstanding")}
                       />
                     </div>

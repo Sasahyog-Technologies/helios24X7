@@ -11,7 +11,7 @@ import { InvoiceNumberGenerator } from "../../../utils/invoiceNumberGenerate";
 
 const formDataDefaultValues = {
   paid: "",
-  outstanding: "",
+  outstanding: 0,
   duration: "",
   paymentType: "",
 };
@@ -174,7 +174,7 @@ const ExtendPTPSubscriptionPopup = ({
                       <label className="col-form-label">Outstanding</label>
                       <input
                         className="form-control"
-                        type="text"
+                        type="number"
                         {...register("outstanding")}
                       />
                     </div>
