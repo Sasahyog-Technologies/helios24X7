@@ -19,87 +19,46 @@ import { useDispatch } from "react-redux";
 import { login } from "../../../../user";
 import { resetFunctionwithlogin } from "../../../../components/ResetFunction";
 // import { login } from "../../../user";
-
+import request from "../../../../sdk/functions";
 import "../../../../assets/css/lp.css";
 
 import { lp1, lp2, lp3 } from "../../../../Routes/ImagePath";
-
-const validationSchema = Yup.object().shape({
-  email: Yup.string()
-    .email("Please enter a valid email address")
-    .required("Email is required"),
-  password: Yup.string()
-    .min(6, "Password must be at least 6 characters")
-    .max(20, "Password must be at most 20 characters")
-    .required("Password is required"),
-});
+import { useQuery } from "@tanstack/react-query";
 
 const OwnerLogin = () => {
-  const details = localStorage.getItem("loginDetails");
+  const { data, isLoading } = useQuery({
+    queryKey: ["admin-report"],
+    queryFn: async () => {
+      const clients = await request.findMany("users", {
+        filters: {
+          type: "client",
+        },
+        feilds: ["username"],
+      });
 
-  const loginData = JSON.parse(details);
+      const trainers = await request.findMany("users", {
+        filters: {
+          type: "trainer",
+        },
+        feilds: ["username"],
+      });
 
-  const {
-    register,
-    control,
-    setValue,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: yupResolver(validationSchema),
+      const branches = await request.findMany("branch", {
+        feilds: ["name"],
+      });
+
+      const subscriptions = await request.findMany("subscription", {
+        feilds: ["type"],
+      });
+
+      return {
+        clients: clients.length,
+        trainers: trainers.length,
+        branches: branches.data.length,
+        subscriptions: subscriptions.data.length,
+      };
+    },
   });
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const [emailError, setEmailError] = useState(false);
-
-  // const onSubmit = (data) => {
-  //   const currentUser = loginData?.find((item) => item?.email === data?.email);
-  //   if (!currentUser) {
-  //     setEmailError(true); // Email is not registered
-  //     navigate("/");
-  //   } else if (currentUser.password === data?.password) {
-  //     setEmailError(false); // Email is registered, and password is correct
-  //     const Value = {
-  //       email: data?.email,
-  //       password: data?.password,
-  //     };
-  //     dispatch(login(Value));
-  //     localStorage.setItem("credencial", JSON.stringify(Value));
-  //     navigate("/admin-dashboard");
-  //     resetFunctionwithlogin();
-  //   } else {
-  //     setEmailError(true); // Email is registered, but the password is incorrect
-  //     navigate("/");
-  //   }
-  // };
-
-  function refreshPage() {
-    window.location.reload(false);
-  }
-
-  const onSubmit = () => {
-    localStorage.setItem("colorschema", "orange");
-    localStorage.setItem("layout", "vertical");
-    localStorage.setItem("layoutwidth", "fixed");
-    localStorage.setItem("layoutpos", "fluid");
-    localStorage.setItem("topbartheme", "light");
-    localStorage.setItem("layoutSized", "lg");
-    localStorage.setItem("layoutStyling", "default");
-    localStorage.setItem("layoutSidebarStyle", "dark");
-
-    navigate("/admin-dashboard");
-  };
-
-  useEffect(() => {
-    setValue("email", localStorage.getItem("email"));
-    setValue("password", localStorage.getItem("password"));
-  }, []);
-
-  const [eye, seteye] = useState(true);
-
-  const onEyeClick = () => {
-    seteye(!eye);
-  };
 
   return (
     <div>
@@ -1229,12 +1188,12 @@ const OwnerLogin = () => {
                   <i className="fa fa-star fs-4 text-white" />
                 </div>
                 <div className="ps-4">
-                  <h5 className="text-secondary text-uppercase">Experience</h5>
+                  <h5 className="text-secondary text-uppercase">Subscribed</h5>
                   <h1
                     className="display-5 text-white mb-0"
                     data-toggle="counter-up"
                   >
-                    12345
+                    {data?.subscriptions}
                   </h1>
                 </div>
               </div>
@@ -1255,7 +1214,7 @@ const OwnerLogin = () => {
                     className="display-5 text-white mb-0"
                     data-toggle="counter-up"
                   >
-                    12345
+                    {data?.trainers}
                   </h1>
                 </div>
               </div>
@@ -1269,14 +1228,12 @@ const OwnerLogin = () => {
                   <i className="fa fa-check fs-4 text-white" />
                 </div>
                 <div className="ps-4">
-                  <h5 className="text-secondary text-uppercase">
-                    Complete Project
-                  </h5>
+                  <h5 className="text-secondary text-uppercase">Branches</h5>
                   <h1
                     className="display-5 text-white mb-0"
                     data-toggle="counter-up"
                   >
-                    12345
+                    {data?.branches}
                   </h1>
                 </div>
               </div>
@@ -1297,7 +1254,7 @@ const OwnerLogin = () => {
                     className="display-5 text-white mb-0"
                     data-toggle="counter-up"
                   >
-                    12345
+                    {data.clients}
                   </h1>
                 </div>
               </div>
@@ -1495,8 +1452,8 @@ const OwnerLogin = () => {
         {/* Blog Start */}
         <div className="container-fluid p-5">
           <div className="mb-5 text-center">
-            <h5 className="text-primary text-uppercase">Our Blog</h5>
-            <h1 className="display-3 text-uppercase mb-0">Latest Blog Post</h1>
+            <h5 className="text-primary text-uppercase">Plans</h5>
+            <h1 className="display-3 text-uppercase mb-0">Our Plans</h1>
           </div>
           <div className="row g-5">
             <div className="col-lg-4">
