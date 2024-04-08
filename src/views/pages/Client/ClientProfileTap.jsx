@@ -123,6 +123,8 @@ const ClientProfileTab = ({
 export default ClientProfileTab;
 
 const PersonalTrainingStatus = ({ setActivePlanEndDate, ptp }) => {
+  const isPaymentOutStanding =
+    parseInt(ptp?.subscription?.at(0)?.outstanding ?? 0) > 0;
   return (
     <div className="col-md-6 d-flex">
       <div className="card profile-box flex-fill">
@@ -178,17 +180,25 @@ const PersonalTrainingStatus = ({ setActivePlanEndDate, ptp }) => {
                   </>
                 )}
                 {ptp?.subscription?.length && (
-                  <Link
-                    to="#"
-                    data-bs-target="#extend_subscription"
-                    className="btn btn-info"
-                    data-bs-toggle="modal"
-                    onClick={() =>
-                      setActivePlanEndDate(ptp.subscription[0].end)
-                    }
-                  >
-                    Extend Subscription
-                  </Link>
+                  <>
+                    {!isPaymentOutStanding ? (
+                      <>
+                        <Link
+                          to="#"
+                          data-bs-target="#extend_subscription"
+                          className="btn btn-info"
+                          data-bs-toggle="modal"
+                          onClick={() =>
+                            setActivePlanEndDate(ptp.subscription[0].end)
+                          }
+                        >
+                          Extend Subscription
+                        </Link>
+                      </>
+                    ) : (
+                      ""
+                    )}
+                  </>
                 )}
 
                 {!ptp?.subscription?.length && (
@@ -276,7 +286,7 @@ const GymMembershipStatus = ({ subscription, setActiveGYMPlanEndDate }) => {
                     </Link>
                   )}
 
-                  {isPaymentOutStanding && (
+                  {/*     {isPaymentOutStanding && (
                     <Link
                       to="#"
                       data-bs-toggle="modal"
@@ -286,7 +296,7 @@ const GymMembershipStatus = ({ subscription, setActiveGYMPlanEndDate }) => {
                     >
                       Pay Outstanding
                     </Link>
-                  )}
+                  )} */}
                 </>
               </div>
             </div>
