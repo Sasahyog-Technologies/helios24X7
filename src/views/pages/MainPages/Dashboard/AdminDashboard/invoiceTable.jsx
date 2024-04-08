@@ -32,7 +32,7 @@ const InvoiceTable = () => {
     {
       title: "Branch",
       dataIndex: "branch",
-      render: (text) => <span>{text.name}</span>,
+      render: (text) => <span>{text?.name}</span>,
     },
   ];
 

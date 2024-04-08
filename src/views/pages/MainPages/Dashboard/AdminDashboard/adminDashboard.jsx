@@ -34,10 +34,10 @@ const AdminDashboard = () => {
       });
 
       return {
-        clients: clients.length,
-        trainers: trainers.length,
-        branches: branches.data.length,
-        subscriptions: subscriptions.data.length,
+        clients: clients?.length,
+        trainers: trainers?.length,
+        branches: branches?.data.length,
+        subscriptions: subscriptions?.data.length,
       };
     },
   });
