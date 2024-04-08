@@ -8,6 +8,7 @@ import CreateSubscriptionPopup from "../../../components/modelpopup/Client/Creat
 import PayOutstanding from "../../../components/modelpopup/Client/PayOutstandingPopup";
 import ExtendPTPSubscriptionPopup from "../../../components/modelpopup/Client/ExtendPTPSubscription";
 import ExtendGYMSubscriptionPopup from "../../../components/modelpopup/Client/ExtendGYMSubscription";
+import PtpEditPopup from "../../../components/modelpopup/Client/PTPEditPopup";
 
 const ClientProfileTab = ({
   ptp,
@@ -131,7 +132,17 @@ const PersonalTrainingStatus = ({ setActivePlanEndDate, ptp }) => {
         {ptp ? (
           <>
             <div className="card-body">
-              <h3 className="card-title">Personal Trainer</h3>{" "}
+              <h3 className="card-title">
+                Personal Trainer
+                <Link
+                  to="#"
+                  className="edit-icon"
+                  data-bs-toggle="modal"
+                  data-bs-target="#edit_ptp"
+                >
+                  <i className="fa fa-pencil" />
+                </Link>
+              </h3>
               <div>
                 <ul className="personal-info">
                   <ListItem
@@ -231,6 +242,7 @@ const PersonalTrainingStatus = ({ setActivePlanEndDate, ptp }) => {
           </>
         )}
       </div>
+      <PtpEditPopup ptpId={ptp.id} />
     </div>
   );
 };
