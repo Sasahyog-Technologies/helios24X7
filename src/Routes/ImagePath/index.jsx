@@ -1,3 +1,33 @@
+export { default as hero_banner } from "../../assets/lp/images/hero-banner.png";
+export { default as hero_circle_one } from "../../assets/lp/images/hero-circle-one.png";
+export { default as hero_circle_two } from "../../assets/lp/images/hero-circle-two.png";
+export { default as heart_rate } from "../../assets/lp/images/heart-rate.svg";
+export { default as calories } from "../../assets/lp/images/calories.svg";
+export { default as about_banner } from "../../assets/lp/images/about-banner.png";
+export { default as classes } from "../../assets/lp/images/about-banner.png";
+
+export { default as aboutbanner } from "../../assets/lp/images/about-banner.png";
+export { default as aboutc1 } from "../../assets/lp/images/about-circle-one.png";
+export { default as aboutc2 } from "../../assets/lp/images/about-circle-two.png";
+export { default as about_f } from "../../assets/lp/images/fitness.png";
+export { default as about_c } from "../../assets/lp/images/about-coach.jpg";
+
+export { default as class1 } from "../../assets/lp/images/class-1.jpg";
+export { default as classi1 } from "../../assets/lp/images/class-icon-1.png";
+export { default as class2 } from "../../assets/lp/images/class-2.jpg";
+export { default as classi2 } from "../../assets/lp/images/class-icon-2.png";
+
+export { default as class3 } from "../../assets/lp/images/class-3.jpg";
+export { default as classi3 } from "../../assets/lp/images/class-icon-3.png";
+export { default as class4 } from "../../assets/lp/images/class-4.jpg";
+export { default as classi4 } from "../../assets/lp/images/class-icon-4.png";
+
+export { default as cls } from "../../assets/lp/images/classes-bg.png";
+export { default as vbanner } from "../../assets/lp/images/video-banner.jpg";
+
+export { default as footerclock } from "../../assets/lp/images/footer-clock.png";
+
+// others
 export { default as headerlogo } from "../../assets/img/logo.svg";
 export { default as Applogo } from "../../assets/img/logo2.png";
 export { default as logo3 } from "../../assets/img/logo3.png";

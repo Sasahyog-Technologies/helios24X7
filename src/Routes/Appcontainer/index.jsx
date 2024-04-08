@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
 
+import LandingPage from "../../views/pages/lp/index.jsx";
 // Customized
 import CustomClientList from "../../views/pages/Client/ClientList.jsx";
 import FloatingButton from "../../components/FloatingBtn/index.jsx";
@@ -1371,17 +1372,17 @@ const AppContainer = () => {
       <div className="main-wrapper" onClick={mobileResponsive}>
         <Routes>
           {/* this part is just for testing purpose  */}
-          {/*    <Route path={"/*"}>
+          <Route path={"/*"}>
             {[
               {
                 id: 1,
                 path: "dev/test-1",
-                element: <TestPage />,
+                element: <LandingPage />,
               },
             ].map((item) => (
               <Route key={item.id} path={item.path} element={item.element} />
             ))}
-          </Route> */}
+          </Route>
 
           <Route path={"/owner"} element={<SidebarLayout />}>
             {OwnerRoutingObjects.map((item) => (
