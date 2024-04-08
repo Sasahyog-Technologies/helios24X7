@@ -126,7 +126,7 @@ const PersonalTrainingStatus = ({ setActivePlanEndDate, ptp }) => {
   return (
     <div className="col-md-6 d-flex">
       <div className="card profile-box flex-fill">
-        {ptp && ptp?.length ? (
+        {ptp ? (
           <>
             <div className="card-body">
               <h3 className="card-title">Personal Trainer</h3>{" "}
