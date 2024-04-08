@@ -10,7 +10,7 @@ const InvoiceDetials = () => {
   const invoiceId = path.split("/")[path.split("/").length - 1];
 
   const { data: invoiceData, isLoading: invoiceLoading } = useQuery({
-    queryKey: ["invoice-data"],
+    queryKey: ["invoice-data", invoiceId],
     queryFn: async () => {
       if (invoiceId) {
         const data = await request.findOne("invoice", invoiceId, {
