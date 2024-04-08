@@ -14,7 +14,14 @@ const InvoiceDetials = () => {
     queryFn: async () => {
       if (invoiceId) {
         const data = await request.findOne("invoice", invoiceId, {
-          populate: ["user", "payment", "subscription", "subscription.plan"],
+          populate: [
+            "user",
+            "payment",
+            "subscription",
+            "subscription.plan",
+            "subscription.personal_training_program",
+            "subscription.personal_training_program.trainer",
+          ],
         });
         return data?.data?.attributes;
       }
@@ -31,9 +38,22 @@ const InvoiceDetials = () => {
             title="Dashboard"
             subtitle="Details"
           />
+
           {invoiceLoading && <Loading />}
           {!invoiceLoading && (
             <InvoiceView
+              subscriptionType={
+                invoiceData?.subscription?.data?.attributes?.type
+              }
+              trainer={
+                invoiceData?.subscription?.data?.attributes
+                  ?.personal_training_program?.data?.attributes?.trainer?.data
+                  ?.attributes?.firstname +
+                " " +
+                invoiceData?.subscription?.data?.attributes
+                  ?.personal_training_program?.data?.attributes?.trainer?.data
+                  ?.attributes?.lastname
+              }
               invoiceNumber={invoiceId}
               amount={invoiceData?.amount}
               outstanding={invoiceData?.outstanding}
@@ -45,16 +65,16 @@ const InvoiceDetials = () => {
                 invoiceData?.subscription?.data?.attributes?.payment_type
               }
               planName={
-                invoiceData?.subscription?.data?.attributes?.plan?.data?.attributes
-                  .title
+                invoiceData?.subscription?.data?.attributes?.plan?.data
+                  ?.attributes.title
               }
               planPrice={
-                invoiceData?.subscription?.data?.attributes?.plan?.data?.attributes
-                  .price
+                invoiceData?.subscription?.data?.attributes?.plan?.data
+                  ?.attributes.price
               }
               planDuration={
-                invoiceData?.subscription?.data?.attributes?.plan?.data?.attributes
-                  .title
+                invoiceData?.subscription?.data?.attributes?.plan?.data
+                  ?.attributes.title
               }
             />
           )}
