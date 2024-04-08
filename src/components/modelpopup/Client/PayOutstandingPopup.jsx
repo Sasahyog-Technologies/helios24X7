@@ -7,7 +7,7 @@ import { InvoiceNumberGenerator } from "../../../utils/invoiceNumberGenerate";
 
 const formDataDefaultValues = {
   paid: "",
-  outstanding: "",
+  outstanding: 0,
 };
 
 const PayOutstanding = ({ subscription }) => {
@@ -88,7 +88,7 @@ const PayOutstanding = ({ subscription }) => {
                       </label>
                       <input
                         className="form-control"
-                        type="text"
+                        type="number"
                         required
                         {...register("paid", {
                           required: "This input is required.",
@@ -104,7 +104,7 @@ const PayOutstanding = ({ subscription }) => {
                       </label>
                       <input
                         className="form-control"
-                        type="text"
+                        type="number"
                         required
                         {...register("outstanding")}
                       />

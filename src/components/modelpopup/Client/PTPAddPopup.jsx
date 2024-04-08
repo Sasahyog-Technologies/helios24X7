@@ -12,7 +12,7 @@ import { InvoiceNumberGenerator } from "../../../utils/invoiceNumberGenerate";
 
 const formDataDefaultValues = {
   paid: "",
-  outstanding: "",
+  outstanding: 0,
   trainer: "",
   duration: "",
 };
@@ -140,7 +140,7 @@ const PtpAddPopup = ({ userId }) => {
                       </label>
                       <input
                         className="form-control"
-                        type="text"
+                        type="number"
                         required
                         {...register("paid", {
                           required: "This input is required.",
@@ -202,7 +202,7 @@ const PtpAddPopup = ({ userId }) => {
                       <label className="col-form-label">Outstanding</label>
                       <input
                         className="form-control"
-                        type="text"
+                        type="number"
                         {...register("outstanding")}
                       />
                     </div>

@@ -34,7 +34,7 @@ const formDataDefaultValues = {
   plan: "",
   gender: "",
   paid: "",
-  outstanding: "",
+  outstanding:0,
   weight: "",
   height: "",
   bmr: "",
@@ -300,7 +300,7 @@ const ClientAddPopup = ({ refetch }) => {
                       </label>
                       <input
                         className="form-control"
-                        type="text"
+                        type="number"
                         required
                         {...register("mobile", { required: true })}
                       />
@@ -401,7 +401,7 @@ const ClientAddPopup = ({ refetch }) => {
                       </label>
                       <input
                         className="form-control"
-                        type="text"
+                        type="number"
                         required
                         {...register("paid", { required: true })}
                       />
@@ -413,7 +413,7 @@ const ClientAddPopup = ({ refetch }) => {
                       <label className="col-form-label">Outstanding</label>
                       <input
                         className="form-control"
-                        type="text"
+                        type="number"
                         {...register("outstanding")}
                       />
                     </div>
