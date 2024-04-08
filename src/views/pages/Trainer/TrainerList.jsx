@@ -116,7 +116,6 @@ const TrainerList = () => {
 
   const deviceColumns = [
     {
-      title: "Student Data",
       render: (record, key, index) => {
         return (
           <div>

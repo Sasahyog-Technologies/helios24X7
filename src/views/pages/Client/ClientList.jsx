@@ -123,12 +123,11 @@ const ClientList = () => {
 
   const deviceColumns = [
     {
-      title: "Student Data",
       render: (record, key, index) => {
         return (
           <div>
             <div className="d-flex justify-content-between">
-            {  <div className="fw-bold fs-6"></div>}
+              {<div className="fw-bold fs-6"></div>}
               <div
                 className="dropdown dropdown-action text-end" /* style={{zIndex:100}} */
               >
