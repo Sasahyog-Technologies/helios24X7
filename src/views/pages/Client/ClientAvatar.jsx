@@ -2,7 +2,6 @@ import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
 import { useRef, useState } from "react";
 import AvatarEditor from "react-avatar-editor";
-
 const ClientAvatar = ({ userId, profile }) => {
   const profile_picture_url = profile?.url;
   return (
@@ -45,20 +44,24 @@ const Modal = ({ userId }) => {
         formData.append("refId", userId);
         formData.append("ref", "plugin::users-permissions.user");
 
-        toast.promise(
-          fetch(
-            "https://helios24x7backend-production.up.railway.app/api/upload",
+        toast
+          .promise(
+            fetch(
+              "https://helios24x7backend-production.up.railway.app/api/upload",
+              {
+                method: "POST",
+                body: formData,
+              }
+            ),
             {
-              method: "POST",
-              body: formData,
+              error: "error",
+              loading: "profile is updating..",
+              success: "profile is updated",
             }
-          ),
-          {
-            error: "error",
-            loading: "profile is updating..",
-            success: "profile is updated",
-          }
-        );
+          )
+          .then(() => {
+            window.location.reload(false);
+          });
       } catch (err) {
         console.log(err);
       }

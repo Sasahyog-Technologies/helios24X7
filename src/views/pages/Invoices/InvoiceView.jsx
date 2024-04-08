@@ -1,7 +1,9 @@
 import React from "react";
 import { hlogo } from "../../../Routes/ImagePath";
-
+import { FormatTime } from "../../../utils/timeFormater";
 const InvoiceView = ({
+  start,
+  end,
   invoice_date,
   amount,
   outstanding,
@@ -96,7 +98,13 @@ const InvoiceView = ({
                         <td>
                           {!trainerSubscription && (
                             <div className="font-weight-bold">
-                              {planName} @ {planPrice}
+                              <b>{planName}</b>
+                              {!trainerSubscription && (
+                                <p>
+                                  {new Date(start).toDateString()} {" - "}
+                                  {new Date(end).toDateString()}
+                                </p>
+                              )}
                             </div>
                           )}
 

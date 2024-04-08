@@ -10,7 +10,7 @@ const InvoiceDetials = () => {
   const invoiceId = path.split("/")[path.split("/").length - 1];
 
   const { data: invoiceData, isLoading: invoiceLoading } = useQuery({
-    queryKey: ["invoice-data"],
+    queryKey: ["invoice-data", invoiceId],
     queryFn: async () => {
       if (invoiceId) {
         const data = await request.findOne("invoice", invoiceId, {
@@ -40,8 +40,11 @@ const InvoiceDetials = () => {
           />
 
           {invoiceLoading && <Loading />}
+
           {!invoiceLoading && (
             <InvoiceView
+              start={invoiceData?.subscription?.data?.attributes?.start}
+              end={invoiceData?.subscription?.data?.attributes?.end}
               subscriptionType={
                 invoiceData?.subscription?.data?.attributes?.type
               }
