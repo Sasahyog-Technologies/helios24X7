@@ -11,9 +11,11 @@ import ClientEditPopup from "../../../components/modelpopup/Client/ClientEditPop
 import ClientPasswordEditPopup from "../../../components/modelpopup/Client/ClientPasswordEditPopup";
 import request from "../../../sdk/functions";
 import ClientListFilter from "./ClientListFilter";
+import { useMediaQuery } from "usehooks-ts";
 
 const ClientList = () => {
   const [userId, setUserId] = useState(null);
+  const isWebDevice = useMediaQuery("(min-width:700px)");
 
   const columns = [
     {
@@ -117,6 +119,90 @@ const ClientList = () => {
     },
   ];
 
+  /* --------------------------------------------------------------------------- */
+
+  const deviceColumns = [
+    {
+      title: "Student Data",
+      render: (record, key, index) => {
+        return (
+          <div>
+            <div className="d-flex justify-content-between">
+            {  <div className="fw-bold fs-6"></div>}
+              <div
+                className="dropdown dropdown-action text-end" /* style={{zIndex:100}} */
+              >
+                <Link
+                  to="#"
+                  className="action-icon dropdown-toggle"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <i className="material-icons">more_vert</i>
+                </Link>
+
+                <div className="dropdown-menu dropdown-menu-right">
+                  <Link
+                    className="dropdown-item"
+                    to="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#edit_client"
+                    onClick={() => setUserId(record.id)}
+                  >
+                    <i className="fa fa-pencil m-r-5" /> Edit
+                  </Link>
+                  <Link
+                    className="dropdown-item"
+                    to="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#edit_client_password"
+                    onClick={() => setUserId(record.id)}
+                  >
+                    <i className="fa fa-pencil m-r-5" /> Edit Password
+                  </Link>
+                  <Link
+                    className="dropdown-item"
+                    to="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#delete_client"
+                    onClick={() => setUserId(record.id)}
+                  >
+                    <i className="fa fa-trash m-r-5" /> Delete
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            <Link to={`/owner/client-profile/${record.id}`}>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">First Name </span>
+                <span> {record?.firstname}</span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Last Name </span>
+                <span> {record?.lastname}</span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Mobile </span>
+                <span> {record?.mobile}</span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Join Date </span>
+                <span>{format(new Date(record?.createdAt), "dd/MM/yyyy")}</span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Branch </span>
+                <span>{record?.branch?.name}</span>
+              </div>
+            </Link>
+          </div>
+        );
+      },
+    },
+  ];
+
+  /* --------------------------------------------------------------------------- */
+
   const [tableParams, setTableParams] = useState({
     pagination: {
       current: 1,
@@ -213,7 +299,7 @@ const ClientList = () => {
                 <Table
                   loading={usersIsLoading || isRefetching}
                   className="table-striped"
-                  columns={columns}
+                  columns={isWebDevice ? columns : deviceColumns}
                   dataSource={usersData}
                   pagination={{
                     total: tableParams.pagination.total,
@@ -222,6 +308,7 @@ const ClientList = () => {
                   //  rowClassName={"cursor-pointer"}
                   rowKey={(record) => record.id}
                   onChange={handleTableChange}
+
                   /*   onRow={(record, rowIndex) => {
                     return {
                       onClick: event => {navigate(`/owner/client-profile/${record.id}`)}, // click row
@@ -237,7 +324,6 @@ const ClientList = () => {
         <ClientEditPopup userId={userId} />
         <ClientDeletePopup userId={userId} />
         <ClientPasswordEditPopup userId={userId} />
-      
       </div>
     </div>
   );
