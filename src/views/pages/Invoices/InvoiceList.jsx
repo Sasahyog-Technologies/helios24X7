@@ -23,6 +23,15 @@ const InvoiceList = () => {
       ),
     },
     {
+      title: "Mobile",
+      dataIndex: "mobile",
+      render: (text, record) => (
+        <span className="w-100 text-capitalize">
+          <Link to={`/owner/invoice-details/${record.id}`}>{text}</Link>
+        </span>
+      ),
+    },
+    {
       title: "Subscription Type",
       dataIndex: "subscriptionType",
       render: (text, record) => (
@@ -152,8 +161,9 @@ const InvoiceList = () => {
       // return formetter(data);
       return data.data.map((itm) => {
         return {
-          ...itm.attributes,
           id: itm.id,
+          ...itm.attributes,
+          mobile: itm.attributes.user.data.attributes.mobile,
           username: `${itm.attributes.user.data.attributes.firstname} ${itm.attributes.user.data.attributes.lastname}`,
           subscriptionType: `${itm.attributes?.subscription?.data?.attributes?.type
             ?.split("-")
