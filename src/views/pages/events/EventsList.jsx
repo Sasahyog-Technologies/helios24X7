@@ -9,6 +9,7 @@ import EventEditPopup from "../../../components/modelpopup/events/EventsEditPopu
 import request from "../../../sdk/functions";
 import EventsListFilter from "./EventsListFilter";
 import { format } from "date-fns";
+import { Image } from "antd";
 
 const EventsList = () => {
   const [eventId, seteventId] = useState(null);
@@ -54,11 +55,11 @@ const EventsList = () => {
       dataIndex: "media",
       render: (media, record) => (
         <span className="table-avatar">
-          <img
-            src={`${process.env.REACT_APP_STARPI_URL}${media?.data?.attributes?.url}`}
-            class="rounded  d-block w-25"
-            alt="..."
-          ></img>
+          <Image
+            width={30}
+            src={`${media?.data?.attributes?.url}`}
+            class="rounded  d-block w-10"
+          />
         </span>
       ),
     },

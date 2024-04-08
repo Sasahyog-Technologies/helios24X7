@@ -3,8 +3,8 @@ import toast from "react-hot-toast";
 import React, { useState } from "react";
 import request from "../../../sdk/functions";
 import { useForm, Controller } from "react-hook-form";
-import {EventCategoryOptions} from "../../../utils/index"
-
+import { EventCategoryOptions } from "../../../utils/index";
+import { Refresh } from "../../../utils/refresh";
 
 const formDataDefaultValues = {
   title: "",
@@ -58,6 +58,7 @@ const EventsAddPopup = () => {
         }
       );
       toast.success("event created");
+      Refresh();
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);
@@ -146,7 +147,9 @@ const EventsAddPopup = () => {
                           <Select
                             options={EventCategoryOptions}
                             placeholder="Select"
-                            value={EventCategoryOptions.find((c) => c.value === value)}
+                            value={EventCategoryOptions.find(
+                              (c) => c.value === value
+                            )}
                             onChange={(val) => setValue("category", val.value)}
                           />
                         )}
