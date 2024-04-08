@@ -17,6 +17,7 @@ const InvoiceDetials = () => {
           populate: [
             "user",
             "payment",
+            "user.branch",
             "subscription",
             "subscription.plan",
             "subscription.personal_training_program",
@@ -43,6 +44,9 @@ const InvoiceDetials = () => {
 
           {!invoiceLoading && (
             <InvoiceView
+              branchData={
+                invoiceData.user.data.attributes.branch.data.attributes
+              }
               start={invoiceData?.subscription?.data?.attributes?.start}
               end={invoiceData?.subscription?.data?.attributes?.end}
               subscriptionType={

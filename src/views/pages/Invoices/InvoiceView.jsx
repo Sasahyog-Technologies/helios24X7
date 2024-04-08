@@ -1,11 +1,12 @@
 import React from "react";
 import { hlogo } from "../../../Routes/ImagePath";
-import { FormatTime } from "../../../utils/timeFormater";
+
 const InvoiceView = ({
-  start,
   end,
-  invoice_date,
+  start,
   amount,
+  branchData,
+  invoice_date,
   outstanding,
   userFirstName,
   userLastName,
@@ -31,12 +32,10 @@ const InvoiceView = ({
                   <div className="col-sm-6 m-b-20">
                     <img src={hlogo} className="inv-logo" alt="Logo" />
                     <ul className="list-unstyled">
-                      <li>HELIOS GYM</li>
-                      <li>
-                        2nd Floor, Singh Tower, Stadium Road Delapeer, Bareilly
-                      </li>
-                      <li>7983411035, 9058619990</li>
-                      <li> GST: 09ACXPK1920G1ZD</li>
+                      <li>{branchData?.name}</li>
+                      <li>{branchData?.location}</li>
+                      <li>{branchData?.mobile}</li>
+                      <li> GST - {branchData?.gstnumber}</li>
                     </ul>
                   </div>
                   <div className="col-sm-6 m-b-20">
