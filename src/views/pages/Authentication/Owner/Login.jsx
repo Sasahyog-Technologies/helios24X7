@@ -130,10 +130,10 @@ const OwnerLogin = () => {
                   id="navbarCollapse"
                 >
                   <div className="navbar-nav mr-auto py-0">
-                    <a href="team.html" className="nav-item nav-link">
+                    <a href="#trainers" className="nav-item nav-link">
                       Trainers
                     </a>
-                    <a href="team.html" className="nav-item nav-link">
+                    <a href="#plans" className="nav-item nav-link">
                       Plans
                     </a>
                   </div>
@@ -1263,7 +1263,7 @@ const OwnerLogin = () => {
         </div>
         {/* Facts End */}
         {/* Team Start */}
-        <div className="container-fluid p-5">
+        <div id="trainers" className="container-fluid p-5">
           <div className="mb-5 text-center">
             <h5 className="text-primary text-uppercase">The Team</h5>
             <h1 className="display-3 text-uppercase mb-0">Expert Trainers</h1>
@@ -1450,7 +1450,7 @@ const OwnerLogin = () => {
         </div>
         {/* Testimonial End */}
         {/* Blog Start */}
-        <div className="container-fluid p-5">
+        <div id="plans" className="container-fluid p-5">
           <div className="mb-5 text-center">
             <h5 className="text-primary text-uppercase">Plans</h5>
             <h1 className="display-3 text-uppercase mb-0">Our Plans</h1>
