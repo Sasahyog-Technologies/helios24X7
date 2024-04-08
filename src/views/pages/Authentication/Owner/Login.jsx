@@ -1254,7 +1254,7 @@ const OwnerLogin = () => {
                     className="display-5 text-white mb-0"
                     data-toggle="counter-up"
                   >
-                    {data.clients}
+                    {data?.clients}
                   </h1>
                 </div>
               </div>
