@@ -1,11 +1,14 @@
-import React from "react";
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
+import React, { useRef } from "react";
 import { hlogo } from "../../../Routes/ImagePath";
-import { FormatTime } from "../../../utils/timeFormater";
+
 const InvoiceView = ({
-  start,
   end,
-  invoice_date,
+  start,
   amount,
+  branchData,
+  invoice_date,
   outstanding,
   userFirstName,
   userLastName,
@@ -19,72 +22,113 @@ const InvoiceView = ({
 }) => {
   const trainerSubscription = subscriptionType === "trainer-subscription";
 
+  const inputRef = useRef(null);
+  const printDocument = () => {
+    html2canvas(inputRef.current).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+      const pdf = new jsPDF();
+      pdf.addImage(imgData, "JPEG", 0, 0);
+      pdf.save("download.pdf");
+    });
+  };
+
   return (
     <>
-      <div className="content container-fluid">
+      <div style={{ overflow: "scroll" }} className="content container-fluid">
         {/* /Page Header */}
         <div className="row">
-          <div className="col-md-12">
-            <div className="card">
-              <div className="card-body">
-                <div className="row">
-                  <div className="col-sm-6 m-b-20">
-                    <img src={hlogo} className="inv-logo" alt="Logo" />
-                    <ul className="list-unstyled">
-                      <li>HELIOS GYM</li>
-                      <li>
-                        2nd Floor, Singh Tower, Stadium Road Delapeer, Bareilly
-                      </li>
-                      <li>7983411035, 9058619990</li>
-                      <li> GST: 09ACXPK1920G1ZD</li>
-                    </ul>
-                  </div>
-                  <div className="col-sm-6 m-b-20">
-                    <div className="invoice-details">
-                      <h3 className="text-uppercase">
-                        Invoice #HL{invoiceNumber}
-                      </h3>
-                      <ul className="list-unstyled">
-                        <li>
-                          Date: <span>{invoice_date}</span>
-                        </li>
-                        <li>
-                          Due date: <span>{invoice_date}</span>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-sm-6 col-lg-7 col-xl-8 m-b-20">
-                    <h5>Invoice to:</h5>
-                    <ul className="list-unstyled">
-                      <li>
-                        <h5>
-                          <strong>
-                            {userFirstName} {userLastName}
-                          </strong>
-                        </h5>
-                      </li>
-                      <li>{userMobile}</li>
-                    </ul>
-                  </div>
+          <div className="mb-3">
+            <button className="btn btn-primary" onClick={printDocument}>
+              download
+            </button>
+          </div>
 
-                  <div className="col-sm-6 col-lg-5 col-xl-4 m-b-20">
-                    <span className="text-muted">Payment Details:</span>
-                    <ul className="list-unstyled invoice-payment-details">
-                      <li>
-                        Payment Mode:{" "}
-                        <span className="uppercase">{paymentType}</span>
+          <div
+            id="divToPrint"
+            ref={inputRef}
+            style={{
+              width: "800px",
+              margin: "auto",
+              padding: "30px",
+              maxWidth: "800px",
+              background: "white",
+            }}
+          >
+            <div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <section>
+                  <div>
+                    <img src={hlogo} className="inv-logo" alt="Logo" />
+                  </div>
+                  <div>
+                    <ul>
+                      <li
+                        style={{
+                          fontWeight: "bold",
+                        }}
+                      >
+                        {branchData?.name}
                       </li>
-                      <li>
-                        Received By: <span>Helios gym </span>
-                      </li>
+                      <li>{branchData?.location}</li>
+                      <li>{branchData?.mobile}</li>
+                      <li> GST - {branchData?.gstnumber}</li>
                     </ul>
                   </div>
-                </div>
+                </section>
+                <section>
+                  <h3 className="text-uppercase">Invoice #HL{invoiceNumber}</h3>
+                  <ul className="list-unstyled">
+                    <li>
+                      Date: <span>{invoice_date}</span>
+                    </li>
+                    <li>
+                      Due date: <span>{invoice_date}</span>
+                    </li>
+                  </ul>
+                </section>
+              </div>
+              <div
+                style={{
+                  margin: "50px 0px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
+              >
+                <section>
+                  <h5>Invoice to:</h5>
+                  <ul className="">
+                    <li>
+                      <h5>
+                        <strong>
+                          {userFirstName} {userLastName}
+                        </strong>
+                      </h5>
+                    </li>
+                    <li>{userMobile}</li>
+                  </ul>
+                </section>
+                <section>
+                  <span className="text-muted">Payment Details:</span>
+                  <ul className="list-unstyled invoice-payment-details">
+                    <li>
+                      Payment Mode:{" "}
+                      <span className="uppercase">{paymentType}</span>
+                    </li>
+                    <li>
+                      Received By: <span>Helios gym </span>
+                    </li>
+                  </ul>
+                </section>
+              </div>
+
+              <div>
                 <div className="table-responsive">
-                  <table className="table table-striped table-hover">
+                  <table className="table">
                     <thead>
                       <tr>
                         <th>#</th>
@@ -113,88 +157,96 @@ const InvoiceView = ({
                               {trainer} PTP @ {amount}
                             </div>
                           )}
-
-                          {/* <div>
-                            {invoice_date} - {invoice_date}
-                          </div> */}
                         </td>
-                        <td className="text-end">₹{planPrice ?? amount}</td>
+                        <td
+                          className="text-end"
+                          style={{
+                            background: "white",
+                          }}
+                        >
+                          ₹{planPrice ?? amount}
+                        </td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
-                <div>
-                  <div className="row invoice-payment">
-                    <div className="col-sm-7"></div>
-                    <div className="col-sm-5">
-                      <div className="m-b-20">
-                        <div className="table-responsive no-border">
-                          <table className="table mb-0">
-                            <tbody>
-                              <tr>
-                                <th>Subtotal:</th>
-                                <td className="text-end">
-                                  ₹{planPrice ?? amount}
-                                </td>
-                              </tr>
-                              <tr>
-                                <th>Discount: </th>
-                                <td className="text-end">0</td>
-                              </tr>
-                              <tr>
-                                <th>SGST@9: </th>
-                                <td className="text-end">
-                                  ₹
-                                  {percentage(
-                                    parseFloat(planPrice ?? amount),
-                                    9
-                                  ).toFixed(2)}
-                                </td>
-                              </tr>
-                              <tr>
-                                <th>CGST@9: </th>
-                                <td className="text-end">
-                                  ₹
-                                  {percentage(
-                                    parseFloat(planPrice ?? amount),
-                                    9
-                                  ).toFixed(2)}
-                                </td>
-                              </tr>
-                              <tr>
-                                <th>Grand Total:</th>
-                                <td className="text-end text-primary">
-                                  <h5>
-                                    ₹
-                                    {(
-                                      parseFloat(planPrice ?? amount) +
-                                      percentage(
-                                        parseFloat(planPrice ?? amount),
-                                        18
-                                      )
-                                    ).toFixed(2)}
-                                  </h5>
-                                </td>
-                              </tr>
-                              <tr>
-                                <th>Payment:</th>
-                                <td className="text-end text-primary">
-                                  <h5>₹{parseFloat(amount).toFixed(2)}</h5>
-                                </td>
-                              </tr>
-                              <tr>
-                                <th>Balance:</th>
-                                <td className="text-end text-primary">
-                                  <h5>₹{parseFloat(outstanding).toFixed(2)}</h5>
-                                </td>
-                              </tr>
-                            </tbody>
-                          </table>
-                        </div>
-                      </div>
-                    </div>
+              </div>
+
+              <div
+                style={{
+                  display: "flex",
+                }}
+              >
+                <section
+                  style={{
+                    flex: "1",
+                  }}
+                ></section>
+
+                <section
+                  style={{
+                    flex: "1",
+                  }}
+                >
+                  <div className="table-responsive no-border">
+                    <table className="table mb-0">
+                      <tbody>
+                        <tr>
+                          <th>Subtotal:</th>
+                          <td className="text-end">₹{planPrice ?? amount}</td>
+                        </tr>
+                        <tr>
+                          <th>Discount: </th>
+                          <td className="text-end">0</td>
+                        </tr>
+                        <tr>
+                          <th>SGST@9: </th>
+                          <td className="text-end">
+                            ₹
+                            {percentage(
+                              parseFloat(planPrice ?? amount),
+                              9
+                            ).toFixed(2)}
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>CGST@9: </th>
+                          <td className="text-end">
+                            ₹
+                            {percentage(
+                              parseFloat(planPrice ?? amount),
+                              9
+                            ).toFixed(2)}
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>Grand Total:</th>
+                          <td className="text-end text-primary">
+                            <h5>
+                              ₹
+                              {(
+                                parseFloat(planPrice ?? amount) +
+                                percentage(parseFloat(planPrice ?? amount), 18)
+                              ).toFixed(2)}
+                            </h5>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>Payment:</th>
+                          <td className="text-end text-primary">
+                            <h5>₹{parseFloat(amount).toFixed(2)}</h5>
+                          </td>
+                        </tr>
+                        <tr>
+                          <th>Balance:</th>
+                          <td className="text-end text-primary">
+                            <h5>₹{parseFloat(outstanding).toFixed(2)}</h5>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
                   </div>
-                </div>
+                </section>
               </div>
             </div>
           </div>
