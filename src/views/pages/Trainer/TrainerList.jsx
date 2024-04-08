@@ -7,6 +7,7 @@ import Breadcrumbs from "../../../components/Breadcrumbs";
 import TrainerAddPopup from "../../../components/modelpopup/Trainer/TrainerAddPopup";
 import TrianerDeletePopup from "../../../components/modelpopup/Trainer/TrainerDeletePopup";
 import TrianerEditPopup from "../../../components/modelpopup/Trainer/TrainerEditPopup";
+import TrainerPasswordEditPopup from "../../../components/modelpopup/Trainer/TrainerPasswordEditPopup";
 import request from "../../../sdk/functions";
 import TrainerListFilter from "./TrainerListFilter";
 
@@ -84,6 +85,15 @@ const TrainerList = () => {
               onClick={() => setUserId(user.id)}
             >
               <i className="fa fa-pencil m-r-5" /> Edit
+            </Link>
+            <Link
+              className="dropdown-item"
+              to="#"
+              data-bs-toggle="modal"
+              data-bs-target="#edit_trainer_password"
+              onClick={() => setUserId(user.id)}
+            >
+              <i className="fa fa-pencil m-r-5" /> Edit Password
             </Link>
             <Link
               className="dropdown-item"
@@ -214,6 +224,7 @@ const TrainerList = () => {
         <TrainerAddPopup />
         <TrianerEditPopup userId={userId} />
         <TrianerDeletePopup userId={userId} />
+        <TrainerPasswordEditPopup userId={userId} />
       </div>
     </div>
   );

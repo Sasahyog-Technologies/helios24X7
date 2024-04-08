@@ -8,6 +8,7 @@ import Breadcrumbs from "../../../components/Breadcrumbs";
 import ClientAddPopup from "../../../components/modelpopup/Client/ClientAddPopup";
 import ClientDeletePopup from "../../../components/modelpopup/Client/ClientDeletePopup";
 import ClientEditPopup from "../../../components/modelpopup/Client/ClientEditPopup";
+import ClientPasswordEditPopup from "../../../components/modelpopup/Client/ClientPasswordEditPopup";
 import request from "../../../sdk/functions";
 import ClientListFilter from "./ClientListFilter";
 
@@ -91,6 +92,15 @@ const ClientList = () => {
               onClick={() => setUserId(user.id)}
             >
               <i className="fa fa-pencil m-r-5" /> Edit
+            </Link>
+            <Link
+              className="dropdown-item"
+              to="#"
+              data-bs-toggle="modal"
+              data-bs-target="#edit_client_password"
+              onClick={() => setUserId(user.id)}
+            >
+              <i className="fa fa-pencil m-r-5" /> Edit Password
             </Link>
             <Link
               className="dropdown-item"
@@ -226,6 +236,8 @@ const ClientList = () => {
         <ClientAddPopup refetch={refetch} />
         <ClientEditPopup userId={userId} />
         <ClientDeletePopup userId={userId} />
+        <ClientPasswordEditPopup userId={userId} />
+      
       </div>
     </div>
   );
