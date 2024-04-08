@@ -34,7 +34,7 @@ const formDataDefaultValues = {
   plan: "",
   gender: "",
   paid: "",
-  outstanding:0,
+  outstanding: 0,
   weight: "",
   height: "",
   bmr: "",
@@ -44,6 +44,7 @@ const formDataDefaultValues = {
   calf: "",
   weist: "",
   neck: "",
+  planPrice: 0,
 };
 
 function calculateEndDate(startDate, durationInMonths) {
@@ -77,6 +78,7 @@ const ClientAddPopup = ({ refetch }) => {
     handleSubmit,
     control,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm({
     defaultValues: formDataDefaultValues,
@@ -85,6 +87,8 @@ const ClientAddPopup = ({ refetch }) => {
   const onSubmit = async (data) => {
     if (data.mobile.length > 10 || data.mobile.length < 10)
       return toast.error("Mobile must be at least 10");
+    if (parseInt(data.paid) > parseInt(data.planPrice))
+      return toast.error("Amount is greater than plan price");
     try {
       setLoading(true);
       const planDuration = plans.find((pt) => pt.id == data.plan)?.attributes
@@ -123,7 +127,7 @@ const ClientAddPopup = ({ refetch }) => {
           user: createRes.user.id,
           plan: data.plan,
           paid: data.paid,
-          outstanding: data.outstanding || null,
+          outstanding: data.outstanding,
           start: startDate,
           end: calculateEndDate(startDate, planDuration),
           payment_type: data.paymentType,
@@ -135,7 +139,7 @@ const ClientAddPopup = ({ refetch }) => {
           user: createRes.user.id,
           subscription: subsRes.data.id,
           amount: data.paid,
-          outstanding: data.outstanding || null,
+          outstanding: data.outstanding,
           payment_date: new Date().toISOString(),
           status: "success",
         },
@@ -148,7 +152,7 @@ const ClientAddPopup = ({ refetch }) => {
           invoice_number: InvoiceNumberGenerator(),
           invoice_date: new Date().toISOString(),
           amount: data.paid,
-          outstanding: data.outstanding || null,
+          outstanding: data.outstanding,
         },
       });
       toast.success("client created");
@@ -192,6 +196,7 @@ const ClientAddPopup = ({ refetch }) => {
       let plansArr = plans?.data?.map((plan) => ({
         value: plan.id,
         label: plan.attributes.title,
+        price: plan.attributes.price,
       }));
       setPlanOptions(plansArr);
     };
@@ -306,27 +311,7 @@ const ClientAddPopup = ({ refetch }) => {
                       />
                     </div>
                   </div>
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">
-                        Plan<span className="text-danger">*</span>
-                      </label>
-                      <Controller
-                        name="plan"
-                        control={control}
-                        render={({ onChange, value, ref }) => (
-                          <Select
-                            options={planOptions}
-                            placeholder="Select"
-                            value={planOptions.find((c) => c.value === value)}
-                            onChange={(val) => setValue("plan", val.value)}
-                            required
-                          />
-                        )}
-                        rules={{ required: true }}
-                      />
-                    </div>
-                  </div>
+
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">
@@ -394,19 +379,82 @@ const ClientAddPopup = ({ refetch }) => {
                       />
                     </div>
                   </div>
+
+                  {/* ------------------------------------- */}
+                  <div className="col-sm-6">
+                    <div className="input-block mb-3">
+                      <label className="col-form-label">
+                        Plan<span className="text-danger">*</span>
+                      </label>
+                      <Controller
+                        name="plan"
+                        control={control}
+                        render={({ onChange, value, ref }) => (
+                          <Select
+                            options={planOptions}
+                            placeholder="Select"
+                            value={planOptions.find((c) => c.value === value)}
+                            onChange={(val) => {
+                              setValue("plan", val.value);
+                              setValue("planPrice", parseInt(val.price));
+                              setValue(
+                                "outstanding",
+                                getValues("planPrice") - getValues("paid")
+                              );
+                            }}
+                            required
+                          />
+                        )}
+                        rules={{ required: true }}
+                      />
+                    </div>
+                  </div>
+                  {/* --------------------- */}
+
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">
                         Paid <span className="text-danger">*</span>
                       </label>
+                      <Controller
+                        name="paid"
+                        control={control}
+                        render={({ onChange, value, ref }) => (
+                          <input
+                            className="form-control"
+                            value={value}
+                            type="number"
+                            required
+                            onChange={(e) => {
+                              setValue("paid", e.target.value);
+                              setValue(
+                                "outstanding",
+                                getValues("planPrice") - e.target.value
+                              );
+                            }}
+                          />
+                        )}
+                        rules={{ required: true }}
+                      />
+                    </div>
+                  </div>
+
+                  {/* ---------------- */}
+                  <div className="col-sm-6">
+                    <div className="input-block mb-3">
+                      <label className="col-form-label">
+                        Plan Price <span className="text-danger">*</span>
+                      </label>
                       <input
                         className="form-control"
                         type="number"
                         required
-                        {...register("paid", { required: true })}
+                        disabled
+                        {...register("planPrice")}
                       />
                     </div>
                   </div>
+                  {/* --------------- */}
 
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
@@ -414,6 +462,7 @@ const ClientAddPopup = ({ refetch }) => {
                       <input
                         className="form-control"
                         type="number"
+                        disabled
                         {...register("outstanding")}
                       />
                     </div>
