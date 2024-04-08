@@ -1,3 +1,25 @@
+export { default as lp1 } from "../../assets/img/about.jpg";
+export { default as lp2 } from "../../assets/img/carousel-1.jpg";
+
+export { default as lp3 } from "../../assets/img/carousel-2.jpg";
+
+export { default as lp4 } from "../../assets/img/team-1.jpg";
+
+export { default as lp5 } from "../../assets/img/team-2.jpg";
+
+export { default as lp6 } from "../../assets/img/team-3.jpg";
+export { default as lp7 } from "../../assets/img/testimonial.jpg";
+
+export { default as lp8 } from "../../assets/img/testimonial-1.jpg";
+
+export { default as lp9 } from "../../assets/img/testimonial-2.jpg";
+
+export { default as lp10 } from "../../assets/img/blog-1.jpg";
+
+export { default as lp11 } from "../../assets/img/testimonial-2.jpg";
+
+export { default as lp12 } from "../../assets/img/testimonial-2.jpg";
+
 export { default as headerlogo } from "../../assets/img/logo.svg";
 export { default as Applogo } from "../../assets/img/logo2.png";
 export { default as logo3 } from "../../assets/img/logo3.png";
