@@ -110,6 +110,12 @@ const ClientProfile = () => {
     },
   });
 
+
+  //console.log("client data",clientData)
+  //console.log("client subs data",clientSubscriptionData)
+  //console.log("client ptp data",clientPTPData)
+
+
   return (
     <>
       <div className="page-wrapper">

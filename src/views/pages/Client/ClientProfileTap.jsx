@@ -108,7 +108,7 @@ const ClientProfileTab = ({
         <ExtendPTPSubscriptionPopup
           userId={userId}
           activePlanEndDate={activePlanEndDate}
-          ptpId={ptp && ptp.length ? ptp[0].id : ""}
+          ptpId={ptp && ptp?.length ? ptp[0]?.id : ""}
           setActivePlanEndDate={setActivePlanEndDate}
         />
         <ExtendGYMSubscriptionPopup
@@ -126,77 +126,100 @@ const PersonalTrainingStatus = ({ setActivePlanEndDate, ptp }) => {
   return (
     <div className="col-md-6 d-flex">
       <div className="card profile-box flex-fill">
-        <div className="card-body">
-          <h3 className="card-title">Personal Trainer</h3>{" "}
-          <div>
-            <ul className="personal-info">
-              <ListItem
-                title={"Trainer"}
-                text={`${ptp.trainer.data?.attributes.firstname} ${ptp.trainer.data?.attributes.lastname}`}
-              />
-              <ListItem
-                title={"Session"}
-                text={`${convertToReadableTime(
-                  ptp?.session_from
-                )} - ${convertToReadableTime(ptp?.session_to)}`}
-              />
-            </ul>
-            <hr />
-            {ptp?.subscription?.length && (
-              <>
-                <div className="mt-4">
-                  <h4>Training Subscription ({ptp.subscription.at(0).id})</h4>
-                  <ul className="personal-info mt-3">
-                    <ListItem
-                      title={"Paid"}
-                      text={ptp.subscription.at(0).paid}
-                    />
-                    <ListItem
-                      title={"Outstanding"}
-                      text={ptp.subscription.at(0).outstanding ?? 0}
-                    />
-                    <ListItem
-                      title={"Payment Type"}
-                      text={ptp.subscription.at(0).payment_type}
-                    />
-                    <ListItem
-                      title={"Duration"}
-                      text={`${format(
-                        new Date(ptp.subscription.at(0)?.start),
-                        "dd MMM yyyy"
-                      )} - ${format(
-                        new Date(ptp.subscription.at(0)?.end),
-                        "dd MMM yyyy"
-                      )}`}
-                    />
-                  </ul>
-                </div>
-              </>
-            )}
-            {ptp?.subscription?.length && (
-              <Link
-                to="#"
-                data-bs-target="#extend_subscription"
-                className="btn btn-info"
-                data-bs-toggle="modal"
-                onClick={() => setActivePlanEndDate(ptp.subscription[0].end)}
-              >
-                Extend Subscription
-              </Link>
-            )}
+        {ptp && ptp?.length ? (
+          <>
+            <div className="card-body">
+              <h3 className="card-title">Personal Trainer</h3>{" "}
+              <div>
+                <ul className="personal-info">
+                  <ListItem
+                    title={"Trainer"}
+                    text={`${ptp?.trainer?.data?.attributes.firstname} ${ptp?.trainer?.data?.attributes.lastname}`}
+                  />
+                  <ListItem
+                    title={"Session"}
+                    text={`${convertToReadableTime(
+                      ptp?.session_from
+                    )} - ${convertToReadableTime(ptp?.session_to)}`}
+                  />
+                </ul>
+                <hr />
+                {ptp?.subscription?.length && (
+                  <>
+                    <div className="mt-4">
+                      <h4>
+                        Training Subscription ({ptp?.subscription?.at(0)?.id})
+                      </h4>
+                      <ul className="personal-info mt-3">
+                        <ListItem
+                          title={"Paid"}
+                          text={ptp?.subscription.at(0).paid}
+                        />
+                        <ListItem
+                          title={"Outstanding"}
+                          text={ptp?.subscription.at(0).outstanding ?? 0}
+                        />
+                        <ListItem
+                          title={"Payment Type"}
+                          text={ptp?.subscription.at(0).payment_type}
+                        />
+                        <ListItem
+                          title={"Duration"}
+                          text={`${format(
+                            new Date(ptp?.subscription.at(0)?.start),
+                            "dd MMM yyyy"
+                          )} - ${format(
+                            new Date(ptp?.subscription.at(0)?.end),
+                            "dd MMM yyyy"
+                          )}`}
+                        />
+                      </ul>
+                    </div>
+                  </>
+                )}
+                {ptp?.subscription?.length && (
+                  <Link
+                    to="#"
+                    data-bs-target="#extend_subscription"
+                    className="btn btn-info"
+                    data-bs-toggle="modal"
+                    onClick={() =>
+                      setActivePlanEndDate(ptp.subscription[0].end)
+                    }
+                  >
+                    Extend Subscription
+                  </Link>
+                )}
 
-            {!ptp?.subscription?.length && (
+                {!ptp?.subscription?.length && (
+                  <Link
+                    to="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#add_ptp"
+                    className="btn btn-info"
+                  >
+                    Purchase Membership
+                  </Link>
+                )}
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="card-body">
+              <h3 className="card-title">Personal Trainer</h3>
+              <p>PTP Not Available</p>
               <Link
                 to="#"
                 data-bs-toggle="modal"
                 data-bs-target="#add_ptp"
                 className="btn btn-info"
               >
-                Purchase Membership
+                Create Personal Trainer
               </Link>
-            )}
-          </div>
-        </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
@@ -290,7 +313,7 @@ const GymMembershipStatus = ({ subscription, setActiveGYMPlanEndDate }) => {
 
 function convertToReadableTime(timeString) {
   // Split the time string into hours, minutes, and seconds
-  const [hours, minutes] = timeString.split(":").map(Number);
+  const [hours, minutes] = timeString?.split(":").map(Number);
 
   // Ensure the time parts are valid
   if (isNaN(hours) || isNaN(minutes)) {
