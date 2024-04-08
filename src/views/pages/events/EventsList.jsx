@@ -10,10 +10,12 @@ import request from "../../../sdk/functions";
 import EventsListFilter from "./EventsListFilter";
 import { format } from "date-fns";
 import { Image } from "antd";
+import { useMediaQuery } from "usehooks-ts";
 
 const EventsList = () => {
   const [eventId, seteventId] = useState(null);
   const [image, setImage] = useState();
+  const isWebDevice = useMediaQuery("(min-width:700px)");
 
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -101,6 +103,91 @@ const EventsList = () => {
     },
   ];
 
+  /* --------------------------------------------------------------------------- */
+
+  const deviceColumns = [
+    {
+      render: (record, key, index) => {
+        return (
+          <div>
+            <div className="d-flex justify-content-between">
+              {<div className="fw-bold fs-6"></div>}
+              <div
+                className="dropdown dropdown-action text-end" /* style={{zIndex:100}} */
+              >
+                <Link
+                  to="#"
+                  className="action-icon dropdown-toggle"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <i className="material-icons">more_vert</i>
+                </Link>
+
+                <div className="dropdown-menu dropdown-menu-right">
+                  <Link
+                    className="dropdown-item"
+                    to="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#edit_event"
+                    onClick={() => seteventId(record.id)}
+                  >
+                    <i className="fa fa-pencil m-r-5" /> Edit
+                  </Link>
+                  <Link
+                    className="dropdown-item"
+                    to="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#delete_event"
+                    onClick={() => seteventId(record.id)}
+                  >
+                    <i className="fa fa-trash m-r-5" /> Delete
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Title </span>
+                <span> {record?.title}</span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Category </span>
+                <span> {record?.category}</span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Start </span>
+                <span>
+                  <span>{format(new Date(record?.start), "dd/MM/yyyy")}</span>
+                </span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">End </span>
+                <span>
+                  <span>{format(new Date(record?.end), "dd/MM/yyyy")}</span>
+                </span>
+              </div>
+
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Media </span>
+                <span className="table-avatar">
+                  <Image
+                    width={30}
+                    src={`${record?.media?.data?.attributes?.url}`}
+                    class="rounded  d-block w-10"
+                  />
+                </span>
+              </div>
+            </div>
+          </div>
+        );
+      },
+    },
+  ];
+
+  /* --------------------------------------------------------------------------- */
+
   const [tableParams, setTableParams] = useState({
     pagination: {
       current: 1,
@@ -184,7 +271,7 @@ const EventsList = () => {
                 <Table
                   loading={eventIsLoading || isRefetching}
                   className="table-striped"
-                  columns={columns}
+                  columns={isWebDevice ? columns : deviceColumns}
                   dataSource={eventsData}
                   pagination={{
                     total: tableParams.pagination.total,
