@@ -10,9 +10,11 @@ import TrianerEditPopup from "../../../components/modelpopup/Trainer/TrainerEdit
 import TrainerPasswordEditPopup from "../../../components/modelpopup/Trainer/TrainerPasswordEditPopup";
 import request from "../../../sdk/functions";
 import TrainerListFilter from "./TrainerListFilter";
+import { useMediaQuery } from "usehooks-ts";
 
 const TrainerList = () => {
   const [userId, setUserId] = useState(null);
+  const isWebDevice = useMediaQuery("(min-width:700px)");
   const columns = [
     {
       title: "First Name",
@@ -109,6 +111,89 @@ const TrainerList = () => {
       ),
     },
   ];
+
+  /* --------------------------------------------------------------------------- */
+
+  const deviceColumns = [
+    {
+      render: (record, key, index) => {
+        return (
+          <div>
+            <div className="d-flex justify-content-between">
+              {<div className="fw-bold fs-6"></div>}
+              <div
+                className="dropdown dropdown-action text-end" /* style={{zIndex:100}} */
+              >
+                <Link
+                  to="#"
+                  className="action-icon dropdown-toggle"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <i className="material-icons">more_vert</i>
+                </Link>
+
+                <div className="dropdown-menu dropdown-menu-right">
+                  <Link
+                    className="dropdown-item"
+                    to="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#edit_trainer"
+                    onClick={() => setUserId(record.id)}
+                  >
+                    <i className="fa fa-pencil m-r-5" /> Edit
+                  </Link>
+                  <Link
+                    className="dropdown-item"
+                    to="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#edit_trainer_password"
+                    onClick={() => setUserId(record.id)}
+                  >
+                    <i className="fa fa-pencil m-r-5" /> Edit Password
+                  </Link>
+                  <Link
+                    className="dropdown-item"
+                    to="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#delete_trainer"
+                    onClick={() => setUserId(record.id)}
+                  >
+                    <i className="fa fa-trash m-r-5" /> Delete
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            <Link to={`/owner/trainer-profile/${record.id}`}>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">First Name </span>
+                <span> {record?.firstname}</span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Last Name </span>
+                <span> {record?.lastname}</span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Mobile </span>
+                <span> {record?.mobile}</span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Join Date </span>
+                <span>{format(new Date(record?.createdAt), "dd/MM/yyyy")}</span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Branch </span>
+                <span>{record?.branch?.name}</span>
+              </div>
+            </Link>
+          </div>
+        );
+      },
+    },
+  ];
+
+  /* ---------------------------------------------------------------- */
 
   const [tableParams, setTableParams] = useState({
     pagination: {
@@ -207,7 +292,7 @@ const TrainerList = () => {
                 <Table
                   loading={usersIsLoading || isRefetching}
                   className="table-striped"
-                  columns={columns}
+                  columns={isWebDevice ? columns : deviceColumns}
                   dataSource={trainersData}
                   pagination={{
                     total: tableParams.pagination.total,
