@@ -12,7 +12,11 @@ const InvoiceView = ({
   userMobile,
   paymentType,
   invoiceNumber,
+  subscriptionType,
+  trainer,
 }) => {
+  const trainerSubscription = subscriptionType === "trainer-subscription";
+
   return (
     <>
       <div className="content container-fluid">
@@ -90,14 +94,23 @@ const InvoiceView = ({
                       <tr>
                         <td>1</td>
                         <td>
-                          <div className="font-weight-bold">
-                            {planName} @ {planPrice}
-                          </div>
+                          {!trainerSubscription && (
+                            <div className="font-weight-bold">
+                              {planName} @ {planPrice}
+                            </div>
+                          )}
+
+                          {trainerSubscription && (
+                            <div className="font-weight-bold">
+                              {trainer} PTP @ {amount}
+                            </div>
+                          )}
+
                           {/* <div>
                             {invoice_date} - {invoice_date}
                           </div> */}
                         </td>
-                        <td className="text-end">₹{planPrice}</td>
+                        <td className="text-end">₹{planPrice ?? amount}</td>
                       </tr>
                     </tbody>
                   </table>
@@ -112,7 +125,9 @@ const InvoiceView = ({
                             <tbody>
                               <tr>
                                 <th>Subtotal:</th>
-                                <td className="text-end">₹{planPrice}</td>
+                                <td className="text-end">
+                                  ₹{planPrice ?? amount}
+                                </td>
                               </tr>
                               <tr>
                                 <th>Discount: </th>
@@ -122,18 +137,20 @@ const InvoiceView = ({
                                 <th>SGST@9: </th>
                                 <td className="text-end">
                                   ₹
-                                  {percentage(parseFloat(planPrice), 9).toFixed(
-                                    2
-                                  )}
+                                  {percentage(
+                                    parseFloat(planPrice ?? amount),
+                                    9
+                                  ).toFixed(2)}
                                 </td>
                               </tr>
                               <tr>
                                 <th>CGST@9: </th>
                                 <td className="text-end">
                                   ₹
-                                  {percentage(parseFloat(planPrice), 9).toFixed(
-                                    2
-                                  )}
+                                  {percentage(
+                                    parseFloat(planPrice ?? amount),
+                                    9
+                                  ).toFixed(2)}
                                 </td>
                               </tr>
                               <tr>
@@ -142,8 +159,11 @@ const InvoiceView = ({
                                   <h5>
                                     ₹
                                     {(
-                                      parseFloat(planPrice) +
-                                      percentage(parseFloat(planPrice), 18)
+                                      parseFloat(planPrice ?? amount) +
+                                      percentage(
+                                        parseFloat(planPrice ?? amount),
+                                        18
+                                      )
                                     ).toFixed(2)}
                                   </h5>
                                 </td>
