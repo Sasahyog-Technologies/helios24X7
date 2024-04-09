@@ -7,10 +7,11 @@ import { useSession } from "../../../Hook/useSession";
 import request from "../../../sdk/functions";
 import MyTraineesFilter from "./MyTraineesFilter";
 import { FormatTime } from "../../../utils/timeFormater";
+import { useMediaQuery } from "usehooks-ts";
 
 const MyTraineesList = () => {
   const [traineeId, setTraineeId] = useState(null);
-
+  const isWebDevice = useMediaQuery("(min-width:700px)");
   const { getUserDataToCookie } = useSession();
   const user = getUserDataToCookie()?.user;
   const trainerId = user.id;
@@ -21,73 +22,59 @@ const MyTraineesList = () => {
       dataIndex: "trainee",
       render: (text, record) => <span className="text-capitalize">{text}</span>,
     },
- 
+
     {
       title: "Mobile",
       dataIndex: "mobile",
-      render: (text, record) => (
-        <span className="table-avatar">
-       {text} 
-        </span>
-      ),
+      render: (text, record) => <span className="table-avatar">{text}</span>,
     },
     {
       title: "Session From",
       dataIndex: "session_from",
       render: (text, record) => (
-        <span className="table-avatar">
-       {FormatTime(text)} 
-        </span>
+        <span className="table-avatar">{FormatTime(text)}</span>
       ),
     },
     {
       title: "Session To",
       dataIndex: "session_to",
       render: (text, record) => (
-        <span className="table-avatar">
-       {FormatTime(text)} 
-        </span>
+        <span className="table-avatar">{FormatTime(text)}</span>
       ),
     },
-
-  
-  /*   {
-      title: "Action",
-      render: (trainer) => (
-        <div className="dropdown dropdown-action text-end">
-          <Link
-            to="#"
-            className="action-icon dropdown-toggle"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <i className="material-icons">more_vert</i>
-          </Link>
-
-          <div className="dropdown-menu dropdown-menu-right">
-            <Link
-              className="dropdown-item"
-              to="#"
-              data-bs-toggle="modal"
-              data-bs-target="#edit_trainer"
-              onClick={() => setTraineeId(trainer.id)}
-            >
-              <i className="fa fa-pencil m-r-5" /> Edit
-            </Link>
-            <Link
-              className="dropdown-item"
-              to="#"
-              data-bs-toggle="modal"
-              data-bs-target="#delete_trainer"
-              onClick={() => setTraineeId(trainer.id)}
-            >
-              <i className="fa fa-trash m-r-5" /> Delete
-            </Link>
-          </div>
-        </div>
-      ),
-    }, */
   ];
+
+  /* --------------------------------------------------------------------------- */
+
+  const deviceColumns = [
+    {
+      render: (record, key, index) => {
+        return (
+          <div>
+            <div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Trainee Name</span>
+                <span> {record?.trainee}</span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Mobile</span>
+                <span> {record?.mobile}</span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Session</span>
+                <span>
+                  {FormatTime(record?.session_from)} -{" "}
+                  {FormatTime(record?.session_to)}
+                </span>
+              </div>
+            </div>
+          </div>
+        );
+      },
+    },
+  ];
+
+  /* --------------------------------------------------------------------------- */
 
   const [tableParams, setTableParams] = useState({
     pagination: {
@@ -115,7 +102,7 @@ const MyTraineesList = () => {
         populate: ["trainee"],
         filters: {
           trainer: trainerId,
-          trainee:{
+          trainee: {
             $or: [
               {
                 firstname: {
@@ -131,7 +118,7 @@ const MyTraineesList = () => {
                 },
               },
             ],
-          }
+          },
         },
       });
       // console.log(data);
@@ -145,7 +132,7 @@ const MyTraineesList = () => {
           ...item.attributes,
           id: item.id,
           trainee: `${item?.attributes?.trainee?.data?.attributes?.firstname} ${item?.attributes?.trainee?.data?.attributes?.lastname}`,
-          mobile:item?.attributes?.trainee?.data?.attributes?.mobile
+          mobile: item?.attributes?.trainee?.data?.attributes?.mobile,
         };
       });
     },
@@ -194,7 +181,7 @@ const MyTraineesList = () => {
                 <Table
                   loading={trainersIsLoading || isRefetching}
                   className="table-striped"
-                  columns={columns}
+                  columns={isWebDevice ? columns : deviceColumns}
                   dataSource={trainersData}
                   pagination={{
                     total: tableParams.pagination.total,
