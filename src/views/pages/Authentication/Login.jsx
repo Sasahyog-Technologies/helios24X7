@@ -9,6 +9,8 @@ const routes = {
   owner: "/owner/client-list",
   trainer: "/trainer/my-profile",
   client: "/client/my-profile",
+  manager: "/manager/my-profile",
+
 };
 
 const TestLogin = () => {

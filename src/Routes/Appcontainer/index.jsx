@@ -1168,7 +1168,7 @@ const AppContainer = () => {
       element: <Users />,
     },
   ];
-
+  /* ------------------owner routres------------------- */
   const OwnerRoutingObjects = [
     {
       id: 1,
@@ -1236,6 +1236,8 @@ const AppContainer = () => {
       element: <MyProfile />,
     },
   ];
+
+  /* ---------client routes --------------------- */
   const ClientRoutingObjects = [
     {
       id: 1,
@@ -1263,6 +1265,8 @@ const AppContainer = () => {
       element: <InvoiceDetails />,
     },
   ];
+
+  /* ------------trainer routes -------------------------- */
   const TrainerRoutingObjects = [
     {
       id: 1,
@@ -1337,16 +1341,19 @@ const AppContainer = () => {
 
   const { getUserDataToCookie } = useSession();
   const user = getUserDataToCookie();
-  //console.log(user);
+
+  /*  owner route procect */
   const OwnerProtectedRoute = ({ children }) => {
     if (user || user?.jwt) {
-      if (user?.user.type === "owner") {
+      if (user?.user.type === "owner" || user?.user.type === "manager") {
         return children;
       }
       return <Navigate to={"/"} replace={true} />;
     }
     return <Navigate replace={true} to="/" />;
   };
+
+  /* trainer route protect  */
   const TrainerProtectedRoute = ({ children }) => {
     if (user || user?.jwt) {
       if (user?.user.type === "trainer") {
@@ -1356,6 +1363,8 @@ const AppContainer = () => {
     }
     return <Navigate replace={true} to="/" />;
   };
+
+  /* client route protect  */
   const ClientProtectedRoute = ({ children }) => {
     if (user || user?.jwt || user?.user?.id) {
       if (user?.user.type === "client") {
@@ -1394,6 +1403,7 @@ const AppContainer = () => {
               />
             ))}
           </Route>
+
           <Route path={"/client"} element={<SidebarLayout />}>
             {ClientRoutingObjects.map((item) => (
               <Route
@@ -1416,7 +1426,7 @@ const AppContainer = () => {
               />
             ))}
           </Route>
-          <Route path={"/user"} element={<SidebarLayout />}>
+          <Route path={"/manager"} element={<SidebarLayout />}>
             <Route path={"my-profile"} element={<MyProfile />} />
           </Route>
 
