@@ -210,15 +210,17 @@ const OwnerLogin = () => {
                     <h1 className="display-2 text-white text-uppercase mb-md-4">
                       Build Your Body Strong With Helios
                     </h1>
-                    <a
-                      href="/login"
-                      className="btn btn-primary py-md-3 px-md-5 me-3"
-                    >
-                      Join Us
-                    </a>
-                    <a href="#footer" class="btn btn-light py-md-3 px-md-5">
-                      Contact Us
-                    </a>
+                    <div className="d-flex flex-wrap justify-content-center align-items-center gap-2 mt-2">
+                      <a
+                        href="/login"
+                        className="btn btn-primary py-md-3 px-md-5"
+                      >
+                        Join Us
+                      </a>
+                      <a href="#footer" class="btn btn-light py-md-3 px-md-5">
+                        Contact Us
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -240,16 +242,17 @@ const OwnerLogin = () => {
                     <h1 className="display-2 text-white text-uppercase mb-md-4">
                       Grow Your Strength With Our Trainers
                     </h1>
-                    <a
-                      href="/login"
-                      className="btn btn-primary py-md-3 px-md-5 me-3"
-                    >
-                      Join Us
-                    </a>
-
-                    <a href="#footer" class="btn btn-light py-md-3 px-md-5">
-                      Contact Us
-                    </a>
+                    <div className="d-flex flex-wrap justify-content-center align-items-center gap-2 mt-2">
+                      <a
+                        href="/login"
+                        className="btn btn-primary py-md-3 px-md-5"
+                      >
+                        Join Us
+                      </a>
+                      <a href="#footer" class="btn btn-light py-md-3 px-md-5">
+                        Contact Us
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -550,6 +553,7 @@ const OwnerLogin = () => {
                       className="img-fluid rounded-circle"
                       src={lp8}
                       alt=""
+                      style={{ width: "100px" }}
                     />
                     <div className="ps-4">
                       <h5 className="text-uppercase text-light">
@@ -576,6 +580,7 @@ const OwnerLogin = () => {
                     <img
                       className="img-fluid rounded-circle"
                       src={lp9}
+                      style={{ width: "100px" }}
                       alt=""
                     />
                     <div className="ps-4">
