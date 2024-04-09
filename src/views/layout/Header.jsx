@@ -117,7 +117,6 @@ const Header = (props) => {
           <span />
         </span>
       </Link> */}
-
       <Link
         id="mobile_btn"
         className="mobile_btn"
@@ -126,7 +125,15 @@ const Header = (props) => {
       >
         <i className="fa fa-bars" />
       </Link>
-
+      {/* Small Device Logo */}
+      <div
+        style={{
+          height: "60px",
+        }}
+        className="w-full d-flex d-lg-none justify-content-center align-items-center"
+      >
+        <img style={{ height: "50px", width: "120px" }} src={hlogo} alt="img" />
+      </div>
       {/* Header Menu */}
       <ul className="nav user-menu">
         {/* /Message Notifications */}
