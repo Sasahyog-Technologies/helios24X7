@@ -30,7 +30,7 @@
  .pricing {
   background-color: #fff;
   margin: 0 auto 40px;
-  max-width: 270px;
+ /*  max-width: 270px; */
   position: relative;
   text-align: left;
 }

@@ -630,7 +630,7 @@ const OwnerLogin = () => {
                 {/*    <p className="text-light">
                  
                 </p> */}
-                <form onSubmit={handleWalkinCreate}>
+                <form onSubmit={handleWalkinCreate} style={{width:"70%"}}>
                   <div className="d-flex flex-column gap-2">
                     <input
                       type="text"

@@ -69,8 +69,8 @@ const PlanCarousel = () => {
           {isFetched &&
             data?.map((item, index) => {
               return (
-                <div className="col-md-6 col-lg-3">
-                  <div className="pricing pricing-warning">
+                <div className="d-flex justify-content-center align-items-center px-4" key={index} style={{height:"900px"}}>
+                  <div className="pricing pricing-warning w-100">
                     <div className="title">
                       <a href="/shop"> {item?.attributes?.title}</a>
                     </div>
