@@ -117,6 +117,7 @@ const Header = (props) => {
           <span />
         </span>
       </Link> */}
+
       <Link
         id="mobile_btn"
         className="mobile_btn"
@@ -125,6 +126,7 @@ const Header = (props) => {
       >
         <i className="fa fa-bars" />
       </Link>
+
       {/* Header Menu */}
       <ul className="nav user-menu">
         {/* /Message Notifications */}
