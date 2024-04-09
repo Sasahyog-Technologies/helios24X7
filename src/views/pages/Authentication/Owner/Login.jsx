@@ -186,12 +186,20 @@ const OwnerLogin = () => {
         <div className="container-fluid p-0 mb-5">
           <div
             id="header-carousel"
-            className="carousel slide"
             data-bs-ride="carousel"
+            className="carousel slide"
           >
             <div className="carousel-inner">
               <div className="carousel-item active">
-                <img className="w-100" src={helios_banner} alt="Image" />
+                <img
+                  style={{
+                    minHeight: "80vh",
+                    objectFit: "cover",
+                  }}
+                  className="w-100"
+                  src={helios_banner}
+                  alt="helios bnnare"
+                />
                 <div className="carousel-caption d-flex flex-column align-items-center justify-content-center">
                   <div className="p-3" style={{ maxWidth: "900px" }}>
                     <h5 className="text-white text-uppercase">
@@ -213,7 +221,15 @@ const OwnerLogin = () => {
                 </div>
               </div>
               <div className="carousel-item">
-                <img className="w-100" src={helios_banner} alt="Image" />
+                <img
+                  style={{
+                    minHeight: "80vh",
+                    objectFit: "cover",
+                  }}
+                  className="w-100"
+                  src={helios_banner}
+                  alt="helios bnnare"
+                />
                 <div className="carousel-caption d-flex flex-column align-items-center justify-content-center">
                   <div className="p-3" style={{ maxWidth: "900px" }}>
                     <h5 className="text-white text-uppercase">
