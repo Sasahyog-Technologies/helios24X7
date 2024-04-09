@@ -285,7 +285,7 @@ const OwnerLogin = () => {
               </p>
               <div className="rounded bg-dark p-5">
                 <ul className="nav nav-pills d-flex flex-sm-row flex-column justify-content-between mb-3">
-                  <li className="nav-item w-50 w-sm-100">
+                  <li className="nav-item w-50 d-none d-sm-flex">
                     <a
                       className="nav-link text-uppercase text-center w-100 active"
                       data-bs-toggle="pill"
@@ -294,7 +294,25 @@ const OwnerLogin = () => {
                       About Us
                     </a>
                   </li>
-                  <li className="nav-item w-50 w-sm-100">
+                  <li className="nav-item w-100 d-flex d-sm-none">
+                    <a
+                      className="nav-link text-uppercase text-center w-100 active"
+                      data-bs-toggle="pill"
+                      href="#pills-1"
+                    >
+                      About Us
+                    </a>
+                  </li>
+                  <li className="nav-item w-50 d-none d-sm-flex">
+                    <a
+                      className="nav-link text-uppercase text-center w-100"
+                      data-bs-toggle="pill"
+                      href="#pills-2"
+                    >
+                      Why Choose Us
+                    </a>
+                  </li>
+                  <li className="nav-item w-100 d-flex d-sm-none">
                     <a
                       className="nav-link text-uppercase text-center w-100"
                       data-bs-toggle="pill"
