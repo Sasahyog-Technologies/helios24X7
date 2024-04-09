@@ -30,8 +30,39 @@ import { useQuery } from "@tanstack/react-query";
 import TrainerCarousel from "./TrainerCarousel";
 import Events from "./Events";
 import PlanCarousel from "./PlanCarousel";
+import toast from "react-hot-toast";
 
 const OwnerLogin = () => {
+  const [mobile, setMobile] = useState("");
+  const [name, setName] = useState("");
+  const [walkinCreateLoading, setWalkinCreateLoading] = useState(false);
+
+  const handleWalkinCreate = async (e) => {
+    e.preventDefault();
+    if (mobile.length !== 10) {
+      toast.error("Mobile Number is not valid");
+      return;
+    }
+    try {
+      setWalkinCreateLoading(true);
+      await request.create("walkin", {
+        data: {
+          mobile,
+          firstname: name.split(" ")[0] || "",
+          lastname: name.split(" ")[1] || "",
+        },
+      });
+      setMobile("");
+      setName("");
+      toast.success("Subscription Added");
+    } catch (error) {
+      toast.error(error?.response?.data?.error?.message, { mobile: 4000 });
+      console.log(error);
+    } finally {
+      setWalkinCreateLoading(false);
+    }
+  };
+
   const { data, isLoading } = useQuery({
     queryKey: ["admin-report"],
     queryFn: async () => {
@@ -101,18 +132,10 @@ const OwnerLogin = () => {
                   <div className="d-inline-flex align-items-center py-2">
                     <a
                       className="btn btn-light btn-square rounded-circle me-2"
-                      href
-                    >
-                      <i className="fab fa-facebook-f" />
-                    </a>
-                    <a
-                      className="btn btn-light btn-square rounded-circle me-2"
-                      href
+                      href="https://www.instagram.com/helios_gym.24x7?igsh=MXZzajk5d2ZoM3Z3"
+                      target="_blank"
                     >
                       <i className="fab fa-instagram" />
-                    </a>
-                    <a className="btn btn-light btn-square rounded-circle" href>
-                      <i className="fab fa-youtube" />
                     </a>
                   </div>
                 </div>
@@ -247,7 +270,6 @@ const OwnerLogin = () => {
             </div>
             <div className="col-lg-7">
               <div className="mb-4 d-flex">
-                <h5 className="text-primary text-uppercase">About Us</h5>
                 <h1 className="display-3 text-uppercase mb-0">
                   Welcome to Helios
                 </h1>
@@ -638,14 +660,9 @@ const OwnerLogin = () => {
                   </div>
                   <div className="d-flex mt-4">
                     <a
-                      className="btn btn-primary btn-square rounded-circle me-2"
-                      href="#"
-                    >
-                      <i className="fab fa-facebook-f" />
-                    </a>
-                    <a
                       className="btn btn-primary btn-square rounded-circle"
-                      href="#"
+                      target="_blank"
+                      href="https://www.instagram.com/helios_gym.24x7?igsh=MXZzajk5d2ZoM3Z3"
                     >
                       <i className="fab fa-instagram" />
                     </a>
@@ -655,21 +672,37 @@ const OwnerLogin = () => {
             </div>
             <div className="col-lg-4 col-md-6">
               <div className="d-flex flex-column align-items-center justify-content-center text-center h-100 bg-primary p-5">
-                <h4 className="text-uppercase text-white mb-4">Newsletter</h4>
-                <h6 className="text-uppercase text-white">
-                  Subscribe Our Newsletter
+                <h4 className="text-uppercase text-white mb-4">Helios24X7</h4>
+                <h6 className="text-uppercase text-white mb-4">
+                  Subscribe Helios24X7
                 </h6>
-                <p className="text-light">
-                  Amet justo diam dolor rebum lorem sit stet sea justo kasd
-                </p>
-                <form action>
-                  <div className="input-group">
+                {/*    <p className="text-light">
+                 
+                </p> */}
+                <form onSubmit={handleWalkinCreate}>
+                  <div className="d-flex flex-column gap-2">
                     <input
                       type="text"
                       className="form-control border-white p-3"
-                      placeholder="Your Email"
+                      placeholder="Your Mobile"
+                      value={mobile}
+                      onChange={(e) => setMobile(e.target.value)}
+                      required
                     />
-                    <button className="btn btn-dark">Sign Up</button>
+                    <input
+                      type="text"
+                      className="form-control border-white p-3"
+                      placeholder="Your Full Name"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      required
+                    />
+                    <button
+                      className="btn btn-dark"
+                      disabled={walkinCreateLoading}
+                    >
+                      Sign Up
+                    </button>
                   </div>
                 </form>
               </div>
