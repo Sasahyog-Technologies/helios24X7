@@ -313,14 +313,14 @@ const Breadcrumbs = (props) => {
         </div>
       </div>
     );
-  } 
+  } else if (
   /*   -----------------------------------------------------------   */
-  else if (
     location.pathname === "/owner/client-list" ||
     location.pathname === "/owner/plans-list" ||
     location.pathname === "/owner/event-list" ||
     location.pathname === "/owner/trainer-list" ||
-    location.pathname === "/owner/walkins-list" 
+    location.pathname === "/owner/walkins-list" ||
+    location.pathname === "/owner/alerts-list"
   ) {
     addButton = (
       <div className="row align-items-center">
