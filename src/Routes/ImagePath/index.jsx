@@ -10,9 +10,9 @@ export { default as lp5 } from "../../assets/img/team-2.jpg";
 export { default as lp6 } from "../../assets/img/team-3.jpg";
 export { default as lp7 } from "../../assets/img/testimonial.jpg";
 
-export { default as lp8 } from "../../assets/img/testimonial-1.jpg";
+export { default as lp8 } from "../../assets/img/1.png";
 
-export { default as lp9 } from "../../assets/img/testimonial-2.jpg";
+export { default as lp9 } from "../../assets/img/2.png";
 
 export { default as lp10 } from "../../assets/img/blog-1.jpg";
 
