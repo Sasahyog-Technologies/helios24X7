@@ -4,6 +4,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import request from "../../../../sdk/functions";
 import { useQuery } from "@tanstack/react-query";
+import { Link } from "react-router-dom";
 
 const PlanCarousel = () => {
   const { data, isFetched } = useQuery({
@@ -30,7 +31,7 @@ const PlanCarousel = () => {
     prevArrow: <SamplePrevArrow />,
     responsive: [
       {
-        breakpoint: 1024,
+        breakpoint: 1124,
         settings: {
           slidesToShow: 3,
           slidesToScroll: 3,
@@ -38,12 +39,13 @@ const PlanCarousel = () => {
           dots: true,
         },
       },
+
       {
-        breakpoint: 600,
+        breakpoint: 900,
         settings: {
-          slidesToShow: 2,
-          slidesToScroll: 2,
-          initialSlide: 2,
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          initialSlide: 1,
         },
       },
       {
@@ -63,27 +65,65 @@ const PlanCarousel = () => {
         <h1 className="display-3 text-uppercase mb-0">Our Plans</h1>
       </div>
       <div className="row g-5">
-        <Slider adaptiveHeight={true} {...settings}>
+        <Slider {...settings}>
           {isFetched &&
-            data?.map((item) => {
+            data?.map((item, index) => {
               return (
-                <div className="col-lg-4 p-2">
-                  <div className="blog-item">
-                    <div className="position-relative overflow-hidden rounded-top"></div>
-                    <div className="bg-dark d-flex align-items-center rounded-bottom p-4">
-                      <div className="flex-shrink-0 text-center text-secondary border-end border-secondary pe-3 me-3">
-                        <span>Duration</span>
-                        <h6 className="text-light text-uppercase mb-0">
-                          {item.attributes?.duration} Month
-                        </h6>
-                        <span>₹{item?.attributes?.price}</span>
+                <div className="col-md-6 col-lg-3">
+                  <div className="pricing pricing-warning">
+                    <div className="title">
+                      <a href="/shop"> {item?.attributes?.title}</a>
+                    </div>
+                    <div className="price-box">
+                      <div className="icon pull-right border circle">
+                        <span
+                          className="livicon livicon-processed"
+                          data-n="shopping-cart"
+                          data-s="32"
+                          data-c="#1e1e1e"
+                          data-hc="0"
+                          id="livicon-1"
+                          style={{ width: "32px", height: "32px" }}
+                        >
+                          <i className="la la-dumbbell" />
+                        </span>
                       </div>
-                      <a className="h5 text-uppercase text-light" href>
-                        {item?.attributes?.title}
+                      <div className="starting">{item.attributes?.duration} Month</div>
+                      <div className="price">
+                        ₹{item?.attributes?.price}
+                        {/* <span>/month</span> */}
+                      </div>
+                    </div>
+                    <ul className="options">
+                      {/*    <li>
+                        <span>
+                          <i className="fa fa-check"></i>
+                        </span>
+                        Responsive Design
+                      </li> */}
+                      <li className="active">
+                        <span>
+                          <i className="fa fa-check"></i>
+                        </span>
+                        Duration -   {item.attributes?.duration} Month
+                      </li>
+                    </ul>
+                    <div className="bottom-box">
+                      {/*    <a href="/shop" className="more">
+                        Read More <span className="fa fa-angle-right"></span>
                       </a>
+                      <div className="rating-box">
+                        <div className="rating" style={{ width: "60%" }}>
+                          icon
+                        </div>
+                      </div> */}
+                      <Link to="#" className="btn btn-lg btn-warning clearfix">
+                        Buy Now
+                      </Link>
                     </div>
                   </div>
                 </div>
+                
               );
             })}
         </Slider>
@@ -96,16 +136,17 @@ export default PlanCarousel;
 
 function SampleNextArrow(props) {
   const { className, style, onClick } = props;
+  // console.log(className);
   return (
     <div
-      className={className}
+      className={"slick-next"}
       style={{
         ...style,
-
         background: "gray",
         top: "50%",
+        borderRadius: "100%",
         transform: "translateY(-50%)",
-        right: "10px", // Adjust this value as needed
+        right: "35px",
       }}
       onClick={onClick}
     ></div>
@@ -114,19 +155,21 @@ function SampleNextArrow(props) {
 
 function SamplePrevArrow(props) {
   const { className, style, onClick } = props;
+  // console.log(className)
   return (
     <div
-      className={className}
+      className={"slick-prev"}
       style={{
         ...style,
-
         background: "gray",
+        borderRadius: "100%",
         top: "50%",
         zIndex: "999",
         transform: "translateY(-50%)",
-        left: "20px", // Adjust this value as needed
+        left: "34px",
       }}
       onClick={onClick}
     ></div>
   );
 }
+ 

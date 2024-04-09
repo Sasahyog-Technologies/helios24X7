@@ -58,7 +58,7 @@ const Events = () => {
         <h1 className="display-3 text-uppercase mb-0">Events & Sessions</h1>
       </div>
       <div className="tab-class text-center">
-        <ul className="nav nav-pills d-inline-flex gap-1 p-2 justify-content-center bg-dark text-uppercase rounded-pill mb-5">
+        <ul className="nav nav-pills d-inline-flex gap-1 p-2 justify-content-center bg-dark text-uppercase rounded px-2 py-4 mb-5">
           {daysList?.map((d, index) => {
             return (
               <li
