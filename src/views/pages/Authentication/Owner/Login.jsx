@@ -29,6 +29,7 @@ import { lp1, lp2, lp3 } from "../../../../Routes/ImagePath";
 import { useQuery } from "@tanstack/react-query";
 import TrainerCarousel from "./TrainerCarousel";
 import Events from "./Events";
+import PlanCarousel from "./PlanCarousel";
 
 const OwnerLogin = () => {
   const { data, isLoading } = useQuery({
@@ -609,70 +610,11 @@ const OwnerLogin = () => {
             </div>
           </div>
         </div>
-        {/* Testimonial End */}
-        {/* Blog Start */}
-        <div id="plans" className="container-fluid p-5">
-          <div className="mb-5 text-center">
-            <h5 className="text-primary text-uppercase">Plans</h5>
-            <h1 className="display-3 text-uppercase mb-0">Our Plans</h1>
-          </div>
-          <div className="row g-5">
-            <div className="col-lg-4">
-              <div className="blog-item">
-                <div className="position-relative overflow-hidden rounded-top">
-                  <img className="img-fluid" src={lp10} alt="" />
-                </div>
-                <div className="bg-dark d-flex align-items-center rounded-bottom p-4">
-                  <div className="flex-shrink-0 text-center text-secondary border-end border-secondary pe-3 me-3">
-                    <span>01</span>
-                    <h6 className="text-light text-uppercase mb-0">January</h6>
-                    <span>2045</span>
-                  </div>
-                  <a className="h5 text-uppercase text-light" href>
-                    Sed amet tempor amet sit kasd sea lorem
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-4">
-              <div className="blog-item">
-                <div className="position-relative overflow-hidden rounded-top">
-                  <img className="img-fluid" src={lp10} alt="" />
-                </div>
-                <div className="bg-dark d-flex align-items-center rounded-bottom p-4">
-                  <div className="flex-shrink-0 text-center text-secondary border-end border-secondary pe-3 me-3">
-                    <span>01</span>
-                    <h6 className="text-light text-uppercase mb-0">January</h6>
-                    <span>2045</span>
-                  </div>
-                  <a className="h5 text-uppercase text-light" href>
-                    Sed amet tempor amet sit kasd sea lorem
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-4">
-              <div className="blog-item">
-                <div className="position-relative overflow-hidden rounded-top">
-                  <img className="img-fluid" src={lp10} alt="" />
-                </div>
-                <div className="bg-dark d-flex align-items-center rounded-bottom p-4">
-                  <div className="flex-shrink-0 text-center text-secondary border-end border-secondary pe-3 me-3">
-                    <span>01</span>
-                    <h6 className="text-light text-uppercase mb-0">January</h6>
-                    <span>2045</span>
-                  </div>
-                  <a className="h5 text-uppercase text-light" href>
-                    Sed amet tempor amet sit kasd sea lorem
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        {/* Blog End */}
-        {/* Footer Start */}
-        <div className="container-fluid bg-dark text-secondary px-5 mt-5">
+        <PlanCarousel />
+        <div
+          id="footer"
+          className="container-fluid bg-dark text-secondary px-5 mt-5"
+        >
           <div className="row gx-5">
             <div className="col-lg-8 col-md-6">
               <div className="row gx-5">
@@ -709,68 +651,6 @@ const OwnerLogin = () => {
                     </a>
                   </div>
                 </div>
-                <div className="col-lg-4 col-md-12 pt-0 pt-lg-5 mb-5">
-                  <h4 className="text-uppercase text-light mb-4">
-                    Quick Links
-                  </h4>
-                  <div className="d-flex flex-column justify-content-start">
-                    <a className="text-secondary mb-2" href="#">
-                      <i className="bi bi-arrow-right text-primary me-2" />
-                      Home
-                    </a>
-                    <a className="text-secondary mb-2" href="#">
-                      <i className="bi bi-arrow-right text-primary me-2" />
-                      About Us
-                    </a>
-                    <a className="text-secondary mb-2" href="#">
-                      <i className="bi bi-arrow-right text-primary me-2" />
-                      Class Schedule
-                    </a>
-                    <a className="text-secondary mb-2" href="#">
-                      <i className="bi bi-arrow-right text-primary me-2" />
-                      Our Trainers
-                    </a>
-                    <a className="text-secondary mb-2" href="#">
-                      <i className="bi bi-arrow-right text-primary me-2" />
-                      Latest Blog
-                    </a>
-                    <a className="text-secondary" href="#">
-                      <i className="bi bi-arrow-right text-primary me-2" />
-                      Contact Us
-                    </a>
-                  </div>
-                </div>
-                <div className="col-lg-4 col-md-12 pt-0 pt-lg-5 mb-5">
-                  <h4 className="text-uppercase text-light mb-4">
-                    Popular Links
-                  </h4>
-                  <div className="d-flex flex-column justify-content-start">
-                    <a className="text-secondary mb-2" href="#">
-                      <i className="bi bi-arrow-right text-primary me-2" />
-                      Home
-                    </a>
-                    <a className="text-secondary mb-2" href="#">
-                      <i className="bi bi-arrow-right text-primary me-2" />
-                      About Us
-                    </a>
-                    <a className="text-secondary mb-2" href="#">
-                      <i className="bi bi-arrow-right text-primary me-2" />
-                      Class Schedule
-                    </a>
-                    <a className="text-secondary mb-2" href="#">
-                      <i className="bi bi-arrow-right text-primary me-2" />
-                      Our Trainers
-                    </a>
-                    <a className="text-secondary mb-2" href="#">
-                      <i className="bi bi-arrow-right text-primary me-2" />
-                      Latest Blog
-                    </a>
-                    <a className="text-secondary" href="#">
-                      <i className="bi bi-arrow-right text-primary me-2" />
-                      Contact Us
-                    </a>
-                  </div>
-                </div>
               </div>
             </div>
             <div className="col-lg-4 col-md-6">
@@ -801,27 +681,14 @@ const OwnerLogin = () => {
           style={{ background: "#111111" }}
         >
           <div className="row gx-5">
-            <div className="col-lg-8">
+            <div className="col-lg-12">
               <div className="py-lg-4 text-center">
                 <p className="text-secondary mb-0">
                   ©{" "}
                   <a className="text-light fw-bold" href="#">
-                    Your Site Name
+                    Helios24X7
                   </a>
                   . All Rights Reserved.
-                </p>
-              </div>
-            </div>
-            <div className="col-lg-4">
-              <div className="py-lg-4 text-center credit">
-                <p className="text-light mb-0">
-                  Designed by{" "}
-                  <a
-                    className="text-light fw-bold"
-                    href="https://htmlcodex.com"
-                  >
-                    HTML Codex
-                  </a>
                 </p>
               </div>
             </div>
