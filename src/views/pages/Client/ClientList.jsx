@@ -105,7 +105,7 @@ const ClientList = () => {
               data-bs-target="#edit_client_password"
               onClick={() => setUserId(user.id)}
             >
-              <i className="fa fa-pencil m-r-5" /> Edit Password
+              <i className="fa fa-lock m-r-5" /> Edit Password
             </Link>
 
             {loggedInUser?.type === "owner" ? (
