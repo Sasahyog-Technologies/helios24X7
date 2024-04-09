@@ -10,11 +10,14 @@ import request from "../../../sdk/functions";
 import MembershipListFilter from "./MembershipListFilter";
 import PayOutstanding from "../../../components/modelpopup/Client/PayOutstandingPopup";
 import { useMediaQuery } from "usehooks-ts";
+import { useSession } from "../../../Hook/useSession";
 
 const MembershipList = () => {
   const [membership, setMembership] = useState(false);
   const [subscriptionId, setsubscriptionId] = useState(null);
   const isWebDevice = useMediaQuery("(min-width:700px)");
+  const { getUserDataToCookie } = useSession();
+  const loggedInUser = getUserDataToCookie()?.user;
 
   const columns = [
     {
@@ -95,17 +98,19 @@ const MembershipList = () => {
             >
               <i className="fa fa-pencil m-r-5" /> Edit
             </Link>
-
-            <Link
-              className="dropdown-item"
-              to="#"
-              data-bs-toggle="modal"
-              data-bs-target="#delete_subscription"
-              onClick={() => setsubscriptionId(user.id)}
-            >
-              <i className="fa fa-trash m-r-5" /> Delete
-            </Link>
-
+            {loggedInUser?.type === "owner" ? (
+              <Link
+                className="dropdown-item"
+                to="#"
+                data-bs-toggle="modal"
+                data-bs-target="#delete_subscription"
+                onClick={() => setsubscriptionId(user.id)}
+              >
+                <i className="fa fa-trash m-r-5" /> Delete
+              </Link>
+            ) : (
+              ""
+            )}
             {parseFloat(user.outstanding) > 0 && (
               <Link
                 to="#"
@@ -154,15 +159,20 @@ const MembershipList = () => {
                   >
                     <i className="fa fa-pencil m-r-5" /> Edit
                   </Link>
-                  <Link
-                    className="dropdown-item"
-                    to="#"
-                    data-bs-toggle="modal"
-                    data-bs-target="#delete_subscription"
-                    onClick={() => setsubscriptionId(record.id)}
-                  >
-                    <i className="fa fa-trash m-r-5" /> Delete
-                  </Link>
+
+                  {loggedInUser?.type === "owner" ? (
+                    <Link
+                      className="dropdown-item"
+                      to="#"
+                      data-bs-toggle="modal"
+                      data-bs-target="#delete_subscription"
+                      onClick={() => setsubscriptionId(record.id)}
+                    >
+                      <i className="fa fa-trash m-r-5" /> Delete
+                    </Link>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
             </div>

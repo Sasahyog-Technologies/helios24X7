@@ -9,10 +9,13 @@ import InvoiceEditPopup from "../../../components/modelpopup/Invoice/EditInvoice
 import request from "../../../sdk/functions";
 import InvoiceListFilter from "./InvoiceListFilter";
 import { useMediaQuery } from "usehooks-ts";
+import { useSession } from "../../../Hook/useSession";
 
 const InvoiceList = () => {
   const [invoiceId, setinvoiceId] = useState(null);
   const isWebDevice = useMediaQuery("(min-width:700px)");
+  const { getUserDataToCookie } = useSession();
+  const loggedInUser = getUserDataToCookie()?.user;
 
   const columns = [
     {
@@ -98,15 +101,20 @@ const InvoiceList = () => {
             >
               <i className="fa fa-pencil m-r-5" /> Edit
             </Link>
-            <Link
-              className="dropdown-item"
-              to="#"
-              data-bs-toggle="modal"
-              data-bs-target="#delete_invoice"
-              onClick={() => setinvoiceId(user.id)}
-            >
-              <i className="fa fa-trash m-r-5" /> Delete
-            </Link>
+
+            {loggedInUser?.type === "owner" ? (
+              <Link
+                className="dropdown-item"
+                to="#"
+                data-bs-toggle="modal"
+                data-bs-target="#delete_invoice"
+                onClick={() => setinvoiceId(user.id)}
+              >
+                <i className="fa fa-trash m-r-5" /> Delete
+              </Link>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       ),
@@ -144,15 +152,19 @@ const InvoiceList = () => {
                   >
                     <i className="fa fa-pencil m-r-5" /> Edit
                   </Link>
-                  <Link
-                    className="dropdown-item"
-                    to="#"
-                    data-bs-toggle="modal"
-                    data-bs-target="#delete_invoice"
-                    onClick={() => setinvoiceId(record.id)}
-                  >
-                    <i className="fa fa-trash m-r-5" /> Delete
-                  </Link>
+                  {loggedInUser?.type === "owner" ? (
+                    <Link
+                      className="dropdown-item"
+                      to="#"
+                      data-bs-toggle="modal"
+                      data-bs-target="#delete_invoice"
+                      onClick={() => setinvoiceId(record.id)}
+                    >
+                      <i className="fa fa-trash m-r-5" /> Delete
+                    </Link>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
             </div>
