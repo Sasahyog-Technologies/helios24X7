@@ -8,9 +8,11 @@ import WalkinsListFilter from "./WalkinsListFilter";
 import WalkinsAddPopup from "../../../components/modelpopup/Walkins/WalkinsAddPopup";
 import WalkinsDeletePopup from "../../../components/modelpopup/Walkins/WalkinDeletePopup";
 import WalkinEditPopup from "../../../components/modelpopup/Walkins/WalkinEditPopup";
+import { useMediaQuery } from "usehooks-ts";
 
 const WalkinsList = () => {
   const [walkinId, setwalkinId] = useState(null);
+  const isWebDevice = useMediaQuery("(min-width:700px)");
   const columns = [
     {
       title: "Firstname",
@@ -26,7 +28,7 @@ const WalkinsList = () => {
       dataIndex: "mobile",
     },
     {
-      title: "Reffered By",
+      title: "Referred By",
       dataIndex: "reffered_by",
     },
 
@@ -67,6 +69,77 @@ const WalkinsList = () => {
       ),
     },
   ];
+
+  /* --------------------------------------------------------------------------- */
+
+  const deviceColumns = [
+    {
+      render: (record, key, index) => {
+        return (
+          <div>
+            <div className="d-flex justify-content-between">
+              {<div className="fw-bold fs-6"></div>}
+              <div
+                className="dropdown dropdown-action text-end" /* style={{zIndex:100}} */
+              >
+                <Link
+                  to="#"
+                  className="action-icon dropdown-toggle"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <i className="material-icons">more_vert</i>
+                </Link>
+
+                <div className="dropdown-menu dropdown-menu-right">
+                  <Link
+                    className="dropdown-item"
+                    to="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#edit_walkin"
+                    onClick={() => setwalkinId(record.id)}
+                  >
+                    <i className="fa fa-pencil m-r-5" /> Edit
+                  </Link>
+                  <Link
+                    className="dropdown-item"
+                    to="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#delete_walkin"
+                    onClick={() => setwalkinId(record.id)}
+                  >
+                    <i className="fa fa-trash m-r-5" /> Delete
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">First Name</span>
+                <span> {record?.firstname}</span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Last Name</span>
+                <span> {record?.lastname}</span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Mobile </span>
+                <span>{record?.mobile}</span>
+              </div>
+
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Referred By </span>
+                <span>{record?.reffered_by}</span>
+              </div>
+            </div>
+          </div>
+        );
+      },
+    },
+  ];
+
+  /* --------------------------------------------------------------------------- */
 
   const [tableParams, setTableParams] = useState({
     pagination: {
@@ -163,7 +236,7 @@ const WalkinsList = () => {
                 <Table
                   loading={WalkinsIsLoading || isRefetching}
                   className="table-striped"
-                  columns={columns}
+                  columns={isWebDevice ? columns : deviceColumns}
                   dataSource={WalkinsData}
                   pagination={{
                     total: tableParams.pagination.total,
