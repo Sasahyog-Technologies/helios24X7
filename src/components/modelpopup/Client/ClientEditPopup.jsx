@@ -1,37 +1,29 @@
-import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
-import { useForm,Controller } from "react-hook-form";
-import toast from "react-hot-toast";
-import request from "../../../sdk/functions";
-import Loading from "../../Loading";
-import { Refresh } from "../../../utils/refresh";
 import Select from "react-select";
+import toast from "react-hot-toast";
+import Loading from "../../Loading";
+import { useEffect, useState } from "react";
+import request from "../../../sdk/functions";
+import { Refresh } from "../../../utils/refresh";
+import { useQuery } from "@tanstack/react-query";
+import { useForm, Controller } from "react-hook-form";
+
 const userDefaultValues = {
   firstname: "",
   lastname: "",
   mobile: "",
-  email: "",
   branch: "",
-  weight: "",
-  height: "",
-  bmr: "",
-  chest: "",
-  hip: "",
-  biceps: "",
-  calf: "",
-  weist: "",
-  neck: "",
+  email: "",
 };
 
 const ClientEditPopup = ({ userId }) => {
-  const [bodyDetailId, setBodyDetailId] = useState(null);
   const [userLoading, setUserLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [branchOptions, setBranchOptions] = useState([]);
-  const { register, handleSubmit, reset,control,setValue } = useForm({
+  const { register, handleSubmit, reset, control, setValue } = useForm({
     defaultValues: userDefaultValues,
   });
-  const { data: userData, isLoading: userIsLoading, refetch } = useQuery({
+
+  const { data: userData, refetch } = useQuery({
     queryKey: ["client-data"],
     queryFn: async () => {
       setUserLoading(true);
@@ -40,22 +32,11 @@ const ClientEditPopup = ({ userId }) => {
           populate: ["branch", "body_detail"],
         });
         reset({
-          firstname: data.firstname,
-          lastname: data.lastname,
-          mobile: data.mobile,
           email: data.email,
-          branch: data?.branch?.id || "",
-          weight: data?.body_detail?.weight || null,
-          height: data?.body_detail?.height || null,
-          bmr: data?.body_detail?.bmr || null,
-          chest: data?.body_detail?.chest || null,
-          hip: data?.body_detail?.hip || null,
-          biceps: data?.body_detail?.biceps || null,
-          calf: data?.body_detail?.calf || null,
-          weist: data?.body_detail?.weist || null,
-          neck: data?.body_detail?.neck || null,
+          mobile: data.mobile,
+          lastname: data.lastname,
+          firstname: data.firstname,
         });
-        setBodyDetailId(data?.body_detail?.id || null);
         setUserLoading(false);
         return data;
       }
@@ -65,32 +46,13 @@ const ClientEditPopup = ({ userId }) => {
   });
 
   const onSubmit = async (data) => {
-    console.log("id", bodyDetailId);
     try {
       setSubmitLoading(true);
-      if (bodyDetailId) {
-        await request.update("bodyDetail", bodyDetailId, {
-          data: {
-            weight: data.weight || null,
-            height: data.height || null,
-            bmr: data.bmr || null,
-            chest: data.chest || null,
-            hip: data.hip || null,
-            biceps: data.biceps || null,
-            calf: data.calf || null,
-            weist: data.weist || null,
-            neck: data.neck || null,
-          },
-        });
-      }
-
       await request.update("users", userId, {
-        firstname: data.firstname,
-        lastname: data.lastname,
         branch: data?.branch,
+        lastname: data.lastname,
+        firstname: data.firstname,
       });
-
-      //   console.log(bodyDetailRes);
       toast.success("client updated");
       Refresh();
     } catch (error) {
@@ -106,7 +68,7 @@ const ClientEditPopup = ({ userId }) => {
   }, [userId, refetch, reset]);
 
   useQuery({
-    queryKey:["fetch-branches"],
+    queryKey: ["fetch-branches"],
     queryFn: async () => {
       let branches = await request.findMany("branch");
       let branchesArr = branches?.data?.map((branch) => ({
@@ -114,8 +76,8 @@ const ClientEditPopup = ({ userId }) => {
         label: branch.attributes.name,
       }));
       setBranchOptions(branchesArr);
-    }
-  })
+    },
+  });
 
   return (
     <>
@@ -126,9 +88,9 @@ const ClientEditPopup = ({ userId }) => {
               <h5 className="modal-title">Edit Client</h5>
               <button
                 type="button"
+                aria-label="Close"
                 className="btn-close"
                 data-bs-dismiss="modal"
-                aria-label="Close"
               >
                 <span aria-hidden="true">×</span>
               </button>
@@ -206,6 +168,7 @@ const ClientEditPopup = ({ userId }) => {
                       </div>
                     </div>
                   </div> */}
+
                       <div className="col-sm-6">
                         <div className="input-block mb-3">
                           <label className="col-form-label">
@@ -244,113 +207,13 @@ const ClientEditPopup = ({ userId }) => {
                           />
                         </div>
                       </div>
-
-                      <div className="col-sm-6">
-                        <div className="input-block mb-3">
-                          <label className="col-form-label">
-                            Weight (Kg) <span className="text-danger">*</span>
-                          </label>
-                          <input
-                            className="form-control"
-                            type="text"
-                            required
-                            {...register("weight", { required: true })}
-                          />
-                        </div>
-                      </div>
-                      <div className="col-sm-6">
-                        <div className="input-block mb-3">
-                          <label className="col-form-label">
-                            Height (cm)
-                          </label>
-                          <input
-                            className="form-control"
-                            type="text"
-                            {...register("height")}
-                          />
-                        </div>
-                      </div>
-                      <div className="col-sm-6">
-                        <div className="input-block mb-3">
-                          <label className="col-form-label">
-                            BMR (cal/day)
-                          </label>
-                          <input
-                            className="form-control"
-                            type="text"
-                            {...register("bmr")}
-                          />
-                        </div>
-                      </div>
-                      <div className="col-sm-6">
-                        <div className="input-block mb-3">
-                          <label className="col-form-label">Chest (cm)</label>
-                          <input
-                            className="form-control"
-                            type="text"
-                            {...register("chest")}
-                          />
-                        </div>
-                      </div>
-                      <div className="col-sm-6">
-                        <div className="input-block mb-3">
-                          <label className="col-form-label">Hip (cm)</label>
-                          <input
-                            className="form-control"
-                            type="text"
-                            {...register("hip")}
-                          />
-                        </div>
-                      </div>
-                      <div className="col-sm-6">
-                        <div className="input-block mb-3">
-                          <label className="col-form-label">Biceps (cm)</label>
-                          <input
-                            className="form-control"
-                            type="text"
-                            {...register("biceps")}
-                          />
-                        </div>
-                      </div>
-                      <div className="col-sm-6">
-                        <div className="input-block mb-3">
-                          <label className="col-form-label">Calf (cm)</label>
-                          <input
-                            className="form-control"
-                            type="text"
-                            {...register("calf")}
-                          />
-                        </div>
-                      </div>
-                      <div className="col-sm-6">
-                        <div className="input-block mb-3">
-                          <label className="col-form-label">Weist (cm)</label>
-                          <input
-                            className="form-control"
-                            type="text"
-                            {...register("weist")}
-                          />
-                        </div>
-                      </div>
-                      <div className="col-sm-6">
-                        <div className="input-block mb-3">
-                          <label className="col-form-label">Neck (cm)</label>
-                          <input
-                            className="form-control"
-                            type="text"
-                            {...register("neck")}
-                          />
-                        </div>
-                      </div>
                     </div>
 
                     <div className="submit-section">
                       <button
-                        className="btn btn-primary submit-btn"
-                        // data-bs-dismiss="modal"
-                        // aria-label="Close"
                         type="submit"
                         disabled={submitLoading}
+                        className="btn btn-primary submit-btn"
                       >
                         {submitLoading ? " Update...." : " Update"}
                       </button>

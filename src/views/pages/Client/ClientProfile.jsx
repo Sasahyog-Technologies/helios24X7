@@ -23,6 +23,7 @@ const ClientProfile = () => {
             "profile",
             "body_detail",
             "subscription",
+            "body_trackings",
             "subscription.plan",
           ],
         });
@@ -59,18 +60,6 @@ const ClientProfile = () => {
       },
     });
 
-  // const {} = useQuery({
-  //   queryKey: ["training-membership", userId],
-  //   queryFn: async () => {
-  //     const subscription = await request.findMany("subscription", {
-  //       sort: ["id:desc"],
-  //       filters: {
-  //         type: "trainer-subscription",
-  //       },
-  //     });
-  //   },
-  // });
-
   const { data: clientPTPData, isLoading: isPtpLoading } = useQuery({
     queryKey: ["client-ptp-data", userId],
     queryFn: async () => {
@@ -95,12 +84,12 @@ const ClientProfile = () => {
         });
         return data.data.map((item) => {
           return {
-            ...item?.attributes,
             id: item?.id,
+            ...item?.attributes,
             subscription: item.attributes?.subscription?.data.map((item) => {
               return {
-                ...item?.attributes,
                 id: item?.id,
+                ...item?.attributes,
               };
             }),
           };
@@ -109,12 +98,6 @@ const ClientProfile = () => {
       return null;
     },
   });
-
-
-  //console.log("client data",clientData)
-  //console.log("client subs data",clientSubscriptionData)
-//  console.log("client ptp data",clientPTPData)
-
 
   return (
     <>
@@ -211,6 +194,7 @@ const ClientProfile = () => {
                     ptpLoading={isPtpLoading}
                     bodyDetails={clientData?.body_detail}
                     subscription={clientSubscriptionData}
+                    bodyTrackings={clientData?.body_trackings}
                     subscriptionLoading={subscriptionLoading}
                   />
                 </>

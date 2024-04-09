@@ -1,13 +1,12 @@
-import { ErrorMessage } from "@hookform/error-message";
-import React, { useEffect, useState } from "react";
-import DatePicker from "react-datepicker";
-import { Controller, useForm } from "react-hook-form";
-import toast from "react-hot-toast";
 import Select from "react-select";
+import toast from "react-hot-toast";
+import DatePicker from "react-datepicker";
 import request from "../../../sdk/functions";
 import { Refresh } from "../../../utils/refresh";
-import { AvatarImageSize, paymentTypeOptions } from "../../../utils";
-import CropperModal from "../ImageModal/AvatarCropModal";
+import React, { useEffect, useState } from "react";
+import { paymentTypeOptions } from "../../../utils";
+import { Controller, useForm } from "react-hook-form";
+import { ErrorMessage } from "@hookform/error-message";
 import { InvoiceNumberGenerator } from "../../../utils/invoiceNumberGenerate";
 
 function generatePassword(length = 8) {
@@ -34,7 +33,6 @@ const formDataDefaultValues = {
   plan: "",
   gender: "",
   paid: "",
-  outstanding: 0,
   weight: "",
   height: "",
   bmr: "",
@@ -45,6 +43,7 @@ const formDataDefaultValues = {
   weist: "",
   neck: "",
   planPrice: 0,
+  outstanding: 0,
 };
 
 function calculateEndDate(startDate, durationInMonths) {
@@ -59,14 +58,13 @@ function calculateEndDate(startDate, durationInMonths) {
 }
 
 const ClientAddPopup = ({ refetch }) => {
-  const [startDate, setStartDate] = useState(new Date().toISOString());
-  const [birthDate, setBirthDate] = useState(null);
-  const [branchOptions, setBranchOptions] = useState([]);
-  const [planOptions, setPlanOptions] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [plans, setPlans] = useState([]);
-  const [cropModalOpen, setCropModalOpen] = useState(false);
-  const [avatarSrc, setAvatarSrc] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [birthDate, setBirthDate] = useState(null);
+  const [planOptions, setPlanOptions] = useState([]);
+  const [branchOptions, setBranchOptions] = useState([]);
+  const [startDate, setStartDate] = useState(new Date().toISOString());
+
   const genderOptions = [
     { value: "male", label: "Male" },
     { value: "female", label: "Female" },
@@ -94,93 +92,61 @@ const ClientAddPopup = ({ refetch }) => {
       const planDuration = plans.find((pt) => pt.id == data.plan)?.attributes
         .duration;
 
-      let bodyDetailRes = await request.create("bodyDetail", {
-        data: {
-          weight: data.weight || null,
-          height: data.height || null,
-          bmr: data.bmr || null,
-          chest: data.chest || null,
-          hip: data.hip || null,
-          biceps: data.biceps || null,
-          calf: data.calf || null,
-          weist: data.weist || null,
-          neck: data.neck || null,
-        },
-      });
-
       let createRes = await request.create("register", {
+        type: "client",
+        email: data.email,
+        mobile: data.mobile,
+        branch: data.branch,
+        gender: data.gender,
+        birthdate: birthDate,
         username: data.mobile,
         password: data.password,
         firstname: data.firstname,
         lastname: data.lastname,
-        mobile: data.mobile,
-        email: data.email,
-        branch: data.branch,
-        gender: data.gender,
-        birthdate: birthDate,
-        body_detail: bodyDetailRes.data.id,
-        type: "client",
       });
 
       let subsRes = await request.create("subscription", {
         data: {
-          user: createRes.user.id,
           plan: data.plan,
-          paid: data.paid,
-          outstanding: data.outstanding,
           start: startDate,
-          end: calculateEndDate(startDate, planDuration),
-          payment_type: data.paymentType,
+          paid: data.paid,
+          user: createRes.user.id,
           type: "gym-subscription",
+          outstanding: data.outstanding,
+          payment_type: data.paymentType,
+          end: calculateEndDate(startDate, planDuration),
         },
       });
       let paymentRes = await request.create("payment", {
         data: {
-          user: createRes.user.id,
-          subscription: subsRes.data.id,
-          amount: data.paid,
-          outstanding: data.outstanding,
-          payment_date: new Date().toISOString(),
           status: "success",
+          amount: data.paid,
+          user: createRes.user.id,
+          outstanding: data.outstanding,
+          subscription: subsRes.data.id,
+          payment_type: data.paymentType,
+          payment_date: new Date().toISOString(),
         },
       });
       await request.create("invoice", {
         data: {
+          amount: data.paid,
           user: createRes.user.id,
-          subscription: subsRes.data.id,
           payment: paymentRes.data.id,
+          outstanding: data.outstanding,
+          subscription: subsRes.data.id,
           invoice_number: InvoiceNumberGenerator(),
           invoice_date: new Date().toISOString(),
-          amount: data.paid,
-          outstanding: data.outstanding,
         },
       });
       toast.success("client created");
       Refresh();
-      //  refetch()
     } catch (error) {
       toast.error(error?.response?.data?.error?.message, { duration: 4000 });
       console.log(error);
     } finally {
       setLoading(false);
     }
-  };
-
-  /* avatar change handler */
-  const handleAvatarChange = (e) => {
-    console.log(e.target.files[0]);
-    if (e.target.files[0].size > AvatarImageSize) {
-      toast.error("File is too big!");
-      e.target.value = "";
-      return;
-    }
-    if (!e.target.files[0].type.includes("image/")) {
-      toast.error("You can choose only image");
-      e.target.value = "";
-      return;
-    }
-    setAvatarSrc(URL.createObjectURL(e.target.files[0]));
-    setCropModalOpen(true);
   };
 
   useEffect(() => {
@@ -220,7 +186,6 @@ const ClientAddPopup = ({ refetch }) => {
               </button>
             </div>
             <div className="modal-body">
-              {/* {JSON.stringify(userInfo)} */}
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="row">
                   <div className="col-sm-6">
@@ -467,35 +432,6 @@ const ClientAddPopup = ({ refetch }) => {
                       />
                     </div>
                   </div>
-                  {/* <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">Avatar</label>
-                      {cropModalOpen ? (
-                        <CropperModal
-                          src={avatarSrc}
-                          setCropModalOpen={setCropModalOpen}
-                          setPreview={setAvatarSrc}
-                        />
-                      ) : (
-                        <input
-                          className="form-control"
-                          type="file"
-                          accept="image/*"
-                          onChange={handleAvatarChange}
-                        />
-                      )}
-                    </div>
-                  </div> */}
-
-                  {/* {avatarSrc && !cropModalOpen ? (
-                    <img
-                      src={avatarSrc}
-                      alt=""
-                      className="w-25 h-25 rounded-circle"
-                    />
-                  ) : (
-                    ""
-                  )} */}
                 </div>
                 <ErrorMessage
                   errors={errors}
@@ -510,8 +446,8 @@ const ClientAddPopup = ({ refetch }) => {
                 <div className="submit-section">
                   <button
                     className="btn btn-primary submit-btn"
-                    // data-bs-dismiss="modal"
                     // aria-label="Close"
+                    // data-bs-dismiss="modal"
                     type="submit"
                     disabled={loading}
                   >
