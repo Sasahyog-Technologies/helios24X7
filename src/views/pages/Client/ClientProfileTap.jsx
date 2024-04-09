@@ -3,21 +3,91 @@ import { Link } from "react-router-dom";
 import React, { useState } from "react";
 import { ListItem } from "../Profile/ProfileContent";
 import PtpAddPopup from "../../../components/modelpopup/Client/PTPAddPopup";
+import PtpEditPopup from "../../../components/modelpopup/Client/PTPEditPopup";
 import ClientEditPopup from "../../../components/modelpopup/Client/ClientEditPopup";
-import CreateSubscriptionPopup from "../../../components/modelpopup/Client/CreateSubscription";
 import PayOutstanding from "../../../components/modelpopup/Client/PayOutstandingPopup";
+import ClientBodyDetails from "../../../components/modelpopup/Client/CliendBodyDetails";
+import CreateSubscriptionPopup from "../../../components/modelpopup/Client/CreateSubscription";
 import ExtendPTPSubscriptionPopup from "../../../components/modelpopup/Client/ExtendPTPSubscription";
 import ExtendGYMSubscriptionPopup from "../../../components/modelpopup/Client/ExtendGYMSubscription";
-import PtpEditPopup from "../../../components/modelpopup/Client/PTPEditPopup";
+
+import {
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from "recharts";
+
+const chatLines = [
+  {
+    name: "height",
+    stroke: "#ff9b44",
+    fill: "#00c5fb",
+  },
+  {
+    name: "weight",
+    stroke: "#fc6075",
+    fill: "#0253cc",
+  },
+  {
+    name: "chest",
+    stroke: "#67e6dc", // Unique color
+    fill: "#e68e67", // Unique color
+  },
+  {
+    name: "hip",
+    stroke: "#e1e667", // Unique color
+    fill: "#6774e6", // Unique color
+  },
+  {
+    name: "biceps",
+    stroke: "#9e67e6", // Unique color
+    fill: "#67e667", // Unique color
+  },
+  {
+    name: "weist",
+    stroke: "#67e667", // Reused color from 'biceps'
+    fill: "#e6679e", // Unique color
+  },
+  {
+    name: "calf",
+    stroke: "#e66767", // Unique color
+    fill: "#67e6dc", // Reused color from 'chest'
+  },
+  {
+    name: "neck",
+    stroke: "#e67e67", // Unique color
+    fill: "#e66767", // Unique color
+  },
+];
+
+const chartFilter = (bodyTrackings) => {
+  return bodyTrackings.map((track) => ({
+    hips: track?.hip ?? 0,
+    neck: track?.neck ?? 0,
+    calfs: track?.calf ?? 0,
+    chest: track?.chest ?? 0,
+    weist: track?.weist ?? 0,
+    weight: track?.weight ?? 0,
+    height: track?.height ?? 0,
+    biceps: track?.biceps ?? 0,
+    y: new Date(track?.createdAt)?.toDateString(),
+  }));
+};
 
 const ClientProfileTab = ({
   ptp,
   userId,
-  bodyDetails,
   ptpLoading,
   subscription,
+  bodyTrackings,
   subscriptionLoading,
 }) => {
+  const bodyData = bodyTrackings[bodyTrackings.length - 1];
   const [activePlanEndDate, setActivePlanEndDate] = useState();
   const [activeGYMPlanEndDate, setActiveGYMPlanEndDate] = useState();
   return (
@@ -31,56 +101,70 @@ const ClientProfileTab = ({
             <div className="col-md-6 d-flex">
               <div className="card profile-box flex-fill">
                 <div className="card-body">
-                  <h3 className="card-title">
+                  <h3 className="card-title mb-2">
                     Body Details
                     <Link
                       to="#"
                       className="edit-icon"
                       data-bs-toggle="modal"
-                      data-bs-target="#edit_client"
+                      data-bs-target="#edit_body_details"
                     >
                       <i className="fa fa-pencil" />
                     </Link>
                   </h3>
 
-                  <ul className="personal-info">
-                    <ListItem
-                      title={"Weight"}
-                      text={bodyDetails?.weight ?? "unspecified"}
-                    />
-                    <ListItem
-                      title={"Height"}
-                      text={bodyDetails?.height ?? "unspecified"}
-                    />
-                    <ListItem
-                      title={"BMR"}
-                      text={bodyDetails?.bmr ?? "unspecified"}
-                    />
-                    <ListItem
-                      title={"HIP"}
-                      text={bodyDetails?.hip ?? "unspecified"}
-                    />
-                    <ListItem
-                      title={"Neck"}
-                      text={bodyDetails?.neck ?? "unspecified"}
-                    />
-                    <ListItem
-                      title={"Weist"}
-                      text={bodyDetails?.weist ?? "unspecified"}
-                    />
-                    <ListItem
-                      title={"Calf"}
-                      text={bodyDetails?.calf ?? "unspecified"}
-                    />
-                    <ListItem
-                      title={"Chest"}
-                      text={bodyDetails?.chest ?? "unspecified"}
-                    />
-                    <ListItem
-                      title={"Biceps"}
-                      text={bodyDetails?.biceps ?? "unspecified"}
-                    />
-                  </ul>
+                  <p className="mb-3 text-xs text-gray">
+                    {bodyData?.createdAt
+                      ? new Date(bodyData?.createdAt)?.toDateString()
+                      : null}
+                  </p>
+
+                  <hr />
+
+                  {!bodyData && (
+                    <p className="text-center">No Data Available</p>
+                  )}
+
+                  {bodyData && (
+                    <ul className="personal-info">
+                      <ListItem
+                        title={"Weight"}
+                        text={bodyData?.weight ?? "unspecified"}
+                      />
+                      <ListItem
+                        title={"Height"}
+                        text={bodyData?.height ?? "unspecified"}
+                      />
+                      <ListItem
+                        title={"BMR"}
+                        text={bodyData?.bmr ?? "unspecified"}
+                      />
+                      <ListItem
+                        title={"HIP"}
+                        text={bodyData?.hip ?? "unspecified"}
+                      />
+                      <ListItem
+                        title={"Neck"}
+                        text={bodyData?.neck ?? "unspecified"}
+                      />
+                      <ListItem
+                        title={"Weist"}
+                        text={bodyData?.weist ?? "unspecified"}
+                      />
+                      <ListItem
+                        title={"Calf"}
+                        text={bodyData?.calf ?? "unspecified"}
+                      />
+                      <ListItem
+                        title={"Chest"}
+                        text={bodyData?.chest ?? "unspecified"}
+                      />
+                      <ListItem
+                        title={"Biceps"}
+                        text={bodyData?.biceps ?? "unspecified"}
+                      />
+                    </ul>
+                  )}
                 </div>
               </div>
             </div>
@@ -99,18 +183,54 @@ const ClientProfileTab = ({
               setActiveGYMPlanEndDate={setActiveGYMPlanEndDate}
             />
           )}
+
+          <div className="col-md-12 text-center">
+            <div className="card">
+              <div className="card-body">
+                <h3 className="card-title">Progress Bar Overview</h3>
+                <ResponsiveContainer width="100%" height={300}>
+                  <LineChart
+                    data={chartFilter(bodyTrackings)}
+                    margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
+                  >
+                    <CartesianGrid />
+                    <XAxis dataKey="y" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+
+                    {chatLines.map((k) => {
+                      return (
+                        <Line
+                          fill={k.fill}
+                          dot={{ r: 3 }}
+                          type="monotone"
+                          strokeWidth={3}
+                          dataKey={k.name}
+                          stroke={k.stroke}
+                          activeDot={{ r: 7 }}
+                        />
+                      );
+                    })}
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          </div>
         </div>
         {!subscriptionLoading && (
           <PayOutstanding userId={userId} subscription={subscription.at(0)} />
         )}
         <PtpAddPopup userId={userId} />
         <ClientEditPopup userId={userId} />
+        <ClientBodyDetails userId={userId} />
         <CreateSubscriptionPopup userId={userId} />
+
         <ExtendPTPSubscriptionPopup
           userId={userId}
           activePlanEndDate={activePlanEndDate}
-          ptpId={ptp && ptp?.length ? ptp[0]?.id : ""}
           setActivePlanEndDate={setActivePlanEndDate}
+          ptpId={ptp && ptp?.length ? ptp[0]?.id : ""}
         />
         <ExtendGYMSubscriptionPopup
           userId={userId}
@@ -147,7 +267,7 @@ const PersonalTrainingStatus = ({ setActivePlanEndDate, ptp }) => {
                 <ul className="personal-info">
                   <ListItem
                     title={"Trainer"}
-                    text={`${ptp?.trainer?.data?.attributes.firstname} ${ptp?.trainer?.data?.attributes.lastname}`}
+                    text={`${ptp?.trainer?.data?.attributes?.firstname} ${ptp?.trainer?.data?.attributes.lastname}`}
                   />
                   <ListItem
                     title={"Session"}
@@ -196,9 +316,10 @@ const PersonalTrainingStatus = ({ setActivePlanEndDate, ptp }) => {
                       <>
                         <Link
                           to="#"
-                          data-bs-target="#extend_subscription"
-                          className="btn btn-info"
+                          data-bs-targe
                           data-bs-toggle="modal"
+                          t="#extend_subscription"
+                          className="btn btn-info"
                           onClick={() =>
                             setActivePlanEndDate(ptp.subscription[0].end)
                           }
@@ -228,8 +349,9 @@ const PersonalTrainingStatus = ({ setActivePlanEndDate, ptp }) => {
         ) : (
           <>
             <div className="card-body">
-              <h3 className="card-title">Personal Trainer</h3>
-              <p>PTP Not Available</p>
+              <h3 className="card-title mb-3">Personal Trainer</h3>
+              <hr />
+              <p className="text-center">No Data Available</p>
               <Link
                 to="#"
                 data-bs-toggle="modal"
@@ -242,7 +364,7 @@ const PersonalTrainingStatus = ({ setActivePlanEndDate, ptp }) => {
           </>
         )}
       </div>
-      <PtpEditPopup ptpId={ptp.id} />
+      <PtpEditPopup ptpId={ptp?.id} />
     </div>
   );
 };
@@ -251,7 +373,7 @@ const GymMembershipStatus = ({ subscription, setActiveGYMPlanEndDate }) => {
   const isPaymentOutStanding = parseInt(subscription?.outstanding ?? 0) > 0;
   return (
     <div className="row">
-      <div className="col-md-6 d-flex">
+      <div className="col-md-12 d-flex">
         <div className="card profile-box flex-fill">
           {/* When subscription activated */}
           {subscription && (
@@ -297,18 +419,6 @@ const GymMembershipStatus = ({ subscription, setActiveGYMPlanEndDate }) => {
                       Extend Subscription
                     </Link>
                   )}
-
-                  {/*     {isPaymentOutStanding && (
-                    <Link
-                      to="#"
-                      data-bs-toggle="modal"
-                      className="btn btn-info"
-                      data-bs-target="#pay_outstanding"
-                      onClick={() => setActiveGYMPlanEndDate(subscription?.end)}
-                    >
-                      Pay Outstanding
-                    </Link>
-                  )} */}
                 </>
               </div>
             </div>

@@ -11,4 +11,5 @@ export const routes = {
   invoice: "/invoices",
   walkin: "/walk-ins",
   alert: "/alerts",
+  "body-tracking": "/body-trackings",
 };

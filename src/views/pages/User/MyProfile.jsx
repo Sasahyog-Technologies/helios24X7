@@ -4,25 +4,25 @@ import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import MyProfileTab from "./MyProfileTab";
 import request from "../../../sdk/functions";
+import SystemAlert from "../../layout/Alert";
 import { useQuery } from "@tanstack/react-query";
+import ClientAvatar from "../Client/ClientAvatar";
 import Loading from "../../../components/Loading";
 import { useSession } from "../../../Hook/useSession";
-import ClientAvatar from "../Client/ClientAvatar";
 import Breadcrumbs from "../../../components/Breadcrumbs";
-import SystemAlert from "../../layout/Alert";
+
 const MyProfile = () => {
   const { getUserDataToCookie } = useSession();
   const session = getUserDataToCookie();
   const user = session?.user;
   const userId = user?.id;
-  //console.log(user);
 
   const { data: clientData, isLoading: userLoading } = useQuery({
     queryKey: ["client-profile-data"],
     queryFn: async () => {
       if (userId) {
         const data = await request.findOne("users", userId, {
-          populate: ["branch", "body_detail", "profile"],
+          populate: ["branch", "profile", "body_trackings"],
         });
         return data;
       }
@@ -122,36 +122,28 @@ const MyProfile = () => {
                         <div className="col-md-12">
                           <div className="profile-view">
                             <ClientAvatar
-                              userId={clientData.id}
-                              profile={clientData.profile}
+                              userId={clientData?.id}
+                              profile={clientData?.profile}
                             />
                             <div className="profile-basic">
                               <div className="row d-flex justify-content-center align-items-center">
                                 <div className="col-md-5">
                                   <div className="profile-info-left">
                                     <h3 className="user-name m-t-0 mb-0 text-capitalize">
-                                      {clientData.firstname}{" "}
-                                      {clientData.lastname}
+                                      {clientData?.firstname}{" "}
+                                      {clientData?.lastname}
                                     </h3>
                                     <h6 className="text-muted">
-                                      {clientData.username}
+                                      {clientData?.username}
                                     </h6>
                                     {/* <div className="staff-id">Plan :</div> */}
                                     <div className="small doj text-muted">
                                       Date of Join :{" "}
                                       {format(
-                                        new Date(clientData.createdAt),
+                                        new Date(clientData?.createdAt),
                                         "dd MMM yyyy"
                                       )}
                                     </div>
-                                    {/* <div className="staff-msg">
-                                      <Link
-                                        className="btn btn-custom"
-                                        to="/call/chat"
-                                      >
-                                        Send Message
-                                      </Link>
-                                    </div> */}
                                   </div>
                                 </div>
                                 <div className="col-md-7">
@@ -159,8 +151,8 @@ const MyProfile = () => {
                                     <li>
                                       <div className="title">Phone:</div>
                                       <div className="text">
-                                        <Link to={`tel:${clientData.mobile}`}>
-                                          {clientData.mobile}
+                                        <Link to={`tel:${clientData?.mobile}`}>
+                                          {clientData?.mobile}
                                         </Link>
                                       </div>
                                     </li>
@@ -169,7 +161,7 @@ const MyProfile = () => {
                                       <div className="title">Birthday:</div>
                                       <div className="text">
                                         {format(
-                                          new Date(clientData.birthdate),
+                                          new Date(clientData?.birthdate),
                                           "dd MMM yyyy"
                                         )}
                                       </div>
@@ -177,7 +169,7 @@ const MyProfile = () => {
                                     <li>
                                       <div className="title">Gender:</div>
                                       <div className="text text-capitalize">
-                                        {clientData.gender}
+                                        {clientData?.gender}
                                       </div>
                                     </li>
                                     <li>
@@ -202,8 +194,8 @@ const MyProfile = () => {
                         userId={userId}
                         ptp={clientPTPData}
                         ptpLoading={isPtpLoading}
-                        bodyDetails={clientData?.body_detail}
                         subscription={clientSubscriptionData}
+                        bodyTrackings={clientData?.body_trackings}
                         subscriptionLoading={subscriptionLoading}
                       />
                     </>
