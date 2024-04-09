@@ -74,6 +74,13 @@ const sidebarOwnerData = {
       route: "/owner/walkins-list",
       icon: "la la-walking",
     },
+    {
+      menuValue: "Alerts",
+      hasSubRoute: false,
+      showSubRoute: false,
+      route: "/owner/alerts-list",
+      icon: "la la-bell",
+    },
   ],
 };
 const sidebarUserData = {

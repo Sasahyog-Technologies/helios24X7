@@ -214,6 +214,7 @@ import EventsListClient from "../../views/pages/UserEvents/EventsListClient.jsx"
 import WalkinsList from "../../views/pages/Walkins/WalkinsList.jsx";
 import MyTraineesList from "../../views/pages/Trainer/MyTraineesList.jsx";
 import MyInvoices from "../../views/pages/User/MyInvoices.jsx";
+import AlertsList from "../../views/pages/Alerts/AlertsList.jsx";
 
 const AppContainer = () => {
   useEffect(() => {
@@ -1234,6 +1235,11 @@ const AppContainer = () => {
       id: 12,
       path: "my-profile",
       element: <MyProfile />,
+    },
+    {
+      id: 13,
+      path: "alerts-list",
+      element: <AlertsList />,
     },
   ];
 

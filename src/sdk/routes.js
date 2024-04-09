@@ -9,5 +9,6 @@ export const routes = {
   event:"/events",
   payment:"/payments",
   invoice:"/invoices",
-  walkin:"/walk-ins"
+  walkin:"/walk-ins",
+  alert:"/alerts"
 };
