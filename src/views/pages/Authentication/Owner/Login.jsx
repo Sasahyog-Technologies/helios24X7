@@ -95,6 +95,8 @@ const OwnerLogin = () => {
         subscriptions: subscriptions.data.length,
       };
     },
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 
   return (
@@ -637,7 +639,7 @@ const OwnerLogin = () => {
                 {/*    <p className="text-light">
                  
                 </p> */}
-                <form onSubmit={handleWalkinCreate} style={{width:"70%"}}>
+                <form onSubmit={handleWalkinCreate} style={{ width: "70%" }}>
                   <div className="d-flex flex-column gap-2">
                     <input
                       type="text"
