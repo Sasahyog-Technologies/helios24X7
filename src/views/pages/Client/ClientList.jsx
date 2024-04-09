@@ -1,8 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
 import { Table } from "antd";
 import { format } from "date-fns";
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 
 import ClientAddPopup from "../../../components/modelpopup/Client/ClientAddPopup";
@@ -105,7 +105,7 @@ const ClientList = () => {
               data-bs-target="#edit_client_password"
               onClick={() => setUserId(user.id)}
             >
-              <i className="fa fa-pencil m-r-5" /> Edit Password
+              <i className="fa fa-lock m-r-5" /> Edit Password
             </Link>
 
             {loggedInUser?.type === "owner" ? (
