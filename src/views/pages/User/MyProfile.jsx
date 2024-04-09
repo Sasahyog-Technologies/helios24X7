@@ -9,6 +9,7 @@ import Loading from "../../../components/Loading";
 import { useSession } from "../../../Hook/useSession";
 import ClientAvatar from "../Client/ClientAvatar";
 import Breadcrumbs from "../../../components/Breadcrumbs";
+import SystemAlert from "../../layout/Alert";
 const MyProfile = () => {
   const { getUserDataToCookie } = useSession();
   const session = getUserDataToCookie();
@@ -104,6 +105,9 @@ const MyProfile = () => {
             modal="#add_indicator"
             name="Add New"
           />
+
+          <SystemAlert />
+
           {userLoading ? (
             <>
               <Loading />
