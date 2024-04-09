@@ -5,46 +5,90 @@ import Loading from "../../../components/Loading";
 import { ListItem } from "../Profile/ProfileContent";
 import PtpAddPopup from "../../../components/modelpopup/Client/PTPAddPopup";
 import ClientEditPopup from "../../../components/modelpopup/Client/ClientEditPopup";
+import ClientBodyDetails from "../../../components/modelpopup/Client/CliendBodyDetails";
 import CreateSubscriptionPopup from "../../../components/modelpopup/Client/CreateSubscription";
 import ExtendPTPSubscriptionPopup from "../../../components/modelpopup/Client/ExtendPTPSubscription";
 import ExtendGYMSubscriptionPopup from "../../../components/modelpopup/Client/ExtendGYMSubscription";
-import { Chart } from "react-chartjs-2";
+import {
+  Line,
+  YAxis,
+  XAxis,
+  Legend,
+  Tooltip,
+  LineChart,
+  CartesianGrid,
+  ResponsiveContainer,
+} from "recharts";
 
-function convertToReadableTime(timeString) {
-  // Split the time string into hours, minutes, and seconds
-  const [hours, minutes] = timeString.split(":").map(Number);
+const chatLines = [
+  {
+    name: "height",
+    stroke: "#ff9b44",
+    fill: "#00c5fb",
+  },
+  {
+    name: "weight",
+    stroke: "#fc6075",
+    fill: "#0253cc",
+  },
+  {
+    name: "chest",
+    stroke: "#67e6dc", // Unique color
+    fill: "#e68e67", // Unique color
+  },
+  {
+    name: "hip",
+    stroke: "#e1e667", // Unique color
+    fill: "#6774e6", // Unique color
+  },
+  {
+    name: "biceps",
+    stroke: "#9e67e6", // Unique color
+    fill: "#67e667", // Unique color
+  },
+  {
+    name: "weist",
+    stroke: "#67e667", // Reused color from 'biceps'
+    fill: "#e6679e", // Unique color
+  },
+  {
+    name: "calf",
+    stroke: "#e66767", // Unique color
+    fill: "#67e6dc", // Reused color from 'chest'
+  },
+  {
+    name: "neck",
+    stroke: "#e67e67", // Unique color
+    fill: "#e66767", // Unique color
+  },
+];
 
-  // Ensure the time parts are valid
-  if (isNaN(hours) || isNaN(minutes)) {
-    return null;
-  }
-
-  // Determine if it's AM or PM
-  const meridiem = hours >= 12 ? "PM" : "AM";
-
-  // Convert 24-hour format to 12-hour format
-  let readableHours = hours % 12;
-  readableHours = readableHours === 0 ? 12 : readableHours;
-
-  // Construct the readable time string
-  const readableTime = `${readableHours}:${
-    (minutes < 10 ? "0" : "") + minutes
-  } ${meridiem}`;
-
-  return readableTime;
-}
+const chartFilter = (bodyTrackings) => {
+  return bodyTrackings.map((track) => ({
+    hips: track?.hip ?? 0,
+    neck: track?.neck ?? 0,
+    calfs: track?.calf ?? 0,
+    chest: track?.chest ?? 0,
+    weist: track?.weist ?? 0,
+    weight: track?.weight ?? 0,
+    height: track?.height ?? 0,
+    biceps: track?.biceps ?? 0,
+    y: new Date(track?.createdAt)?.toDateString(),
+  }));
+};
 
 const MyProfileTab = ({
   ptp,
   userId,
-  bodyDetails,
   ptpLoading,
+  bodyDetails,
   subscription,
+  bodyTrackings,
   subscriptionLoading,
 }) => {
- 
+  const bodyData = bodyTrackings[bodyTrackings.length - 1];
   const [activePlanEndDate, setActivePlanEndDate] = useState();
-  const [activeGYMPlanEndDate, setActiveGYMPlanEndDate] = useState();
+  const [activeGYMPlanEndDate] = useState();
   return (
     <>
       <div className="tab-content">
@@ -62,7 +106,7 @@ const MyProfileTab = ({
                       to="#"
                       className="edit-icon"
                       data-bs-toggle="modal"
-                      data-bs-target="#edit_client"
+                      data-bs-target="#edit_body_details"
                     >
                       <i className="fa fa-pencil" />
                     </Link>
@@ -130,7 +174,6 @@ const MyProfileTab = ({
                                 />
                                 <ListItem
                                   title={"Session From"}
-                                  // text={p.session_from}
                                   text={convertToReadableTime(p?.session_from)}
                                 />
                                 <ListItem
@@ -176,53 +219,18 @@ const MyProfileTab = ({
                                                 "dd MMM yyyy"
                                               )}
                                             </>
-                                          ) : (
-                                            ""
-                                          )
+                                          ) : null
                                         }
                                       />
                                     </ul>
-                                    {/*      <Link
-                                      to="#"
-                                      data-bs-target="#extend_subscription"
-                                      className="btn btn-info"
-                                      data-bs-toggle="modal"
-                                      onClick={() =>
-                                        setActivePlanEndDate(
-                                          p.subscription[0].end
-                                        )
-                                      }
-                                    >
-                                      Extend Subscription
-                                    </Link> */}
                                   </div>
                                 </>
-                              ) : (
-                                <>
-                                  {/*   <Link
-                                    to="#"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#add_ptp"
-                                    className="btn btn-info"
-                                  >
-                                    Purchase Membership
-                                  </Link> */}
-                                </>
-                              )}
+                              ) : null}
                             </div>
                           ))}
                         </>
                       ) : (
                         <>
-                          {/*    <Link
-                            to="#"
-                            data-bs-toggle="modal"
-                            data-bs-target="#add_ptp"
-                            className="btn btn-info"
-                          >
-                            Create PTP
-                          </Link>{" "} */}
-
                           <div>Personal Trainer Not Available</div>
                         </>
                       )}
@@ -232,8 +240,9 @@ const MyProfileTab = ({
               </div>
             </div>
           </div>
+
           <div className="row">
-            <div className="col-md-6 d-flex">
+            <div className="col-md-12 d-flex">
               <div className="card profile-box flex-fill">
                 {subscriptionLoading ? (
                   <>
@@ -241,20 +250,12 @@ const MyProfileTab = ({
                   </>
                 ) : (
                   <>
-                    {subscription.length ? (
+                    {subscription?.length ? (
                       <>
                         <div>
                           <div className="card-body">
                             <h3 className="card-title">
                               GYM Subscription ({subscription[0].id})
-                              {/*  <Link
-                                  to="#"
-                                  className="edit-icon"
-                                  data-bs-toggle="modal"
-                                  data-bs-target="#emergency_contact_modal"
-                                >
-                                  <i className="fa fa-pencil" />
-                                </Link> */}
                             </h3>
                             <>
                               <ul className="personal-info">
@@ -299,17 +300,6 @@ const MyProfileTab = ({
                                   text={subscription[0].payment_type}
                                 />
                               </ul>
-                              {/*   <Link
-                                to="#"
-                                data-bs-toggle="modal"
-                                className="btn btn-info"
-                                data-bs-target="#extend_gym_subscription"
-                                onClick={() =>
-                                  setActiveGYMPlanEndDate(subscription[0].end)
-                                }
-                              >
-                                Extend Subscription
-                              </Link> */}
                             </>
                           </div>
                         </div>
@@ -318,14 +308,6 @@ const MyProfileTab = ({
                       <>
                         <div className="card-body">
                           <h3 className="card-title">GYM Subscription</h3>
-                          {/*      <Link
-                            to="#"
-                            data-bs-toggle="modal"
-                            data-bs-target="#create_subscription"
-                            className="btn btn-info"
-                          >
-                            Create Subscription
-                          </Link> */}
                           <p>GYM Subscription not Available</p>
                         </div>
                       </>
@@ -334,76 +316,39 @@ const MyProfileTab = ({
                 )}
               </div>
             </div>
-            {/* Attendance card */}
-            <div className="col-lg-6 col-md-12">
-              <div className="card flex-fill">
+
+            <div className="col-md-12 text-center">
+              <div className="card">
                 <div className="card-body">
-                  <div className="statistic-header">
-                    <h4>Attendance &amp; Leaves</h4>
-                    <div className="dropdown statistic-dropdown">
-                      <Link
-                        className="dropdown-toggle"
-                        data-bs-toggle="dropdown"
-                        to="#"
-                      >
-                        2024
-                      </Link>
-                      <div className="dropdown-menu dropdown-menu-end">
-                        <Link to="#" className="dropdown-item">
-                          2025
-                        </Link>
-                        <Link to="#" className="dropdown-item">
-                          2026
-                        </Link>
-                        <Link to="#" className="dropdown-item">
-                          2027
-                        </Link>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="attendance-list">
-                    <div className="row">
-                      <div className="col-md-4">
-                        <div className="attendance-details">
-                          <h4 className="text-primary">9</h4>
-                          <p>Total Leaves</p>
-                        </div>
-                      </div>
-                      <div className="col-md-4">
-                        <div className="attendance-details">
-                          <h4 className="text-pink">5.5</h4>
-                          <p>Leaves Taken</p>
-                        </div>
-                      </div>
-                      <div className="col-md-4">
-                        <div className="attendance-details">
-                          <h4 className="text-success">04</h4>
-                          <p>Leaves Absent</p>
-                        </div>
-                      </div>
-                      <div className="col-md-4">
-                        <div className="attendance-details">
-                          <h4 className="text-purple">0</h4>
-                          <p>Pending Approval</p>
-                        </div>
-                      </div>
-                      <div className="col-md-4">
-                        <div className="attendance-details">
-                          <h4 className="text-info">214</h4>
-                          <p>Working Days</p>
-                        </div>
-                      </div>
-                      <div className="col-md-4">
-                        <div className="attendance-details">
-                          <h4 className="text-danger">2</h4>
-                          <p>Loss of Pay</p>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <h3 className="card-title">Progress Bar Overview</h3>
+                  <ResponsiveContainer width="100%" height={300}>
+                    <LineChart
+                      data={chartFilter(bodyTrackings)}
+                      margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
+                    >
+                      <CartesianGrid />
+                      <XAxis dataKey="y" />
+                      <YAxis />
+                      <Tooltip />
+                      <Legend />
+
+                      {chatLines.map((k) => {
+                        return (
+                          <Line
+                            fill={k.fill}
+                            dot={{ r: 3 }}
+                            type="monotone"
+                            strokeWidth={3}
+                            dataKey={k.name}
+                            stroke={k.stroke}
+                            activeDot={{ r: 7 }}
+                          />
+                        );
+                      })}
+                    </LineChart>
+                  </ResponsiveContainer>
                 </div>
               </div>
-              {/* Attendance Card */}
             </div>
           </div>
         </div>
@@ -416,6 +361,8 @@ const MyProfileTab = ({
           activePlanEndDate={activePlanEndDate}
           setActivePlanEndDate={setActivePlanEndDate}
         />
+
+        <ClientBodyDetails userId={userId} />
         <ExtendGYMSubscriptionPopup
           userId={userId}
           activeGYMPlanEndDate={activeGYMPlanEndDate}
@@ -426,3 +373,27 @@ const MyProfileTab = ({
 };
 
 export default MyProfileTab;
+
+function convertToReadableTime(timeString) {
+  // Split the time string into hours, minutes, and seconds
+  const [hours, minutes] = timeString.split(":").map(Number);
+
+  // Ensure the time parts are valid
+  if (isNaN(hours) || isNaN(minutes)) {
+    return null;
+  }
+
+  // Determine if it's AM or PM
+  const meridiem = hours >= 12 ? "PM" : "AM";
+
+  // Convert 24-hour format to 12-hour format
+  let readableHours = hours % 12;
+  readableHours = readableHours === 0 ? 12 : readableHours;
+
+  // Construct the readable time string
+  const readableTime = `${readableHours}:${
+    (minutes < 10 ? "0" : "") + minutes
+  } ${meridiem}`;
+
+  return readableTime;
+}
