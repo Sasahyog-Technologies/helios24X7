@@ -2,7 +2,7 @@
 /* eslint-disable no-unused-vars */
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { helios_banner } from "../../../../Routes/ImagePath";
+import { helios_banner, hlogo } from "../../../../Routes/ImagePath";
 import { image_01, img_2, img_3, img_4 } from "../../../../Routes/ImagePath";
 
 import {
@@ -107,9 +107,11 @@ const OwnerLogin = () => {
                 href="index.html"
                 className="navbar-brand w-100 h-100 m-0 p-0 d-flex align-items-center justify-content-center"
               >
-                <h1 className="m-0 display-4 text-primary text-uppercase">
-                  Helios
-                </h1>
+                <img
+                  style={{ height: "80px", width: "180px" }}
+                  src={hlogo}
+                  alt="img"
+                />
               </a>
             </div>
             <div className="col-lg-9">
@@ -141,10 +143,12 @@ const OwnerLogin = () => {
                 </div>
               </div>
               <nav className="navbar navbar-expand-lg bg-dark navbar-dark p-3 p-lg-0 px-lg-5">
-                <a href="index.html" className="navbar-brand d-block d-lg-none">
-                  <h1 className="m-0 display-4 text-primary text-uppercase">
-                    Helios
-                  </h1>
+                <a href="#" className="navbar-brand d-block d-lg-none">
+                  <img
+                    alt="img"
+                    src={hlogo}
+                    style={{ height: "80px", width: "180px" }}
+                  />
                 </a>
                 <button
                   type="button"
