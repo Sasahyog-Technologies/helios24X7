@@ -636,7 +636,7 @@ const OwnerLogin = () => {
               </div>
             </div>
             <div className="col-lg-4 col-md-6">
-              <div className="d-flex flex-column align-items-center justify-content-center text-center h-100 bg-primary p-5">
+              <div className="d-flex flex-column align-items-center justify-content-center text-center h-100 bg-primary p-3">
                 <h4 className="text-uppercase text-white mb-4">Helios24X7</h4>
                 <h6 className="text-uppercase text-white mb-4">
                   Subscribe Helios24X7
@@ -648,7 +648,7 @@ const OwnerLogin = () => {
                   <div className="d-flex flex-column gap-2">
                     <input
                       type="text"
-                      className="form-control border-white p-3"
+                      className="form-control border-white p-3 w-full"
                       placeholder="Your Mobile"
                       value={mobile}
                       onChange={(e) => setMobile(e.target.value)}
@@ -656,7 +656,7 @@ const OwnerLogin = () => {
                     />
                     <input
                       type="text"
-                      className="form-control border-white p-3"
+                      className="form-control border-white p-3 w-full"
                       placeholder="Your Full Name"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
