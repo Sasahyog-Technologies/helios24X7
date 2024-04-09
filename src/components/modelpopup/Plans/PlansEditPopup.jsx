@@ -14,15 +14,29 @@ const planDefaultValues = {
   duration: "",
   desc: "",
   branch: "",
+  seleted: "",
 };
 
 const PlanEditPopup = ({ planId }) => {
   const [planLoading, setplanLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [branchOptions, setBranchOptions] = useState([]);
-  const { register, handleSubmit, reset, control, setValue } = useForm({
-    defaultValues: planDefaultValues,
-  });
+
+  const selectedOptions = [
+    {
+      value: true,
+      label: "Selected",
+    },
+    {
+      value: false,
+      label: "Not Selected",
+    },
+  ];
+
+  const { register, handleSubmit, reset, control, setValue } =
+    useForm({
+      defaultValues: planDefaultValues,
+    });
   const {
     data: planData,
     isLoading,
@@ -41,6 +55,7 @@ const PlanEditPopup = ({ planId }) => {
           duration: res.data.attributes.duration,
           desc: res.data.attributes.desc,
           branch: res.data?.attributes?.branch?.data?.id || "",
+          seleted: res?.data?.attributes?.seleted || false,
         });
         setplanLoading(false);
         return res.data;
@@ -145,7 +160,7 @@ const PlanEditPopup = ({ planId }) => {
                             <span className="text-danger">*</span>
                           </label>
                           <Controller
-                            name="trainer"
+                            name="duration"
                             control={control}
                             render={({ onChange, value, ref }) => (
                               <Select
@@ -157,7 +172,6 @@ const PlanEditPopup = ({ planId }) => {
                                 onChange={(val) =>
                                   setValue("duration", val.value)
                                 }
-                                required
                               />
                             )}
                           />
@@ -199,6 +213,35 @@ const PlanEditPopup = ({ planId }) => {
                                   planData?.attributes?.branch?.data?.attributes
                                     ?.name
                                 }
+                              />
+                            )}
+                          />
+                        </div>
+                      </div>
+                      <div className="col-md-6">
+                        <div className="input-block mb-3">
+                          <label className="col-form-label">
+                            Show on Landing Page{" "}
+                            <span className="text-danger">*</span>
+                          </label>
+                          <Controller
+                            name="seleted"
+                            control={control}
+                            render={({ onChange, value, ref }) => (
+                              <Select
+                                options={selectedOptions}
+                                placeholder={
+                                  planData?.attributes?.seleted
+                                    ? "Selected"
+                                    : "Not Selected"
+                                }
+                                value={selectedOptions.find(
+                                  (c) => c.value === value
+                                )}
+                                onChange={(val) =>
+                                  setValue("seleted", val.value)
+                                }
+                                defaultValue={planData?.attributes?.seleted}
                               />
                             )}
                           />

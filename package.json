@@ -16,6 +16,7 @@
     "@hookform/error-message": "^2.0.1",
     "@hookform/resolvers": "^3.3.4",
     "@mantine/hooks": "^7.7.1",
+    "@nextui-org/react": "^2.2.10",
     "@react-latest-ui/react-sticky-notes": "^0.2.6",
     "@reduxjs/toolkit": "^2.2.1",
     "@tanstack/react-query": "^5.28.6",
