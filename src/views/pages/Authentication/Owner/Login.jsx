@@ -274,7 +274,7 @@ const OwnerLogin = () => {
         </div>
         {/* Carousel End */}
         {/* About Start */}
-        <div className="container-fluid p-5">
+        <div className="container-fluid p-4">
           <div className="row gx-5">
             <div
               className="col-lg-5 mb-5 mb-lg-0"
@@ -304,7 +304,7 @@ const OwnerLogin = () => {
                 fitness in Bareilly.
               </p>
               <div className="rounded bg-dark p-5">
-                <ul className="nav nav-pills d-flex flex-sm-row flex-column justify-content-between mb-3">
+                <ul className="nav nav-pills d-flex gap-2 flex-sm-row flex-column justify-content-between mb-3">
                   <li className="nav-item w-50 d-none d-sm-flex">
                     <a
                       className="nav-link text-uppercase text-center w-100 active"
@@ -506,100 +506,13 @@ const OwnerLogin = () => {
         {/* Facts End */}
         {/* Team Start */}
 
-        <div id="trainers" className="container-fluid p-5">
+        <div id="trainers" className="container-fluid p-4">
           <div className="mb-5 text-center">
             <h5 className="text-primary text-uppercase">The Team</h5>
             <h1 className="display-3 text-uppercase mb-0">Expert Trainers</h1>
           </div>
 
           <TrainerCarousel />
-
-          {/* <div className="row g-5">
-            <div className="col-lg-4 col-md-6">
-              <div className="team-item position-relative">
-                <div className="position-relative overflow-hidden rounded">
-                  <img className="img-fluid w-100" src={lp4} alt="" />
-                  <div className="team-overlay">
-                    <div className="d-flex align-items-center justify-content-start">
-                      <a
-                        className="btn btn-light btn-square rounded-circle mx-1"
-                        href="#"
-                      >
-                        <i className="la la-instagram" />
-                      </a>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  className="position-absolute start-0 bottom-0 w-100 rounded-bottom text-center p-4"
-                  style={{ background: "rgba(34, 36, 41, .9)" }}
-                >
-                  <h5 className="text-uppercase text-light">John Deo</h5>
-                  <p className="text-uppercase text-secondary m-0">Trainer</p>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-4 col-md-6">
-              <div className="team-item position-relative">
-                <div className="position-relative overflow-hidden rounded">
-                  <img className="img-fluid w-100" src={lp5} alt="" />
-                  <div className="team-overlay">
-                    <div className="d-flex align-items-center justify-content-start">
-                      <a
-                        className="btn btn-light btn-square rounded-circle mx-1"
-                        href="#"
-                      >
-                        <i className="la la-instagram" />
-                      </a>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  className="position-absolute start-0 bottom-0 w-100 rounded-bottom text-center p-4"
-                  style={{ background: "rgba(34, 36, 41, .9)" }}
-                >
-                  <h5 className="text-uppercase text-light">James Taylor</h5>
-                  <p className="text-uppercase text-secondary m-0">Trainer</p>
-                </div>
-              </div>
-            </div>
-            <div className="col-lg-4 col-md-6">
-              <div className="team-item position-relative">
-                <div className="position-relative overflow-hidden rounded">
-                  <img className="img-fluid w-100" src={lp6} alt="" />
-                  <div className="team-overlay">
-                    <div className="d-flex align-items-center justify-content-start">
-                      <a
-                        className="btn btn-light btn-square rounded-circle mx-1"
-                        href="#"
-                      >
-                        <i className="fab fa-twitter" />
-                      </a>
-                      <a
-                        className="btn btn-light btn-square rounded-circle mx-1"
-                        href="#"
-                      >
-                        <i className="fab fa-facebook-f" />
-                      </a>
-                      <a
-                        className="btn btn-light btn-square rounded-circle mx-1"
-                        href="#"
-                      >
-                        <i className="fab fa-linkedin-in" />
-                      </a>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  className="position-absolute start-0 bottom-0 w-100 rounded-bottom text-center p-4"
-                  style={{ background: "rgba(34, 36, 41, .9)" }}
-                >
-                  <h5 className="text-uppercase text-light">Adam Phillips</h5>
-                  <p className="text-uppercase text-secondary m-0">Trainer</p>
-                </div>
-              </div>
-            </div>
-          </div> */}
         </div>
         {/* Team End */}
         {/* Testimonial Start */}
