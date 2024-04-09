@@ -63,9 +63,9 @@ const TrainerCarousel = () => {
         <div className="slider-container relative">
           <Slider adaptiveHeight={true} {...settings}>
             {isFetched &&
-              data?.map((item) => {
+              data?.map((item, idx) => {
                 return (
-                  <div className="col-lg-4 col-md-6 p-2 ">
+                  <div className="col-lg-4 col-md-6 p-2 " key={idx}>
                     <div className="team-item position-relative">
                       <div className="position-relative overflow-hidden rounded">
                         <img
@@ -112,14 +112,14 @@ function SampleNextArrow(props) {
   const { className, style, onClick } = props;
   return (
     <div
-      className={className}
+      className={"slick-next"}
       style={{
         ...style,
-
         background: "gray",
+        borderRadius: "100%",
         top: "50%",
         transform: "translateY(-50%)",
-        right: "10px", // Adjust this value as needed
+        right: "35px",
       }}
       onClick={onClick}
     ></div>
@@ -130,15 +130,15 @@ function SamplePrevArrow(props) {
   const { className, style, onClick } = props;
   return (
     <div
-      className={className}
+      className={"slick-prev"}
       style={{
         ...style,
-
         background: "gray",
+        borderRadius: "100%",
         top: "50%",
         zIndex: "999",
         transform: "translateY(-50%)",
-        left: "20px", // Adjust this value as needed
+        left: "35px",
       }}
       onClick={onClick}
     ></div>

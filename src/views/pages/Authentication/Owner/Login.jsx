@@ -246,7 +246,7 @@ const OwnerLogin = () => {
               </div>
             </div>
             <div className="col-lg-7">
-              <div className="mb-4">
+              <div className="mb-4 d-flex">
                 <h5 className="text-primary text-uppercase">About Us</h5>
                 <h1 className="display-3 text-uppercase mb-0">
                   Welcome to Helios
@@ -262,8 +262,8 @@ const OwnerLogin = () => {
                 fitness in Bareilly.
               </p>
               <div className="rounded bg-dark p-5">
-                <ul className="nav nav-pills justify-content-between mb-3">
-                  <li className="nav-item w-50">
+                <ul className="nav nav-pills d-flex flex-sm-row flex-column justify-content-between mb-3">
+                  <li className="nav-item w-50 w-sm-100">
                     <a
                       className="nav-link text-uppercase text-center w-100 active"
                       data-bs-toggle="pill"
@@ -272,7 +272,7 @@ const OwnerLogin = () => {
                       About Us
                     </a>
                   </li>
-                  <li className="nav-item w-50">
+                  <li className="nav-item w-50 w-sm-100">
                     <a
                       className="nav-link text-uppercase text-center w-100"
                       data-bs-toggle="pill"
@@ -315,7 +315,7 @@ const OwnerLogin = () => {
         >
           <div className="row g-5 gb-5">
             <div className="col-lg-4 col-md-6">
-              <div className="bg-light rounded text-center p-5">
+              <div className="bg-light rounded text-center p-5 border border-dark">
                 <i className="flaticon-six-pack display-1 text-primary" />
                 <h3 className="text-uppercase my-4">Personal Training</h3>
                 <p>
@@ -326,7 +326,7 @@ const OwnerLogin = () => {
               </div>
             </div>
             <div className="col-lg-4 col-md-6">
-              <div className="bg-light rounded text-center p-5">
+              <div className="bg-light rounded text-center p-5 border border-dark">
                 <i className="flaticon-barbell display-1 text-primary" />
                 <h3 className="text-uppercase my-4">Diet Counseling</h3>
                 <p>
@@ -337,7 +337,7 @@ const OwnerLogin = () => {
               </div>
             </div>
             <div className="col-lg-4 col-md-6">
-              <div className="bg-light rounded text-center p-5">
+              <div className="bg-light rounded text-center p-5 border border-dark">
                 <i className="flaticon-bodybuilding display-1 text-primary" />
                 <h3 className="text-uppercase my-4">Guided Workout Plan</h3>
                 <p>
@@ -370,13 +370,13 @@ const OwnerLogin = () => {
                   <i className="fa fa-star fs-4 text-white" />
                 </div>
                 <div className="ps-4">
-                  <h5 className="text-secondary text-uppercase">Subscribed</h5>
                   <h1
                     className="display-5 text-white mb-0"
                     data-toggle="counter-up"
                   >
                     {data?.subscriptions}
                   </h1>
+                  <h5 className="text-secondary text-uppercase">Subscribed</h5>
                 </div>
               </div>
             </div>
@@ -389,15 +389,15 @@ const OwnerLogin = () => {
                   <i className="fa fa-users fs-4 text-white" />
                 </div>
                 <div className="ps-4">
-                  <h5 className="text-secondary text-uppercase">
-                    Our Trainers
-                  </h5>
                   <h1
                     className="display-5 text-white mb-0"
                     data-toggle="counter-up"
                   >
                     {data?.trainers}
                   </h1>
+                  <h5 className="text-secondary text-uppercase">
+                    Our Trainers
+                  </h5>
                 </div>
               </div>
             </div>
@@ -410,13 +410,13 @@ const OwnerLogin = () => {
                   <i className="fa fa-check fs-4 text-white" />
                 </div>
                 <div className="ps-4">
-                  <h5 className="text-secondary text-uppercase">Branches</h5>
                   <h1
                     className="display-5 text-white mb-0"
                     data-toggle="counter-up"
                   >
                     {data?.branches}
                   </h1>
+                  <h5 className="text-secondary text-uppercase">Branches</h5>
                 </div>
               </div>
             </div>
@@ -429,15 +429,15 @@ const OwnerLogin = () => {
                   <i className="fa fa-mug-hot fs-4 text-white" />
                 </div>
                 <div className="ps-4">
-                  <h5 className="text-secondary text-uppercase">
-                    Happy Clients
-                  </h5>
                   <h1
                     className="display-5 text-white mb-0"
                     data-toggle="counter-up"
                   >
                     {data?.clients}
                   </h1>
+                  <h5 className="text-secondary text-uppercase">
+                    Happy Clients
+                  </h5>
                 </div>
               </div>
             </div>
@@ -696,8 +696,8 @@ const OwnerLogin = () => {
         </div>
         {/* Footer End */}
         {/* Back to Top */}
-        <a href="#" className="btn btn-dark py-3 fs-4 back-to-top">
-          <i className="bi bi-arrow-up" />
+        <a href="#" className="btn btn-dark py-1 fs-4 m-3 back-to-top">
+          <i className="la la-arrow-up" />
         </a>
         {/* JavaScript Libraries */}
         {/* Template Javascript */}

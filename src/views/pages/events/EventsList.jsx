@@ -11,11 +11,14 @@ import EventsListFilter from "./EventsListFilter";
 import { format } from "date-fns";
 import { Image } from "antd";
 import { useMediaQuery } from "usehooks-ts";
+import { useSession } from "../../../Hook/useSession";
 
 const EventsList = () => {
   const [eventId, seteventId] = useState(null);
   const [image, setImage] = useState();
   const isWebDevice = useMediaQuery("(min-width:700px)");
+  const { getUserDataToCookie } = useSession();
+  const loggedInUser = getUserDataToCookie()?.user;
 
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -88,15 +91,19 @@ const EventsList = () => {
             >
               <i className="fa fa-pencil m-r-5" /> Edit
             </Link>
-            <Link
-              className="dropdown-item"
-              to="#"
-              data-bs-toggle="modal"
-              data-bs-target="#delete_event"
-              onClick={() => seteventId(event.id)}
-            >
-              <i className="fa fa-trash m-r-5" /> Delete
-            </Link>
+            {loggedInUser?.type === "owner" ? (
+              <Link
+                className="dropdown-item"
+                to="#"
+                data-bs-toggle="modal"
+                data-bs-target="#delete_event"
+                onClick={() => seteventId(event.id)}
+              >
+                <i className="fa fa-trash m-r-5" /> Delete
+              </Link>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       ),
@@ -134,15 +141,19 @@ const EventsList = () => {
                   >
                     <i className="fa fa-pencil m-r-5" /> Edit
                   </Link>
-                  <Link
-                    className="dropdown-item"
-                    to="#"
-                    data-bs-toggle="modal"
-                    data-bs-target="#delete_event"
-                    onClick={() => seteventId(record.id)}
-                  >
-                    <i className="fa fa-trash m-r-5" /> Delete
-                  </Link>
+                  {loggedInUser?.type === "owner" ? (
+                    <Link
+                      className="dropdown-item"
+                      to="#"
+                      data-bs-toggle="modal"
+                      data-bs-target="#delete_event"
+                      onClick={() => seteventId(record.id)}
+                    >
+                      <i className="fa fa-trash m-r-5" /> Delete
+                    </Link>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
             </div>
