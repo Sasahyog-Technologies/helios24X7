@@ -1,10 +1,10 @@
 import React from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
+import { Link } from "react-router-dom";
 import "slick-carousel/slick/slick-theme.css";
 import request from "../../../../sdk/functions";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "react-router-dom";
 
 const PlanCarousel = () => {
   const { data, isFetched } = useQuery({
@@ -59,9 +59,9 @@ const PlanCarousel = () => {
   };
 
   return (
-    <div id="plans" className="container-fluid p-5">
+    <div id="plans" className="container-fluid p-4">
       <div className="mb-5 text-center">
-        <h5 className="text-primary text-uppercase">Plans</h5>
+        <h5 className="text-primary text-uppercase">Pricing</h5>
         <h1 className="display-3 text-uppercase mb-0">Our Plans</h1>
       </div>
       <div className="row g-5">
@@ -69,7 +69,10 @@ const PlanCarousel = () => {
           {isFetched &&
             data?.map((item, index) => {
               return (
-                <div className="d-flex justify-content-center align-items-center px-4" key={index} style={{height:"900px"}}>
+                <div
+                  className="d-flex justify-content-center align-items-center px-2"
+                  key={index}
+                >
                   <div className="pricing pricing-warning w-100">
                     <div className="title">
                       <a href="/shop"> {item?.attributes?.title}</a>
@@ -88,7 +91,9 @@ const PlanCarousel = () => {
                           <i className="la la-dumbbell" />
                         </span>
                       </div>
-                      <div className="starting">{item.attributes?.duration} Month</div>
+                      <div className="starting">
+                        {item.attributes?.duration} Month
+                      </div>
                       <div className="price">
                         ₹{item?.attributes?.price}
                         {/* <span>/month</span> */}
@@ -105,7 +110,7 @@ const PlanCarousel = () => {
                         <span>
                           <i className="fa fa-check"></i>
                         </span>
-                        Duration -   {item.attributes?.duration} Month
+                        Duration - {item.attributes?.duration} Month
                       </li>
                     </ul>
                     <div className="bottom-box">
@@ -123,7 +128,6 @@ const PlanCarousel = () => {
                     </div>
                   </div>
                 </div>
-                
               );
             })}
         </Slider>
@@ -172,4 +176,3 @@ function SamplePrevArrow(props) {
     ></div>
   );
 }
- 
