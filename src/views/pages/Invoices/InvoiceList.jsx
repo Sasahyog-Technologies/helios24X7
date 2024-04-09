@@ -8,9 +8,11 @@ import InvoiceDeletePopup from "../../../components/modelpopup/Invoice/DeleteInv
 import InvoiceEditPopup from "../../../components/modelpopup/Invoice/EditInvoicePopup";
 import request from "../../../sdk/functions";
 import InvoiceListFilter from "./InvoiceListFilter";
+import { useMediaQuery } from "usehooks-ts";
 
 const InvoiceList = () => {
   const [invoiceId, setinvoiceId] = useState(null);
+  const isWebDevice = useMediaQuery("(min-width:700px)");
 
   const columns = [
     {
@@ -110,6 +112,90 @@ const InvoiceList = () => {
       ),
     },
   ];
+
+  /* --------------------------------------------------------------------------- */
+
+  const deviceColumns = [
+    {
+      render: (record, key, index) => {
+        return (
+          <div>
+            <div className="d-flex justify-content-between">
+              {<div className="fw-bold fs-6"></div>}
+              <div
+                className="dropdown dropdown-action text-end" /* style={{zIndex:100}} */
+              >
+                <Link
+                  to="#"
+                  className="action-icon dropdown-toggle"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <i className="material-icons">more_vert</i>
+                </Link>
+
+                <div className="dropdown-menu dropdown-menu-right">
+                  <Link
+                    className="dropdown-item"
+                    to="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#edit_invoice"
+                    onClick={() => setinvoiceId(record.id)}
+                  >
+                    <i className="fa fa-pencil m-r-5" /> Edit
+                  </Link>
+                  <Link
+                    className="dropdown-item"
+                    to="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#delete_invoice"
+                    onClick={() => setinvoiceId(record.id)}
+                  >
+                    <i className="fa fa-trash m-r-5" /> Delete
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <Link to={`/owner/invoice-details/${record.id}`}>
+                <div className="d-flex justify-content-between">
+                  <span className="fw-bold fs-6">User Name</span>
+                  <span> {record?.username}</span>
+                </div>
+                <div className="d-flex justify-content-between">
+                  <span className="fw-bold fs-6">Mobile</span>
+                  <span> {record?.mobile}</span>
+                </div>
+                <div className="d-flex justify-content-between">
+                  <span className="fw-bold fs-6">Subscription Type </span>
+                  <span> {record?.subscriptionType}</span>
+                </div>
+                <div className="d-flex justify-content-between">
+                  <span className="fw-bold fs-6">Amount </span>
+                  <span>{record?.amount}</span>
+                </div>
+                <div className="d-flex justify-content-between">
+                  <span className="fw-bold fs-6">Payment Date </span>
+                  <span>
+                    <span>
+                      {format(new Date(record?.invoice_date), "dd/MM/yyyy")}
+                    </span>
+                  </span>
+                </div>
+                <div className="d-flex justify-content-between">
+                  <span className="fw-bold fs-6">Outstanding </span>
+                  <span>{record?.outstanding ? record?.outstanding : "0"}</span>
+                </div>
+              </Link>
+            </div>
+          </div>
+        );
+      },
+    },
+  ];
+
+  /* --------------------------------------------------------------------------- */
 
   const [tableParams, setTableParams] = useState({
     pagination: {
@@ -212,7 +298,7 @@ const InvoiceList = () => {
                 <Table
                   loading={InvoicesIsLoading || isRefetching}
                   className="table-striped"
-                  columns={columns}
+                  columns={isWebDevice ? columns : deviceColumns}
                   dataSource={InvoicesData}
                   pagination={{
                     total: tableParams.pagination.total,
