@@ -9,10 +9,12 @@ import MembershipEditPopup from "../../../components/modelpopup/Membership/EditM
 import request from "../../../sdk/functions";
 import MembershipListFilter from "./MembershipListFilter";
 import PayOutstanding from "../../../components/modelpopup/Client/PayOutstandingPopup";
+import { useMediaQuery } from "usehooks-ts";
 
 const MembershipList = () => {
   const [membership, setMembership] = useState(false);
   const [subscriptionId, setsubscriptionId] = useState(null);
+  const isWebDevice = useMediaQuery("(min-width:700px)");
 
   const columns = [
     {
@@ -120,6 +122,102 @@ const MembershipList = () => {
       ),
     },
   ];
+
+  /* --------------------------------------------------------------------------- */
+
+  const deviceColumns = [
+    {
+      render: (record, key, index) => {
+        return (
+          <div>
+            <div className="d-flex justify-content-between">
+              {<div className="fw-bold fs-6"></div>}
+              <div
+                className="dropdown dropdown-action text-end" /* style={{zIndex:100}} */
+              >
+                <Link
+                  to="#"
+                  className="action-icon dropdown-toggle"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  <i className="material-icons">more_vert</i>
+                </Link>
+
+                <div className="dropdown-menu dropdown-menu-right">
+                  <Link
+                    className="dropdown-item"
+                    to="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#edit_subscription"
+                    onClick={() => setsubscriptionId(record.id)}
+                  >
+                    <i className="fa fa-pencil m-r-5" /> Edit
+                  </Link>
+                  <Link
+                    className="dropdown-item"
+                    to="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#delete_subscription"
+                    onClick={() => setsubscriptionId(record.id)}
+                  >
+                    <i className="fa fa-trash m-r-5" /> Delete
+                  </Link>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Full Name </span>
+                <span> {record?.fullname}</span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Mobile </span>
+                <span> {record?.mobile}</span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Start </span>
+                <span>
+                  <span>{format(new Date(record?.start), "dd/MM/yyyy")}</span>
+                </span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">End </span>
+                <span>
+                  <span>{format(new Date(record?.end), "dd/MM/yyyy")}</span>
+                </span>
+              </div>
+
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Paid </span>
+                <span> {record?.paid}</span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Outstanding </span>
+                <span> {record?.outstanding ? record?.outstanding : "0"}</span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Payment Type </span>
+                <span> {record?.payment_type}</span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Subscription Type </span>
+                <span>
+                  {" "}
+                  <span className="text-capitalize">
+                    {record?.type?.split("-").join(" ")}
+                  </span>
+                </span>
+              </div>
+            </div>
+          </div>
+        );
+      },
+    },
+  ];
+
+  /* --------------------------------------------------------------------------- */
 
   const [tableParams, setTableParams] = useState({
     pagination: {
@@ -234,7 +332,7 @@ const MembershipList = () => {
                 <Table
                   loading={usersIsLoading || isRefetching}
                   className="table-striped"
-                  columns={columns}
+                  columns={isWebDevice ? columns : deviceColumns}
                   dataSource={subscriptionData}
                   pagination={{
                     total: tableParams.pagination.total,

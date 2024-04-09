@@ -30,8 +30,8 @@ const MembershipEditPopup = ({ membershipId }) => {
   const { data: membershipData, refetch } = useQuery({
     queryKey: ["membership-data"],
     queryFn: async () => {
-      setmembershipLoading(true);
       if (membershipId) {
+        setmembershipLoading(true);
         const res = await request.findOne("subscription", membershipId, {
           populate: ["user", "plan"],
         });
@@ -47,14 +47,14 @@ const MembershipEditPopup = ({ membershipId }) => {
         });
         setStartDate(res.data.attributes.start);
         setEndDate(res.data.attributes.end);
-        setmembershipLoading(false);
         return res.data;
       }
       reset(membershipDefaultValues);
+      setmembershipLoading(false);
       return null;
     },
   });
-  console.log(membershipData);
+  //console.log(membershipData);
 
   const onSubmit = async (dt) => {
     setSubmitLoading(true);
