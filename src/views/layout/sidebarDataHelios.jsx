@@ -7,7 +7,7 @@ const sidebarOwnerData = {
       menuValue: "Analytics",
       hasSubRoute: false,
       showSubRoute: false,
-      route: "/admin-dashboard",
+      route: "/owner/admin-dashboard",
       icon: "la la-chart-bar",
     },
     {

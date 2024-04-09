@@ -234,11 +234,11 @@ const AppContainer = () => {
       path: "form-basic-inputs",
       element: <BasicInputs />,
     },
-    {
+/*     {
       id: 2,
       path: "admin-dashboard",
       element: <AdminDashboard />,
-    },
+    }, */
     {
       id: 3,
       path: "form-horizontal",
@@ -1240,6 +1240,11 @@ const AppContainer = () => {
       id: 13,
       path: "alerts-list",
       element: <AlertsList />,
+    },
+    {
+      id: 14,
+      path: "admin-dashboard",
+      element: <AdminDashboard />,
     },
   ];
 
