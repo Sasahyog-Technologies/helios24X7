@@ -95,7 +95,10 @@ const Sidebar = () => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      <div className="sidebar-inner slimscroll " style={{ overflow: false }}>
+      <div
+        className="sidebar-inner d-flex flex-column slimscroll "
+        style={{ overflow: false }}
+      >
         <div id="sidebar-menu" className="sidebar-menu">
           <Scrollbars
             autoHide={false}
