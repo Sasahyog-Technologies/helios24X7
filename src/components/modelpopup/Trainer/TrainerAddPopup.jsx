@@ -17,6 +17,7 @@ const formDataDefaultValues = {
   )}@gmail.com`, // please use uuid for unique email
   branch: "",
   gender: "",
+  social_link: "",
 };
 
 const TrainerAddPopup = () => {
@@ -56,9 +57,10 @@ const TrainerAddPopup = () => {
         birthdate: birthDate,
         type: "trainer",
         gender: data.gender,
+        social_link: data.social_link,
       });
       //console.log(createRes);
-      toast.success("trainer created");
+      toast.success("Trainer Created");
       Refresh();
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
@@ -156,7 +158,6 @@ const TrainerAddPopup = () => {
                             required
                           />
                         )}
-                      
                       />
                     </div>
                   </div>
@@ -225,7 +226,16 @@ const TrainerAddPopup = () => {
                             required
                           />
                         )}
-                        
+                      />
+                    </div>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="input-block mb-3">
+                      <label className="col-form-label">Social Link</label>
+                      <input
+                        className="form-control"
+                        type="text"
+                        {...register("social_link")}
                       />
                     </div>
                   </div>
