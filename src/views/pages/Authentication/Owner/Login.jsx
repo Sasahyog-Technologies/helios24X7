@@ -686,9 +686,8 @@ const OwnerLogin = () => {
                 <p className="text-secondary mb-0">
                   ©{" "}
                   <a className="text-light fw-bold" href="#">
-                    Helios24X7
+                    Helios Gym 24 X 7
                   </a>
-                  . All Rights Reserved.
                 </p>
               </div>
             </div>
