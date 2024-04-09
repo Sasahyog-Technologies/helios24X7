@@ -1,4 +1,4 @@
-export { default as lp1 } from "../../assets/img/about.jpg";
+export { default as lp1 } from "../../assets/img/about.png";
 export { default as lp2 } from "../../assets/img/carousel-1.jpg";
 
 export { default as lp3 } from "../../assets/img/carousel-2.jpg";
