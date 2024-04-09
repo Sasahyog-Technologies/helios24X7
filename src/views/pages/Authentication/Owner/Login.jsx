@@ -535,13 +535,13 @@ const OwnerLogin = () => {
                 </h1>
               </div>
               <div className="owl-carousel testimonial-carousel">
-                <div className="testimonial-item">
+                <div className="testimonial-item mb-4">
                   <p className="fs-4 fw-normal text-light mb-4">
                     <i className="fa fa-quote-left text-primary me-3" />
-                    Dolores sed duo clita tempor justo dolor et stet lorem kasd
-                    labore dolore lorem ipsum. At lorem lorem magna ut et,
-                    nonumy et labore et tempor diam tempor erat dolor rebum sit
-                    ipsum.
+                    Stepping into the new gym branch feels like entering a
+                    strength training sanctuary! With top-notch equipment,
+                    personalized coaching, and an empowering atmosphere, it's a
+                    powerhouse for serious fitness enthusiasts like me.
                   </p>
                   <div className="d-flex align-items-center">
                     <img
@@ -550,20 +550,25 @@ const OwnerLogin = () => {
                       alt=""
                     />
                     <div className="ps-4">
-                      <h5 className="text-uppercase text-light">Client Name</h5>
+                      <h5 className="text-uppercase text-light">
+                        Sarthak Agrawal
+                      </h5>
                       <span className="text-uppercase text-secondary">
-                        Profession
+                        CEO of Sasahayog Technology
                       </span>
                     </div>
                   </div>
                 </div>
+
+                <hr />
+
                 <div className="testimonial-item">
                   <p className="fs-4 fw-normal text-light mb-4">
                     <i className="fa fa-quote-left text-primary me-3" />
-                    Dolores sed duo clita tempor justo dolor et stet lorem kasd
-                    labore dolore lorem ipsum. At lorem lorem magna ut et,
-                    nonumy et labore et tempor diam tempor erat dolor rebum sit
-                    ipsum.
+                    The new gym branch is a vibrant hub of wellness! From
+                    rejuvenating yoga sessions to high-energy Zumba classes,
+                    accompanied by expert guidance and a warm community spirit,
+                    it's a holistic haven for all fitness lovers
                   </p>
                   <div className="d-flex align-items-center">
                     <img
@@ -572,9 +577,11 @@ const OwnerLogin = () => {
                       alt=""
                     />
                     <div className="ps-4">
-                      <h5 className="text-uppercase text-light">Client Name</h5>
+                      <h5 className="text-uppercase text-light">
+                        Tanya Gangwar's
+                      </h5>
                       <span className="text-uppercase text-secondary">
-                        Profession
+                        College Student
                       </span>
                     </div>
                   </div>
