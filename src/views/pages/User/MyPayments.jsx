@@ -5,11 +5,12 @@ import React, { useState } from "react";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 import request from "../../../sdk/functions";
 import { useSession } from "../../../Hook/useSession";
+import { useMediaQuery } from "usehooks-ts";
 
 const MyPayments = () => {
   const { getUserDataToCookie } = useSession();
-
   const userId = getUserDataToCookie()?.user?.id;
+  const isWebDevice = useMediaQuery("(min-width:700px)");
 
   const columns = [
     {
@@ -25,7 +26,9 @@ const MyPayments = () => {
     {
       title: "Outstanding",
       dataIndex: "outstanding",
-      render: (text, record) => <span className="w-100">{text}</span>,
+      render: (text, record) => (
+        <span className="w-100">{text ? text : "0"}</span>
+      ),
     },
 
     {
@@ -79,6 +82,46 @@ const MyPayments = () => {
         ),
       }, */
   ];
+
+  /* --------------------------------------------------------------------------- */
+
+  const deviceColumns = [
+    {
+      render: (record, key, index) => {
+        return (
+          <div>
+            <div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Amount</span>
+                <span> {record?.amount}</span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Outstanding</span>
+                <span> {record?.outstanding ? record?.outstanding : "0"}</span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Payment Date</span>
+                <span>
+                  <span>
+                    {record?.payment_date
+                      ? format(new Date(record?.payment_date), "dd/MM/yyyy")
+                      : ""}
+                  </span>
+                </span>
+              </div>
+
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Status </span>
+                <span>{record?.status}</span>
+              </div>
+            </div>
+          </div>
+        );
+      },
+    },
+  ];
+
+  /* --------------------------------------------------------------------------- */
 
   const [tableParams, setTableParams] = useState({
     pagination: {
@@ -161,7 +204,7 @@ const MyPayments = () => {
                 <Table
                   loading={paymentsIsLoading || isRefetching}
                   className="table-striped"
-                  columns={columns}
+                  columns={isWebDevice ? columns : deviceColumns}
                   dataSource={paymentsData}
                   pagination={{
                     total: tableParams.pagination.total,

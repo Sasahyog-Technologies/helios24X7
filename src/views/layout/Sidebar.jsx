@@ -44,7 +44,7 @@ const Sidebar = () => {
 
   /*  insert sidebar owner data if owner is logged in */
   useEffect(() => {
-    if (user?.type === "owner") {
+    if (user?.type === "owner" || user?.type === "manager") {
       setSidebarData([...sidebarData, sidebarOwnerData]);
     } else if (user?.type === "client") {
       setSidebarData([...sidebarData, sidebarUserData]);

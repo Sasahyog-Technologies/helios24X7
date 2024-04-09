@@ -12,10 +12,13 @@ import ClientPasswordEditPopup from "../../../components/modelpopup/Client/Clien
 import request from "../../../sdk/functions";
 import ClientListFilter from "./ClientListFilter";
 import { useMediaQuery } from "usehooks-ts";
+import { useSession } from "../../../Hook/useSession";
 
 const ClientList = () => {
   const [userId, setUserId] = useState(null);
   const isWebDevice = useMediaQuery("(min-width:700px)");
+  const { getUserDataToCookie } = useSession();
+  const loggedInUser = getUserDataToCookie()?.user;
 
   const columns = [
     {
@@ -104,15 +107,20 @@ const ClientList = () => {
             >
               <i className="fa fa-pencil m-r-5" /> Edit Password
             </Link>
-            <Link
-              className="dropdown-item"
-              to="#"
-              data-bs-toggle="modal"
-              data-bs-target="#delete_client"
-              onClick={() => setUserId(user.id)}
-            >
-              <i className="fa fa-trash m-r-5" /> Delete
-            </Link>
+
+            {loggedInUser?.type === "owner" ? (
+              <Link
+                className="dropdown-item"
+                to="#"
+                data-bs-toggle="modal"
+                data-bs-target="#delete_client"
+                onClick={() => setUserId(user.id)}
+              >
+                <i className="fa fa-trash m-r-5" /> Delete
+              </Link>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       ),
@@ -159,15 +167,20 @@ const ClientList = () => {
                   >
                     <i className="fa fa-pencil m-r-5" /> Edit Password
                   </Link>
-                  <Link
-                    className="dropdown-item"
-                    to="#"
-                    data-bs-toggle="modal"
-                    data-bs-target="#delete_client"
-                    onClick={() => setUserId(record.id)}
-                  >
-                    <i className="fa fa-trash m-r-5" /> Delete
-                  </Link>
+
+                  {loggedInUser?.type === "owner" ? (
+                    <Link
+                      className="dropdown-item"
+                      to="#"
+                      data-bs-toggle="modal"
+                      data-bs-target="#delete_client"
+                      onClick={() => setUserId(record.id)}
+                    >
+                      <i className="fa fa-trash m-r-5" /> Delete
+                    </Link>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
             </div>

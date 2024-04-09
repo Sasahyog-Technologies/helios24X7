@@ -8,15 +8,17 @@ import { Refresh } from "../../../utils/refresh";
 import DatePicker from "react-datepicker";
 import Select from "react-select";
 import { subscriptionStatusOptions } from "../../../utils";
+import { ErrorMessage } from "@hookform/error-message";
+
 const membershipDefaultValues = {
-  username: "",
-  subscription_type: "",
-  label: "",
   paid: "",
   status: "",
   outstanding: "",
-  plan: "",
+  label: "",
+  username: "",
+  subscription_type: "",
   payment_type: "",
+  plan: "",
 };
 
 const MembershipEditPopup = ({ membershipId }) => {
@@ -24,14 +26,22 @@ const MembershipEditPopup = ({ membershipId }) => {
   const [submitLoading, setSubmitLoading] = useState(false);
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
-  const { register, handleSubmit, reset, control, setValue } = useForm({
+  const {
+    register,
+    handleSubmit,
+    reset,
+    control,
+    setValue,
+    formState: { errors },
+  } = useForm({
     defaultValues: membershipDefaultValues,
   });
   const { data: membershipData, refetch } = useQuery({
-    queryKey: ["membership-data"],
+    queryKey: ["single-membership-data"],
     queryFn: async () => {
       if (membershipId) {
         setmembershipLoading(true);
+
         const res = await request.findOne("subscription", membershipId, {
           populate: ["user", "plan"],
         });
@@ -40,17 +50,17 @@ const MembershipEditPopup = ({ membershipId }) => {
           status: res.data.attributes.status,
           outstanding: res.data.attributes.outstanding,
           label: res.data.attributes.label,
-          username: `${res.data.attributes.user.data.attributes.firstname} ${res.data.attributes.user.data.attributes.lastname}`,
+          username: `${res?.data?.attributes?.user?.data?.attributes?.firstname} ${res?.data?.attributes?.user?.data?.attributes?.lastname}`,
           subscription_type: res.data.attributes.type,
           payment_type: res.data.attributes.payment_type,
-          plan: res.data.attributes.plan.data.attributes.title,
+          plan: res?.data?.attributes?.plan?.data?.attributes?.title,
         });
         setStartDate(res.data.attributes.start);
         setEndDate(res.data.attributes.end);
+        setmembershipLoading(false);
         return res.data;
       }
       reset(membershipDefaultValues);
-      setmembershipLoading(false);
       return null;
     },
   });
@@ -118,11 +128,13 @@ const MembershipEditPopup = ({ membershipId }) => {
                             required
                             disabled
                             {...register("username", {
-                              required: "This input is required.",
+                              required: "Username is required.",
                             })}
                           />
+                          <ErrorMessage errors={errors} name="username" />
                         </div>
                       </div>
+
                       <div className="col-sm-6">
                         <div className="input-block mb-3">
                           <label className="col-form-label">
@@ -134,9 +146,10 @@ const MembershipEditPopup = ({ membershipId }) => {
                             required
                             disabled
                             {...register("plan", {
-                              required: "This input is required.",
+                              required: "Please Select Plan",
                             })}
                           />
+                          <ErrorMessage errors={errors} name="plan" />
                         </div>
                       </div>
                       <div className="col-sm-6">
@@ -151,8 +164,12 @@ const MembershipEditPopup = ({ membershipId }) => {
                             required
                             disabled
                             {...register("subscription_type", {
-                              required: "This input is required.",
+                              required: "Subscription Type is required.",
                             })}
+                          />
+                          <ErrorMessage
+                            errors={errors}
+                            name="subscription_type"
                           />
                         </div>
                       </div>
@@ -168,9 +185,10 @@ const MembershipEditPopup = ({ membershipId }) => {
                             required
                             disabled
                             {...register("payment_type", {
-                              required: "This input is required.",
+                              required: "Payment Type is required.",
                             })}
                           />
+                          <ErrorMessage errors={errors} name="payment_type" />
                         </div>
                       </div>
                       <div className="col-sm-6">
@@ -220,8 +238,11 @@ const MembershipEditPopup = ({ membershipId }) => {
                             className="form-control"
                             type="text"
                             required
-                            {...register("paid", { required: true })}
+                            {...register("paid", {
+                              required: "Paid amount is required",
+                            })}
                           />
+                          <ErrorMessage errors={errors} name="paid" />
                         </div>
                       </div>
                       <div className="col-sm-6">

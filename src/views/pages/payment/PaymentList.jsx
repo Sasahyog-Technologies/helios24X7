@@ -9,10 +9,13 @@ import PaymentEditPopup from "../../../components/modelpopup/payment/EditPayment
 import request from "../../../sdk/functions";
 import PaymentListFilter from "./PaymentListFilter";
 import { useMediaQuery } from "usehooks-ts";
+import { useSession } from "../../../Hook/useSession";
 
 const PaymentList = () => {
   const [paymentsId, setpaymentsId] = useState(null);
   const isWebDevice = useMediaQuery("(min-width:700px)");
+  const { getUserDataToCookie } = useSession();
+  const loggedInUser = getUserDataToCookie()?.user;
 
   const columns = [
     {
@@ -77,15 +80,20 @@ const PaymentList = () => {
             >
               <i className="fa fa-pencil m-r-5" /> Edit
             </Link>
-            <Link
-              className="dropdown-item"
-              to="#"
-              data-bs-toggle="modal"
-              data-bs-target="#delete_payment"
-              onClick={() => setpaymentsId(user.id)}
-            >
-              <i className="fa fa-trash m-r-5" /> Delete
-            </Link>
+
+            {loggedInUser?.type === "owner" ? (
+              <Link
+                className="dropdown-item"
+                to="#"
+                data-bs-toggle="modal"
+                data-bs-target="#delete_payment"
+                onClick={() => setpaymentsId(user.id)}
+              >
+                <i className="fa fa-trash m-r-5" /> Delete
+              </Link>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       ),
@@ -123,15 +131,20 @@ const PaymentList = () => {
                   >
                     <i className="fa fa-pencil m-r-5" /> Edit
                   </Link>
-                  <Link
-                    className="dropdown-item"
-                    to="#"
-                    data-bs-toggle="modal"
-                    data-bs-target="#delete_payment"
-                    onClick={() => setpaymentsId(record.id)}
-                  >
-                    <i className="fa fa-trash m-r-5" /> Delete
-                  </Link>
+
+                  {loggedInUser?.type === "owner" ? (
+                    <Link
+                      className="dropdown-item"
+                      to="#"
+                      data-bs-toggle="modal"
+                      data-bs-target="#delete_payment"
+                      onClick={() => setpaymentsId(record.id)}
+                    >
+                      <i className="fa fa-trash m-r-5" /> Delete
+                    </Link>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
             </div>

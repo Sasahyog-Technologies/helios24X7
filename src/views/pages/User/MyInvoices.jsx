@@ -6,11 +6,13 @@ import Breadcrumbs from "../../../components/Breadcrumbs";
 import request from "../../../sdk/functions";
 import { useSession } from "../../../Hook/useSession";
 import { Link } from "react-router-dom";
+import { useMediaQuery } from "usehooks-ts";
 
 const MyInvoices = () => {
   const { getUserDataToCookie } = useSession();
 
   const userId = getUserDataToCookie()?.user?.id;
+  const isWebDevice = useMediaQuery("(min-width:700px)");
 
   const columns = [
     {
@@ -27,7 +29,9 @@ const MyInvoices = () => {
       dataIndex: "outstanding",
       render: (text, record) => (
         <span className="w-100 text-capitalize">
-          <Link to={`/client/invoice-details/${record.id}`}>{text}</Link>
+          <Link to={`/client/invoice-details/${record.id}`}>
+            {text ? text : "0"}
+          </Link>
         </span>
       ),
     },
@@ -52,45 +56,46 @@ const MyInvoices = () => {
         </span>
       ),
     },
-    /*   {
-        title: "Action",
-        render: (user) => (
-          <div
-            className="dropdown dropdown-action text-end"  
-          >
-            <Link
-              to="#"
-              className="action-icon dropdown-toggle"
-              data-bs-toggle="dropdown"
-              aria-expanded="false"
-            >
-              <i className="material-icons">more_vert</i>
-            </Link>
-  
-            <div className="dropdown-menu dropdown-menu-right">
-              <Link
-                className="dropdown-item"
-                to="#"
-                data-bs-toggle="modal"
-                data-bs-target="#edit_invoices"
-                onClick={() => setUserId(user.id)}
-              >
-                <i className="fa fa-pencil m-r-5" /> Edit
-              </Link>
-              <Link
-                className="dropdown-item"
-                to="#"
-                data-bs-toggle="modal"
-                data-bs-target="#delete_invoices"
-                onClick={() => setUserId(user.id)}
-              >
-                <i className="fa fa-trash m-r-5" /> Delete
-              </Link>
+  ];
+
+  /* --------------------------------------------------------------------------- */
+
+  const deviceColumns = [
+    {
+      render: (record, key, index) => {
+        return (
+          <div>
+            <div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Amount</span>
+                <span> {record?.amount}</span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Outstanding</span>
+                <span> {record?.outstanding ? record?.outstanding : "0"}</span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Invoice Number</span>
+                <span> {record?.invoice_number}</span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Invoice Date</span>
+                <span>
+                  <span>
+                    {record?.invoice_date
+                      ? format(new Date(record?.invoice_date), "dd/MM/yyyy")
+                      : ""}
+                  </span>
+                </span>
+              </div>
             </div>
           </div>
-        ),
-      }, */
+        );
+      },
+    },
   ];
+
+  /* --------------------------------------------------------------------------- */
 
   const [tableParams, setTableParams] = useState({
     pagination: {
@@ -173,7 +178,7 @@ const MyInvoices = () => {
                 <Table
                   loading={invoicesIsLoading || isRefetching}
                   className="table-striped"
-                  columns={columns}
+                  columns={isWebDevice ? columns : deviceColumns}
                   dataSource={invoicesData}
                   pagination={{
                     total: tableParams.pagination.total,

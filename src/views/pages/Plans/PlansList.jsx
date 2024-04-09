@@ -14,6 +14,8 @@ import { useMediaQuery } from "usehooks-ts";
 const PlansList = () => {
   const [planId, setPlanId] = useState(null);
   const isWebDevice = useMediaQuery("(min-width:700px)");
+  const { getUserDataToCookie } = useSession();
+  const loggedInUser = getUserDataToCookie()?.user;
   const columns = [
     {
       title: "Title",
@@ -56,15 +58,19 @@ const PlansList = () => {
             >
               <i className="fa fa-pencil m-r-5" /> Edit
             </Link>
-            <Link
-              className="dropdown-item"
-              to="#"
-              data-bs-toggle="modal"
-              data-bs-target="#delete_plan"
-              onClick={() => setPlanId(plan.id)}
-            >
-              <i className="fa fa-trash m-r-5" /> Delete
-            </Link>
+            {loggedInUser?.type === "owner" ? (
+              <Link
+                className="dropdown-item"
+                to="#"
+                data-bs-toggle="modal"
+                data-bs-target="#delete_plan"
+                onClick={() => setPlanId(plan.id)}
+              >
+                <i className="fa fa-trash m-r-5" /> Delete
+              </Link>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       ),
@@ -102,15 +108,20 @@ const PlansList = () => {
                   >
                     <i className="fa fa-pencil m-r-5" /> Edit
                   </Link>
-                  <Link
-                    className="dropdown-item"
-                    to="#"
-                    data-bs-toggle="modal"
-                    data-bs-target="#delete_plan"
-                    onClick={() => setPlanId(record.id)}
-                  >
-                    <i className="fa fa-trash m-r-5" /> Delete
-                  </Link>
+
+                  {loggedInUser?.type === "owner" ? (
+                    <Link
+                      className="dropdown-item"
+                      to="#"
+                      data-bs-toggle="modal"
+                      data-bs-target="#delete_plan"
+                      onClick={() => setPlanId(record.id)}
+                    >
+                      <i className="fa fa-trash m-r-5" /> Delete
+                    </Link>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
             </div>

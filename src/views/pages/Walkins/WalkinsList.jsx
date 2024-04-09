@@ -9,10 +9,13 @@ import WalkinsAddPopup from "../../../components/modelpopup/Walkins/WalkinsAddPo
 import WalkinsDeletePopup from "../../../components/modelpopup/Walkins/WalkinDeletePopup";
 import WalkinEditPopup from "../../../components/modelpopup/Walkins/WalkinEditPopup";
 import { useMediaQuery } from "usehooks-ts";
+import { useSession } from "../../../Hook/useSession";
 
 const WalkinsList = () => {
   const [walkinId, setwalkinId] = useState(null);
   const isWebDevice = useMediaQuery("(min-width:700px)");
+  const { getUserDataToCookie } = useSession();
+  const loggedInUser = getUserDataToCookie()?.user;
   const columns = [
     {
       title: "Firstname",
@@ -55,15 +58,19 @@ const WalkinsList = () => {
             >
               <i className="fa fa-pencil m-r-5" /> Edit
             </Link>
-            <Link
-              className="dropdown-item"
-              to="#"
-              data-bs-toggle="modal"
-              data-bs-target="#delete_walkin"
-              onClick={() => setwalkinId(walkin.id)}
-            >
-              <i className="fa fa-trash m-r-5" /> Delete
-            </Link>
+            {loggedInUser?.type === "owner" ? (
+              <Link
+                className="dropdown-item"
+                to="#"
+                data-bs-toggle="modal"
+                data-bs-target="#delete_walkin"
+                onClick={() => setwalkinId(walkin.id)}
+              >
+                <i className="fa fa-trash m-r-5" /> Delete
+              </Link>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       ),
@@ -101,15 +108,19 @@ const WalkinsList = () => {
                   >
                     <i className="fa fa-pencil m-r-5" /> Edit
                   </Link>
-                  <Link
-                    className="dropdown-item"
-                    to="#"
-                    data-bs-toggle="modal"
-                    data-bs-target="#delete_walkin"
-                    onClick={() => setwalkinId(record.id)}
-                  >
-                    <i className="fa fa-trash m-r-5" /> Delete
-                  </Link>
+                  {loggedInUser?.type === "owner" ? (
+                    <Link
+                      className="dropdown-item"
+                      to="#"
+                      data-bs-toggle="modal"
+                      data-bs-target="#delete_walkin"
+                      onClick={() => setwalkinId(record.id)}
+                    >
+                      <i className="fa fa-trash m-r-5" /> Delete
+                    </Link>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </div>
             </div>
