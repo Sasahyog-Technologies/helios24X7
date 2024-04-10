@@ -7,7 +7,7 @@ import Select from "react-select";
 import DatePicker from "react-datepicker";
 import TimePicker from "react-time-picker";
 import { calculateEndDate } from "../../../utils/calculateEndDate";
-import { durationOptions } from "../../../utils/index";
+import { durationOptions, paymentTypeOptions } from "../../../utils/index";
 import { InvoiceNumberGenerator } from "../../../utils/invoiceNumberGenerate";
 
 const formDataDefaultValues = {
@@ -15,6 +15,7 @@ const formDataDefaultValues = {
   outstanding: 0,
   trainer: "",
   duration: "",
+  paymentType: "",
 };
 
 const PtpAddPopup = ({ userId }) => {
@@ -44,7 +45,7 @@ const PtpAddPopup = ({ userId }) => {
           paid: data.paid,
           outstanding: data.outstanding || null,
           start: startDate,
-          payment_type: "cash",
+          payment_type: data.paymentType,
           type: "trainer-subscription",
           end: calculateEndDate(startDate.toString(), parseInt(data.duration)),
         },
@@ -66,6 +67,7 @@ const PtpAddPopup = ({ userId }) => {
           outstanding: data.outstanding || null,
           payment_date: new Date().toISOString(),
           status: "success",
+          payment_type: data.paymentType,
         },
       });
       await request.create("invoice", {
@@ -250,6 +252,31 @@ const PtpAddPopup = ({ userId }) => {
                           />
                         )}
                         rules={{ required: true }}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="col-sm-6">
+                    <div className="input-block mb-3">
+                      <label className="col-form-label">
+                        Payment Type<span className="text-danger">*</span>
+                      </label>
+                      <Controller
+                        name="plan"
+                        control={control}
+                        render={({ onChange, value, ref }) => (
+                          <Select
+                            options={paymentTypeOptions}
+                            placeholder="Select"
+                            value={paymentTypeOptions.find(
+                              (c) => c.value === value
+                            )}
+                            onChange={(val) =>
+                              setValue("paymentType", val.value)
+                            }
+                            required
+                          />
+                        )}
                       />
                     </div>
                   </div>

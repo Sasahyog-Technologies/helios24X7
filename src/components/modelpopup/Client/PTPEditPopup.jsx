@@ -18,8 +18,6 @@ const formDataDefaultValues = {
 
 const PtpEditPopup = ({ ptpId }) => {
   const [loading, setLoading] = useState(false);
-  const [startDate, setStartDate] = useState(new Date().toISOString());
-  const [planOptions, setPlanOptions] = useState([]);
   const [trainerOptions, setTrainerOptions] = useState([]);
   const [sessionFrom, setSessionFrom] = useState("00:00:00");
   const [sessionTo, setSessionTo] = useState("00:00:00");
@@ -39,6 +37,7 @@ const PtpEditPopup = ({ ptpId }) => {
     data: ptpData,
     isLoading: ptpIsLoading,
     refetch,
+    isRefetching,
   } = useQuery({
     queryKey: ["ptp-data"],
     queryFn: async () => {
@@ -72,7 +71,7 @@ const PtpEditPopup = ({ ptpId }) => {
       });
 
       console.log(data);
-      toast.success("PTP created");
+      toast.success("PTP updated");
       Refresh();
     } catch (error) {
       // toast.error(error.response.data.error.message, { duration: 4000 });
@@ -99,6 +98,10 @@ const PtpEditPopup = ({ ptpId }) => {
     },
   });
 
+  useEffect(() => {
+    refetch();
+  }, [ptpId, refetch, reset]);
+
   return (
     <>
       <div id="edit_ptp" className="modal custom-modal fade" role="dialog">
@@ -118,7 +121,7 @@ const PtpEditPopup = ({ ptpId }) => {
             </div>
             <div className="modal-body">
               {/* {JSON.stringify(userInfo)} */}
-              {ptpIsLoading ? (
+              {ptpIsLoading || isRefetching ? (
                 <>
                   <Loading />
                 </>
