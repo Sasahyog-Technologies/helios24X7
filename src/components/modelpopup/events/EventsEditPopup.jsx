@@ -20,13 +20,14 @@ const EventEditPopup = ({ eventId }) => {
   const [submitLoading, setSubmitLoading] = useState(false);
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
-  const [image, setImage] = useState();
+  const [file, setFile] = useState();
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
-      setImage(file);
+      setFile(file);
     }
   };
+
   const { register, handleSubmit, reset, control, setValue } = useForm({
     defaultValues: userDefaultValues,
   });
@@ -57,10 +58,26 @@ const EventEditPopup = ({ eventId }) => {
       await request.update("event", eventId, {
         data: { ...dt, start: startDate, end: endDate },
       });
+      // Update Image
+      const formData = new FormData();
+      formData.append("files", file);
+      formData.append("field", "media");
+      formData.append("refId", eventId);
+      formData.append("ref", "api::event.event");
+      await fetch(
+        "https://helios24x7backend-production.up.railway.app/api/upload",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
       toast.success("Event updated");
       Refresh();
     } catch (error) {
-      toast.error(error.response.data.error.message, { duration: 4000 });
+      toast.error(
+        error?.response?.data?.error?.message || "Something Went Wrong",
+        { duration: 4000 }
+      );
       console.log(error);
     } finally {
       setSubmitLoading(false);
@@ -184,16 +201,15 @@ const EventEditPopup = ({ eventId }) => {
                           />
                         </div>
                       </div>
-
                       <div className="col-sm-6">
                         <div className="input-block mb-3">
                           <label className="col-form-label">Image</label>
                           <input
+                            required
                             type="file"
                             accept="image/*"
+                            className="form-control"
                             onChange={handleImageChange}
-                            placeholder="Image"
-                            className="file-input file-input-bordered  file-input-info w-full max-w-xs"
                           />
                         </div>
                       </div>

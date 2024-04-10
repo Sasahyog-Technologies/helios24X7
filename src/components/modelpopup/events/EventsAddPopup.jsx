@@ -115,6 +115,7 @@ const EventsAddPopup = () => {
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">Start Date</label>
+                      <span className="text-danger">*</span>
                       <input
                         required
                         className="form-control"
@@ -159,7 +160,8 @@ const EventsAddPopup = () => {
 
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
-                      <label className="col-form-label">Image</label>
+                      <label className="col-form-label">Image</label>{" "}
+                      <span className="text-danger">*</span>
                       <input
                         required
                         type="file"
