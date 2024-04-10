@@ -458,6 +458,9 @@ const OwnerLogin = () => {
 
           <TrainerCarousel />
         </div>
+
+        <PlanCarousel />
+
         {/* Team End */}
         {/* Testimonial Start */}
         <div className="container-fluid p-0 my-5">
@@ -537,7 +540,7 @@ const OwnerLogin = () => {
             </div>
           </div>
         </div>
-        <PlanCarousel />
+
         <div
           id="footer"
           className="container-fluid bg-dark text-secondary px-5 mt-5"
