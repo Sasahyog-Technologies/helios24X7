@@ -1,76 +1,67 @@
 import React from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
-  Bar,
-  BarChart,
-  CartesianGrid,
-  Legend,
   Line,
-  LineChart,
-  ResponsiveContainer,
-  Tooltip,
   XAxis,
   YAxis,
+  Legend,
+  Tooltip,
+  LineChart,
+  CartesianGrid,
+  ResponsiveContainer,
 } from "recharts";
-// import "../../../../../assets/css/index.css";
+import request from "../../../../../sdk/functions";
 
-const barchartdata = [
-  { y: "2006", "Total Income": 100, "Total Outcome": 90 },
-  { y: "2007", "Total Income": 75, "Total Outcome": 65 },
-  { y: "2008", "Total Income": 50, "Total Outcome": 40 },
-  { y: "2009", "Total Income": 75, "Total Outcome": 65 },
-  { y: "2010", "Total Income": 50, "Total Outcome": 40 },
-  { y: "2011", "Total Income": 75, "Total Outcome": 65 },
-  { y: "2012", "Total Income": 100, "Total Outcome": 90 },
-];
-const linechartdata = [
-  { y: "2006", "Total Sales": 50, "Total Revenue": 90 },
-  { y: "2007", "Total Sales": 75, "Total Revenue": 65 },
-  { y: "2008", "Total Sales": 50, "Total Revenue": 40 },
-  { y: "2009", "Total Sales": 75, "Total Revenue": 65 },
-  { y: "2010", "Total Sales": 50, "Total Revenue": 40 },
-  { y: "2011", "Total Sales": 75, "Total Revenue": 65 },
-  { y: "2012", "Total Sales": 100, "Total Revenue": 50 },
-];
+const formatter = (payments) => {
+  const t = {};
+  const j = [];
+  payments.forEach((payment) => {
+    const createdAt = formatDate(payment?.attributes?.createdAt);
+    if (t[createdAt]) {
+      t[createdAt] = t[createdAt] + parseFloat(payment?.attributes?.amount);
+    } else {
+      t[createdAt] = parseFloat(payment?.attributes?.amount);
+    }
+  });
+
+  Object.keys(t).forEach((date) => {
+    j.push({ y: date, "Total Revenue": t[date] });
+  });
+
+  return j;
+};
 
 const Charts = () => {
+  var last7Days = getLast7Days();
+  const { data, isLoading } = useQuery({
+    queryKey: ["graph-data"],
+    queryFn: async () => {
+      const payments = await request.findMany("payment", {
+        filters: {
+          createdAt: {
+            $gte: new Date(last7Days.at(0)),
+            // $lte: new Date(last7Days.at(6)),
+          },
+        },
+      });
+      return formatter(payments?.data);
+    },
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+  });
+
   return (
     <div>
       <div className="row">
         <div className="col-md-12">
           <div className="row">
-            <div className="col-md-6 text-center">
+            <div className="col-md-12  text-center">
               <div className="card">
                 <div className="card-body">
-                  <h3 className="card-title">Total Revenue</h3>
-                  <ResponsiveContainer width="100%" height={300}>
-                    <BarChart
-                      data={barchartdata}
-                      margin={{
-                        top: 5,
-                        right: 5,
-                        left: 5,
-                        bottom: 5,
-                      }}
-                    >
-                      <CartesianGrid />
-                      <XAxis dataKey="y" />
-                      <YAxis />
-                      <Tooltip />
-                      <Legend />
-                      <Bar dataKey="Total Income" fill="#ff9b44" />
-                      <Bar dataKey="Total Outcome" fill="#fc6075" />
-                    </BarChart>
-                  </ResponsiveContainer>
-                </div>
-              </div>
-            </div>
-            <div className="col-md-6 text-center">
-              <div className="card">
-                <div className="card-body">
-                  <h3 className="card-title">Sales Overview</h3>
+                  <h3 className="card-title">Weekly Overview</h3>
                   <ResponsiveContainer width="100%" height={300}>
                     <LineChart
-                      data={linechartdata}
+                      data={data}
                       margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
                     >
                       <CartesianGrid />
@@ -80,18 +71,9 @@ const Charts = () => {
                       <Legend />
                       <Line
                         type="monotone"
-                        dataKey="Total Sales"
+                        dataKey="Total Revenue"
                         stroke="#ff9b44"
                         fill="#00c5fb"
-                        strokeWidth={3}
-                        dot={{ r: 3 }}
-                        activeDot={{ r: 7 }}
-                      />
-                      <Line
-                        type="monotone"
-                        dataKey="Total Revenue"
-                        stroke="#fc6075"
-                        fill="#0253cc"
                         strokeWidth={3}
                         dot={{ r: 3 }}
                         activeDot={{ r: 7 }}
@@ -109,3 +91,26 @@ const Charts = () => {
 };
 
 export default Charts;
+
+function getLast7Days() {
+  var dates = [];
+  for (var i = 6; i >= 0; i--) {
+    var d = new Date();
+    d.setDate(d.getDate() - i);
+    dates.push(d.toISOString().split("T")[0]);
+  }
+  return dates;
+}
+
+function formatDate(inputDate) {
+  var date = new Date(inputDate);
+  var day = date.getDate();
+  var month = date.getMonth() + 1;
+  var year = date.getFullYear();
+
+  // Adding leading zeros if necessary
+  day = day < 10 ? "0" + day : day;
+  month = month < 10 ? "0" + month : month;
+
+  return day + "-" + month + "-" + year;
+}
