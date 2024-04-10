@@ -623,7 +623,6 @@ const OwnerLogin = () => {
             <div className="col-lg-12">
               <div className="py-lg-4 text-center">
                 <p className="text-secondary mb-0">
-                  ©{" "}
                   <a className="text-light fw-bold" href="#">
                     Helios Gym 24 X 7
                   </a>
