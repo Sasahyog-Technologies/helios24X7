@@ -65,7 +65,7 @@ const TrainerCarousel = () => {
             {isFetched &&
               data?.map((item, idx) => {
                 return (
-                  <div className="col-lg-4 col-md-6 p-2 " key={idx}>
+                  <div className="col-lg-4 col-md-6 p-2 border" key={idx}>
                     <div className="team-item position-relative">
                       <div className="position-relative overflow-hidden rounded">
                         <img

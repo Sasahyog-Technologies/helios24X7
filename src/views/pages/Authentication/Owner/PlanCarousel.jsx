@@ -73,9 +73,9 @@ const PlanCarousel = () => {
                   className="d-flex justify-content-center align-items-center px-2"
                   key={index}
                 >
-                  <div className="pricing pricing-warning w-100">
-                    <div className="title">
-                      <a href="/shop"> {item?.attributes?.title}</a>
+                  <div className="pricing pricing-warning w-100 border border-primary rounded">
+                    <div className="title ">
+                      <p> {item?.attributes?.title}</p>
                     </div>
                     <div className="price-box">
                       <div className="icon pull-right border circle">
@@ -100,12 +100,6 @@ const PlanCarousel = () => {
                       </div>
                     </div>
                     <ul className="options">
-                      {/*    <li>
-                        <span>
-                          <i className="fa fa-check"></i>
-                        </span>
-                        Responsive Design
-                      </li> */}
                       <li className="active">
                         <span>
                           <i className="fa fa-check"></i>
@@ -113,19 +107,12 @@ const PlanCarousel = () => {
                         Duration - {item.attributes?.duration} Month
                       </li>
                     </ul>
-                    <div className="bottom-box">
-                      {/*    <a href="/shop" className="more">
-                        Read More <span className="fa fa-angle-right"></span>
-                      </a>
-                      <div className="rating-box">
-                        <div className="rating" style={{ width: "60%" }}>
-                          icon
-                        </div>
-                      </div> */}
+                    {/* <div className="bottom-box">
+      
                       <Link to="#" className="btn btn-lg btn-warning clearfix">
                         Buy Now
                       </Link>
-                    </div>
+                    </div> */}
                   </div>
                 </div>
               );
