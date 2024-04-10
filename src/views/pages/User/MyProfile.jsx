@@ -128,7 +128,7 @@ const MyProfile = () => {
                               <div className="row d-flex justify-content-center align-items-center">
                                 <div className="col-md-5">
                                   <div className="profile-info-left">
-                                    <h3 className="user-name m-t-0 mb-0 text-capitalize">
+                                    <h3 className="user-name mt-2 mt-md-0 mb-2 mt-md-0 text-capitalize">
                                       {clientData?.firstname}{" "}
                                       {clientData?.lastname}
                                     </h3>
