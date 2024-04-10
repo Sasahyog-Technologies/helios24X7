@@ -118,7 +118,7 @@ const EventsAddPopup = () => {
                       <input
                         required
                         className="form-control"
-                        type="datetime-local"
+                        type="date"
                         {...register("start_date")}
                       />
                     </div>
@@ -129,7 +129,7 @@ const EventsAddPopup = () => {
                       <label className="col-form-label">End Date</label>
                       <input
                         className="form-control"
-                        type="datetime-local"
+                        type="date"
                         {...register("end_date")}
                       />
                     </div>

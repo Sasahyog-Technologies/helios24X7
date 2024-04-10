@@ -1,36 +1,19 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { helios_banner, hlogo } from "../../../../Routes/ImagePath";
-import { image_01, img_2, img_3, img_4 } from "../../../../Routes/ImagePath";
-
-import {
-  Applogo,
-  lp10,
-  lp4,
-  lp5,
-  lp6,
-  lp7,
-  lp8,
-  lp9,
-} from "../../../../Routes/ImagePath";
-import { Controller, useForm } from "react-hook-form";
-import * as Yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup/dist/yup.js";
-import { useDispatch } from "react-redux";
-import { login } from "../../../../user";
-import { resetFunctionwithlogin } from "../../../../components/ResetFunction";
-
-import request from "../../../../sdk/functions";
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable react-hooks/exhaustive-deps */
 import "../../../../assets/css/lp.css";
 
-import { lp1, lp2, lp3 } from "../../../../Routes/ImagePath";
-import { useQuery } from "@tanstack/react-query";
-import TrainerCarousel from "./TrainerCarousel";
+import AboutUs from "./About";
 import Events from "./Events";
-import PlanCarousel from "./PlanCarousel";
 import toast from "react-hot-toast";
+import React, { useState } from "react";
+import PlanCarousel from "./PlanCarousel";
+import TrainerCarousel from "./TrainerCarousel";
+import { useQuery } from "@tanstack/react-query";
+import request from "../../../../sdk/functions";
+import { lp7, lp8, lp9, lp1, lp13 } from "../../../../Routes/ImagePath";
+import { helios_banner, hlogo } from "../../../../Routes/ImagePath";
 
 const OwnerLogin = () => {
   const [mobile, setMobile] = useState("");
@@ -95,6 +78,8 @@ const OwnerLogin = () => {
         subscriptions: subscriptions.data.length,
       };
     },
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 
   return (
@@ -126,7 +111,7 @@ const OwnerLogin = () => {
                   <div className="h-100 d-inline-flex align-items-center py-2">
                     <i className="fa fa-phone-alt text-primary me-2" />
                     <h6 className="mb-0">
-                      <a href="917983411035">+91 7983411035</a>
+                      <a href="tel:917983411035">+91 7983411035</a>
                     </h6>
                   </div>
                 </div>
@@ -136,6 +121,7 @@ const OwnerLogin = () => {
                       className="btn btn-light btn-square rounded-circle me-2"
                       href="https://www.instagram.com/helios_gym.24x7?igsh=MXZzajk5d2ZoM3Z3"
                       target="_blank"
+                      rel="noreferrer"
                     >
                       <i className="fab fa-instagram" />
                     </a>
@@ -163,11 +149,26 @@ const OwnerLogin = () => {
                   id="navbarCollapse"
                 >
                   <div className="navbar-nav mr-auto py-0">
+                    <a href="/login" className="nav-item nav-link">
+                      Login
+                    </a>
+                    <a href="#footer" className="nav-item nav-link">
+                      Join Our Gym
+                    </a>
+                    <a href="#about" className="nav-item nav-link">
+                      About Us
+                    </a>
                     <a href="#trainers" className="nav-item nav-link">
                       Trainers
                     </a>
                     <a href="#plans" className="nav-item nav-link">
                       Plans
+                    </a>
+                    <a href="#sessions" className="nav-item nav-link">
+                      Upcoming Sessions
+                    </a>
+                    <a href="#footer" className="nav-item nav-link">
+                      Contact Us
                     </a>
                   </div>
                   <a
@@ -277,7 +278,7 @@ const OwnerLogin = () => {
         </div>
         {/* Carousel End */}
         {/* About Start */}
-        <div className="container-fluid p-4">
+        <div id="about" className="container-fluid p-4">
           <div className="row gx-5">
             <div
               className="col-lg-5 mb-5 mb-lg-0"
@@ -306,67 +307,7 @@ const OwnerLogin = () => {
                 atmosphere, Helios 24X7 stands as the pinnacle of
                 fitness in Bareilly.
               </p>
-              <div className="rounded bg-dark p-5">
-                <ul className="nav nav-pills d-flex gap-2 flex-sm-row flex-column justify-content-between mb-3">
-                  <li className="nav-item w-50 d-none d-sm-flex">
-                    <a
-                      className="nav-link text-uppercase text-center w-100 active"
-                      data-bs-toggle="pill"
-                      href="#pills-1"
-                    >
-                      About Us
-                    </a>
-                  </li>
-                  <li className="nav-item w-100 d-flex d-sm-none">
-                    <a
-                      className="nav-link text-uppercase text-center w-100 active"
-                      data-bs-toggle="pill"
-                      href="#pills-1"
-                    >
-                      About Us
-                    </a>
-                  </li>
-                  <li className="nav-item w-50 d-none d-sm-flex">
-                    <a
-                      className="nav-link text-uppercase text-center w-100"
-                      data-bs-toggle="pill"
-                      href="#pills-2"
-                    >
-                      Why Choose Us
-                    </a>
-                  </li>
-                  <li className="nav-item w-100 d-flex d-sm-none">
-                    <a
-                      className="nav-link text-uppercase text-center w-100"
-                      data-bs-toggle="pill"
-                      href="#pills-2"
-                    >
-                      Why Choose Us
-                    </a>
-                  </li>
-                </ul>
-                <div className="tab-content">
-                  <div className="tab-pane fade show active" id="pills-1">
-                    <p className="text-secondary mb-0">
-                      Helios 24X7 isn't just a gym; it's a lifestyle. Step into
-                      a world where fitness knows no bounds, where the pursuit
-                      of excellence is a 24/7 endeavor. With our commitment to
-                      providing unparalleled service, cutting-edge equipment,
-                      and a vibrant atmosphere, Helios 24X7 stands as the
-                      pinnacle of fitness in Bareilly.
-                    </p>
-                  </div>
-                  <div className="tab-pane fade" id="pills-2">
-                    <p className="text-secondary mb-0">
-                      + 24/7 Access <br />
-                      + International Standard Equipment <br />
-                      + Elite Trainers <br />
-                      + Cutting-Edge Technology <br />
-                      + Vibrant Community Atmosphere <br />
-                    </p>
-                  </div>
-                </div>
-              </div>
+              <AboutUs />
             </div>
           </div>
         </div>
@@ -517,6 +458,9 @@ const OwnerLogin = () => {
 
           <TrainerCarousel />
         </div>
+
+        <PlanCarousel />
+
         {/* Team End */}
         {/* Testimonial Start */}
         <div className="container-fluid p-0 my-5">
@@ -524,9 +468,10 @@ const OwnerLogin = () => {
             <div className="col-lg-6" style={{ minHeight: "500px" }}>
               <div className="position-relative h-100">
                 <img
-                  className="position-absolute w-100 h-100"
-                  src={lp7}
+                  src={lp13}
+                  alt="client"
                   style={{ objectFit: "cover" }}
+                  className="position-absolute w-100 h-100"
                 />
               </div>
             </div>
@@ -583,10 +528,10 @@ const OwnerLogin = () => {
                     />
                     <div className="ps-4">
                       <h5 className="text-uppercase text-light">
-                        Tanya Gangwar's
+                        Tanya Gangwar
                       </h5>
                       <span className="text-uppercase text-secondary">
-                        College Student
+                        Clothing Brand Owner
                       </span>
                     </div>
                   </div>
@@ -595,7 +540,7 @@ const OwnerLogin = () => {
             </div>
           </div>
         </div>
-        <PlanCarousel />
+
         <div
           id="footer"
           className="container-fluid bg-dark text-secondary px-5 mt-5"
@@ -615,17 +560,22 @@ const OwnerLogin = () => {
                   </div>
                   <div className="d-flex mb-2">
                     <i className="bi bi-envelope-open text-primary me-2" />
-                    <p className="mb-0">+91 8218603083</p>
+                    <a className="mb-0" href="tel:8218603083">
+                      +91 8218603083
+                    </a>
                   </div>
                   <div className="d-flex mb-2">
                     <i className="bi bi-telephone text-primary me-2" />
-                    <p className="mb-0">+91 7983411035</p>
+                    <a className="mb-0" href="tel:7983411035">
+                      +91 7983411035
+                    </a>
                   </div>
                   <div className="d-flex mt-4">
                     <a
                       className="btn btn-primary btn-square rounded-circle"
                       target="_blank"
                       href="https://www.instagram.com/helios_gym.24x7?igsh=MXZzajk5d2ZoM3Z3"
+                      rel="noreferrer"
                     >
                       <i className="fab fa-instagram" />
                     </a>
@@ -634,19 +584,17 @@ const OwnerLogin = () => {
               </div>
             </div>
             <div className="col-lg-4 col-md-6">
-              <div className="d-flex flex-column align-items-center justify-content-center text-center h-100 bg-primary p-5">
+              <div className="d-flex flex-column align-items-center justify-content-center text-center h-100 bg-primary p-3">
                 <h4 className="text-uppercase text-white mb-4">Helios24X7</h4>
                 <h6 className="text-uppercase text-white mb-4">
                   Subscribe Helios24X7
                 </h6>
-                {/*    <p className="text-light">
-                 
-                </p> */}
+
                 <form onSubmit={handleWalkinCreate} style={{ width: "70%" }}>
                   <div className="d-flex flex-column gap-2">
                     <input
                       type="text"
-                      className="form-control border-white p-3"
+                      className="form-control border-white p-3 w-full"
                       placeholder="Your Mobile"
                       value={mobile}
                       onChange={(e) => setMobile(e.target.value)}
@@ -654,7 +602,7 @@ const OwnerLogin = () => {
                     />
                     <input
                       type="text"
-                      className="form-control border-white p-3"
+                      className="form-control border-white p-3 w-full"
                       placeholder="Your Full Name"
                       value={name}
                       onChange={(e) => setName(e.target.value)}

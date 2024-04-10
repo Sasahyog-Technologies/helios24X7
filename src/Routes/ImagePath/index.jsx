@@ -21,6 +21,7 @@ export { default as lp11 } from "../../assets/img/testimonial-2.jpg";
 export { default as lp12 } from "../../assets/img/testimonial-2.jpg";
 export { default as stlogo } from "../../assets/img/st2.png";
 export { default as helios_banner } from "../../assets/img/helios-banner.jpg";
+export { default as lp13 } from "../../assets/img/rope-boy.png";
 
 export { default as headerlogo } from "../../assets/img/logo.svg";
 export { default as Applogo } from "../../assets/img/logo2.png";

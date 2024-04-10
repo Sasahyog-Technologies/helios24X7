@@ -22,7 +22,7 @@ const TrainerCarousel = () => {
   });
 
   var settings = {
-    dots: true,
+    dots: false,
     infinite: true,
     speed: 500,
     slidesToShow: 3,
@@ -65,7 +65,7 @@ const TrainerCarousel = () => {
             {isFetched &&
               data?.map((item, idx) => {
                 return (
-                  <div className="col-lg-4 col-md-6 p-2 " key={idx}>
+                  <div className="col-lg-4 col-md-6 p-2 border" key={idx}>
                     <div className="team-item position-relative">
                       <div className="position-relative overflow-hidden rounded">
                         <img
@@ -74,10 +74,10 @@ const TrainerCarousel = () => {
                           src={item?.profile?.url}
                         />
                         <div className="team-overlay">
-                          <div className="d-flex align-items-center justify-content-start">
+                          <div className="d-flex align-items-center justify-content-center">
                             <a
-                              className="btn btn-light btn-square rounded-circle mx-1 d-flex align-items-center justify-content-between"
-                              href="#"
+                              className="btn btn-light btn-square rounded-circle d-flex align-items-center justify-content-center"
+                              href={item?.social_link}
                             >
                               <i className="la la-instagram" />
                             </a>
