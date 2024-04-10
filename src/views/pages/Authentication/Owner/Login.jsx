@@ -1,37 +1,19 @@
-/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable jsx-a11y/alt-text */
 /* eslint-disable no-unused-vars */
-import React, { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { helios_banner, hlogo } from "../../../../Routes/ImagePath";
-import { image_01, img_2, img_3, img_4 } from "../../../../Routes/ImagePath";
-
-import {
-  Applogo,
-  lp10,
-  lp4,
-  lp5,
-  lp6,
-  lp7,
-  lp8,
-  lp9,
-} from "../../../../Routes/ImagePath";
-import { Controller, useForm } from "react-hook-form";
-import * as Yup from "yup";
-import { yupResolver } from "@hookform/resolvers/yup/dist/yup.js";
-import { useDispatch } from "react-redux";
-import { login } from "../../../../user";
-import { resetFunctionwithlogin } from "../../../../components/ResetFunction";
-
-import request from "../../../../sdk/functions";
+/* eslint-disable jsx-a11y/anchor-is-valid */
+/* eslint-disable react-hooks/exhaustive-deps */
 import "../../../../assets/css/lp.css";
-import AboutUs from "./About";
 
-import { lp1, lp2, lp3 } from "../../../../Routes/ImagePath";
-import { useQuery } from "@tanstack/react-query";
-import TrainerCarousel from "./TrainerCarousel";
+import AboutUs from "./About";
 import Events from "./Events";
-import PlanCarousel from "./PlanCarousel";
 import toast from "react-hot-toast";
+import React, { useState } from "react";
+import PlanCarousel from "./PlanCarousel";
+import TrainerCarousel from "./TrainerCarousel";
+import { useQuery } from "@tanstack/react-query";
+import request from "../../../../sdk/functions";
+import { lp7, lp8, lp9, lp1 } from "../../../../Routes/ImagePath";
+import { helios_banner, hlogo } from "../../../../Routes/ImagePath";
 
 const OwnerLogin = () => {
   const [mobile, setMobile] = useState("");
@@ -139,6 +121,7 @@ const OwnerLogin = () => {
                       className="btn btn-light btn-square rounded-circle me-2"
                       href="https://www.instagram.com/helios_gym.24x7?igsh=MXZzajk5d2ZoM3Z3"
                       target="_blank"
+                      rel="noreferrer"
                     >
                       <i className="fab fa-instagram" />
                     </a>
@@ -620,17 +603,22 @@ const OwnerLogin = () => {
                   </div>
                   <div className="d-flex mb-2">
                     <i className="bi bi-envelope-open text-primary me-2" />
-                    <p className="mb-0">+91 8218603083</p>
+                    <a className="mb-0" href="tel:8218603083">
+                      +91 8218603083
+                    </a>
                   </div>
                   <div className="d-flex mb-2">
                     <i className="bi bi-telephone text-primary me-2" />
-                    <p className="mb-0">+91 7983411035</p>
+                    <a className="mb-0" href="tel:7983411035">
+                      +91 7983411035
+                    </a>
                   </div>
                   <div className="d-flex mt-4">
                     <a
                       className="btn btn-primary btn-square rounded-circle"
                       target="_blank"
                       href="https://www.instagram.com/helios_gym.24x7?igsh=MXZzajk5d2ZoM3Z3"
+                      rel="noreferrer"
                     >
                       <i className="fab fa-instagram" />
                     </a>
@@ -644,9 +632,7 @@ const OwnerLogin = () => {
                 <h6 className="text-uppercase text-white mb-4">
                   Subscribe Helios24X7
                 </h6>
-                {/*    <p className="text-light">
-                 
-                </p> */}
+
                 <form onSubmit={handleWalkinCreate} style={{ width: "70%" }}>
                   <div className="d-flex flex-column gap-2">
                     <input
