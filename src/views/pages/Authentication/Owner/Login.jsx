@@ -129,7 +129,7 @@ const OwnerLogin = () => {
                   <div className="h-100 d-inline-flex align-items-center py-2">
                     <i className="fa fa-phone-alt text-primary me-2" />
                     <h6 className="mb-0">
-                      <a href="917983411035">+91 7983411035</a>
+                      <a href="tel:917983411035">+91 7983411035</a>
                     </h6>
                   </div>
                 </div>
