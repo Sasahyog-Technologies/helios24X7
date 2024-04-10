@@ -81,7 +81,7 @@ const ClientBodyDetails = ({ userId }) => {
                       </label>
                       <input
                         className="form-control"
-                        type="text"
+                        type="number"
                         required
                         {...register("weight", { required: true })}
                       />
@@ -92,7 +92,7 @@ const ClientBodyDetails = ({ userId }) => {
                       <label className="col-form-label">Height (cm)</label>
                       <input
                         className="form-control"
-                        type="text"
+                        type="number"
                         {...register("height")}
                       />
                     </div>
@@ -102,7 +102,7 @@ const ClientBodyDetails = ({ userId }) => {
                       <label className="col-form-label">BMR (cal/day)</label>
                       <input
                         className="form-control"
-                        type="text"
+                        type="number"
                         {...register("bmr")}
                       />
                     </div>
@@ -112,7 +112,7 @@ const ClientBodyDetails = ({ userId }) => {
                       <label className="col-form-label">Chest (cm)</label>
                       <input
                         className="form-control"
-                        type="text"
+                        type="number"
                         {...register("chest")}
                       />
                     </div>
@@ -122,7 +122,7 @@ const ClientBodyDetails = ({ userId }) => {
                       <label className="col-form-label">Hip (cm)</label>
                       <input
                         className="form-control"
-                        type="text"
+                        type="number"
                         {...register("hip")}
                       />
                     </div>
@@ -132,7 +132,7 @@ const ClientBodyDetails = ({ userId }) => {
                       <label className="col-form-label">Biceps (cm)</label>
                       <input
                         className="form-control"
-                        type="text"
+                        type="number"
                         {...register("biceps")}
                       />
                     </div>
@@ -142,7 +142,7 @@ const ClientBodyDetails = ({ userId }) => {
                       <label className="col-form-label">Calf (cm)</label>
                       <input
                         className="form-control"
-                        type="text"
+                        type="number"
                         {...register("calf")}
                       />
                     </div>
@@ -152,7 +152,7 @@ const ClientBodyDetails = ({ userId }) => {
                       <label className="col-form-label">Weist (cm)</label>
                       <input
                         className="form-control"
-                        type="text"
+                        type="number"
                         {...register("weist")}
                       />
                     </div>
@@ -162,7 +162,7 @@ const ClientBodyDetails = ({ userId }) => {
                       <label className="col-form-label">Neck (cm)</label>
                       <input
                         className="form-control"
-                        type="text"
+                        type="number"
                         {...register("neck")}
                       />
                     </div>
