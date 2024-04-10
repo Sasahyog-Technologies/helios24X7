@@ -1,19 +1,22 @@
 import toast from "react-hot-toast";
-import { useForm } from "react-hook-form";
+import { useForm,Controller } from "react-hook-form";
 import request from "../../../sdk/functions";
 import { Refresh } from "../../../utils/refresh";
 import React, { useState } from "react";
 import { InvoiceNumberGenerator } from "../../../utils/invoiceNumberGenerate";
+import Select from "react-select";
+import { paymentTypeOptions } from "../../../utils";
 
 const formDataDefaultValues = {
   paid: "",
   outstanding: 0,
+  paymentType: "",
 };
 
 const PayOutstanding = ({ subscription }) => {
   const [loading, setLoading] = useState(false);
 
-  const { register, handleSubmit } = useForm({
+  const { register, handleSubmit,control,setValue } = useForm({
     defaultValues: formDataDefaultValues,
   });
 
@@ -24,6 +27,7 @@ const PayOutstanding = ({ subscription }) => {
         data: {
           paid: parseInt(subscription.paid) + parseInt(data.paid),
           outstanding: data?.outstanding,
+          payment_type: data.paymentType,
         },
       });
 
@@ -35,6 +39,7 @@ const PayOutstanding = ({ subscription }) => {
           user: subscription.user.data.id,
           outstanding: data.outstanding || null,
           payment_date: new Date().toISOString(),
+          payment_type: data.paymentType,
         },
       });
       await request.create("invoice", {
@@ -107,6 +112,32 @@ const PayOutstanding = ({ subscription }) => {
                         type="number"
                         required
                         {...register("outstanding")}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="col-sm-6">
+                    <div className="input-block mb-3">
+                      <label className="col-form-label">
+                        Payment Type<span className="text-danger">*</span>
+                      </label>
+                      <Controller
+                        name="plan"
+                        control={control}
+                        render={({ onChange, value, ref }) => (
+                          <Select
+                            options={paymentTypeOptions}
+                            placeholder="Select"
+                            value={paymentTypeOptions.find(
+                              (c) => c.value === value
+                            )}
+                            onChange={(val) =>
+                              setValue("paymentType", val.value)
+                            }
+                            required
+                          />
+                        )}
+                        rules={{ required: true }}
                       />
                     </div>
                   </div>

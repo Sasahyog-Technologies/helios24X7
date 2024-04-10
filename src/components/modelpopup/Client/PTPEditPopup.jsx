@@ -72,7 +72,7 @@ const PtpEditPopup = ({ ptpId }) => {
       });
 
       console.log(data);
-      toast.success("PTP created");
+      toast.success("PTP updated");
       Refresh();
     } catch (error) {
       // toast.error(error.response.data.error.message, { duration: 4000 });

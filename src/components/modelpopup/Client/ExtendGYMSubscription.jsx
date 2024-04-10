@@ -61,6 +61,7 @@ const ExtendGYMSubscriptionPopup = ({ userId, activeGYMPlanEndDate }) => {
           amount: data.paid,
           outstanding: data.outstanding || null,
           payment_date: new Date().toISOString(),
+          payment_type: data.paymentType,
           status: "success",
         },
       });

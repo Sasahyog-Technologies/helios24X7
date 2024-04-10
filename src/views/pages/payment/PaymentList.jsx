@@ -46,6 +46,11 @@ const PaymentList = () => {
       ),
     },
     {
+      title: "Payment Type",
+      dataIndex: "payment_type",
+      render: (text, record) => <span>{text}</span>,
+    },
+    {
       title: "Status",
       dataIndex: "status",
       render: (text, record) => <span>{text}</span>,
@@ -169,6 +174,10 @@ const PaymentList = () => {
                     {format(new Date(record?.payment_date), "dd/MM/yyyy")}
                   </span>
                 </span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Payment Type </span>
+                <span>{record?.payment_type}</span>
               </div>
               <div className="d-flex justify-content-between">
                 <span className="fw-bold fs-6">Status </span>

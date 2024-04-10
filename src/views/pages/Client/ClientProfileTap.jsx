@@ -173,6 +173,8 @@ const ClientProfileTab = ({
               <PersonalTrainingStatus
                 ptp={ptp?.at(0)}
                 setActivePlanEndDate={setActivePlanEndDate}
+                userId={userId}
+                activePlanEndDate={activePlanEndDate}
               />
             )}
           </div>
@@ -199,9 +201,10 @@ const ClientProfileTab = ({
                     <Tooltip />
                     <Legend />
 
-                    {chatLines.map((k) => {
+                    {chatLines.map((k, idx) => {
                       return (
                         <Line
+                          key={idx}
                           fill={k.fill}
                           dot={{ r: 3 }}
                           type="monotone"
@@ -225,13 +228,6 @@ const ClientProfileTab = ({
         <ClientEditPopup userId={userId} />
         <ClientBodyDetails userId={userId} />
         <CreateSubscriptionPopup userId={userId} />
-
-        <ExtendPTPSubscriptionPopup
-          userId={userId}
-          activePlanEndDate={activePlanEndDate}
-          setActivePlanEndDate={setActivePlanEndDate}
-          ptpId={ptp && ptp?.length ? ptp[0]?.id : ""}
-        />
         <ExtendGYMSubscriptionPopup
           userId={userId}
           activeGYMPlanEndDate={activeGYMPlanEndDate}
@@ -243,7 +239,12 @@ const ClientProfileTab = ({
 
 export default ClientProfileTab;
 
-const PersonalTrainingStatus = ({ setActivePlanEndDate, ptp }) => {
+const PersonalTrainingStatus = ({
+  setActivePlanEndDate,
+  ptp,
+  userId,
+  activePlanEndDate,
+}) => {
   const isPaymentOutStanding =
     parseInt(ptp?.subscription?.at(0)?.outstanding ?? 0) > 0;
   return (
@@ -318,7 +319,7 @@ const PersonalTrainingStatus = ({ setActivePlanEndDate, ptp }) => {
                           to="#"
                           data-bs-targe
                           data-bs-toggle="modal"
-                          t="#extend_subscription"
+                          data-bs-target="#extend_subscription"
                           className="btn btn-info"
                           onClick={() =>
                             setActivePlanEndDate(ptp.subscription[0].end)
@@ -365,6 +366,12 @@ const PersonalTrainingStatus = ({ setActivePlanEndDate, ptp }) => {
         )}
       </div>
       <PtpEditPopup ptpId={ptp?.id} />
+      <ExtendPTPSubscriptionPopup
+        userId={userId}
+        activePlanEndDate={activePlanEndDate}
+        setActivePlanEndDate={setActivePlanEndDate}
+        ptpId={ptp?.id}
+      />
     </div>
   );
 };

@@ -8,11 +8,13 @@ import DatePicker from "react-datepicker";
 import TimePicker from "react-time-picker";
 import { calculateEndDate } from "../../../utils/calculateEndDate";
 import { InvoiceNumberGenerator } from "../../../utils/invoiceNumberGenerate";
+import { paymentTypeOptions } from "../../../utils";
 
 const formDataDefaultValues = {
   plan: "",
   paid: "",
   outstanding: 0,
+  paymentType: "",
 };
 
 const CreateSubscriptionPopup = ({ userId }) => {
@@ -44,7 +46,7 @@ const CreateSubscriptionPopup = ({ userId }) => {
           outstanding: data.outstanding || null,
           start: startDate,
           end: calculateEndDate(startDate, planDuration),
-          payment_type: "cash",
+          payment_type: data.paymentType,
           type: "gym-subscription",
         },
       });
@@ -56,6 +58,7 @@ const CreateSubscriptionPopup = ({ userId }) => {
           outstanding: data.outstanding || null,
           payment_date: new Date().toISOString(),
           status: "success",
+          payment_type: data.paymentType,
         },
       });
       await request.create("invoice", {
@@ -173,6 +176,31 @@ const CreateSubscriptionPopup = ({ userId }) => {
                             placeholder="Select"
                             value={planOptions.find((c) => c.value === value)}
                             onChange={(val) => setValue("plan", val.value)}
+                            required
+                          />
+                        )}
+                        rules={{ required: true }}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="input-block mb-3">
+                      <label className="col-form-label">
+                        Payment Type<span className="text-danger">*</span>
+                      </label>
+                      <Controller
+                        name="plan"
+                        control={control}
+                        render={({ onChange, value, ref }) => (
+                          <Select
+                            options={paymentTypeOptions}
+                            placeholder="Select"
+                            value={paymentTypeOptions.find(
+                              (c) => c.value === value
+                            )}
+                            onChange={(val) =>
+                              setValue("paymentType", val.value)
+                            }
                             required
                           />
                         )}

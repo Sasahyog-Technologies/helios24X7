@@ -38,7 +38,7 @@ const ExtendPTPSubscriptionPopup = ({
 
   const onSubmit = async (data) => {
     //if (!activePlanEndDate) return null;
-
+   
     const endDate = calculateEndDate(activePlanEndDate, data.duration);
     try {
       setLoading(true);
@@ -62,6 +62,7 @@ const ExtendPTPSubscriptionPopup = ({
           outstanding: data.outstanding || null,
           payment_date: new Date().toISOString(),
           status: "success",
+          payment_type: data.paymentType,
         },
       });
       await request.create("invoice", {
