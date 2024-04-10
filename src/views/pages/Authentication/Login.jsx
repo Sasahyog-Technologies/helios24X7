@@ -2,7 +2,7 @@ import toast from "react-hot-toast";
 import strapiAxios from "../../../sdk";
 import React, { useState } from "react";
 import { hlogo } from "../../../Routes/ImagePath";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, Navigate } from "react-router-dom";
 import { useSession } from "../../../Hook/useSession";
 
 const routes = {
@@ -10,7 +10,6 @@ const routes = {
   trainer: "/trainer/my-profile",
   client: "/client/my-profile",
   manager: "/manager/my-profile",
-
 };
 
 const TestLogin = () => {
@@ -18,7 +17,13 @@ const TestLogin = () => {
   const [password, setPassword] = useState("");
   const [identifier, setIdentifier] = useState("");
   const [isLoading, setIsloading] = useState(false);
-  const { setUserInfoToCookies } = useSession();
+  const { setUserInfoToCookies, getUserDataToCookie } = useSession();
+
+  const user = getUserDataToCookie();
+  //console.log(user);
+  if (user?.jwt && user?.user) {
+    return <Navigate to={`/${user?.user?.type}/my-profile`} />;
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();

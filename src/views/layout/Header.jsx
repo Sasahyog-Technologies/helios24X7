@@ -163,7 +163,7 @@ const Header = (props) => {
             <button className="dropdown-item btn" onClick={logoutHandler}>
               Logout
             </button>
-            <Link className="dropdown-item" to="#">
+            <Link className="dropdown-item" to={`tel:8218603083`} target="_blank">
               Contact Gym
             </Link>
           </div>
