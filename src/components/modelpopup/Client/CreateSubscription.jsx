@@ -36,6 +36,7 @@ const CreateSubscriptionPopup = ({ userId }) => {
   });
 
   const onSubmit = async (data) => {
+    if (parseInt(data.paid) > parseInt(data.planPrice))
     try {
       setLoading(true);
       const planDuration = plans.find((pt) => pt.id == data.plan)?.attributes

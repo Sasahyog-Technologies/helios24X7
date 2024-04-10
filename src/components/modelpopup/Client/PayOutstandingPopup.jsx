@@ -11,7 +11,7 @@ const formDataDefaultValues = {
   paid: "",
   outstanding: 0,
   paymentType: "",
-  outstandingPrice:0
+  outstandingPrice: 0,
 };
 
 const PayOutstanding = ({ subscription }) => {
@@ -22,46 +22,47 @@ const PayOutstanding = ({ subscription }) => {
   });
 
   const onSubmit = async (data) => {
-    try {
-      setLoading(true);
-      await request.update("subscription", subscription?.id, {
-        data: {
-          paid: parseInt(subscription.paid) + parseInt(data.paid),
-          outstanding: data?.outstanding,
-          payment_type: data.paymentType,
-        },
-      });
+    if (parseInt(data.paid) > parseInt(data.outstandingPrice))
+      try {
+        setLoading(true);
+        await request.update("subscription", subscription?.id, {
+          data: {
+            paid: parseInt(subscription.paid) + parseInt(data.paid),
+            outstanding: data?.outstanding,
+            payment_type: data.paymentType,
+          },
+        });
 
-      let paymentRes = await request.create("payment", {
-        data: {
-          status: "success",
-          amount: data.paid,
-          subscription: subscription?.id,
-          user: subscription.user.data.id,
-          outstanding: data.outstanding || null,
-          payment_date: new Date().toISOString(),
-          payment_type: data.paymentType,
-        },
-      });
-      await request.create("invoice", {
-        data: {
-          amount: data.paid,
-          payment: paymentRes.data.id,
-          subscription: subscription?.id,
-          user: subscription.user.data.id,
-          invoice_number: InvoiceNumberGenerator(),
-          invoice_date: new Date().toISOString(),
-          outstanding: data.outstanding || null,
-        },
-      });
-      toast.success("Subscription created");
-      Refresh();
-    } catch (error) {
-      toast.error(error.response.data.error.message, { duration: 4000 });
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
+        let paymentRes = await request.create("payment", {
+          data: {
+            status: "success",
+            amount: data.paid,
+            subscription: subscription?.id,
+            user: subscription.user.data.id,
+            outstanding: data.outstanding || null,
+            payment_date: new Date().toISOString(),
+            payment_type: data.paymentType,
+          },
+        });
+        await request.create("invoice", {
+          data: {
+            amount: data.paid,
+            payment: paymentRes.data.id,
+            subscription: subscription?.id,
+            user: subscription.user.data.id,
+            invoice_number: InvoiceNumberGenerator(),
+            invoice_date: new Date().toISOString(),
+            outstanding: data.outstanding || null,
+          },
+        });
+        toast.success("Subscription created");
+        Refresh();
+      } catch (error) {
+        toast.error(error.response.data.error.message, { duration: 4000 });
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
   };
   useEffect(() => {
     setValue("outstanding", subscription?.outstanding);
@@ -113,7 +114,6 @@ const PayOutstanding = ({ subscription }) => {
                             }}
                           />
                         )}
-                        rules={{ required: true }}
                       />
                     </div>
                   </div>

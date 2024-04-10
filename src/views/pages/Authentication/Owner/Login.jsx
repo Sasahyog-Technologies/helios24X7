@@ -33,6 +33,7 @@ const OwnerLogin = () => {
           mobile,
           firstname: name.split(" ")[0] || "",
           lastname: name.split(" ")[1] || "",
+          reffered_by: "Website Visitor",
         },
       });
       setMobile("");
