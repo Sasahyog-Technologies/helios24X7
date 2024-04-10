@@ -525,10 +525,10 @@ const OwnerLogin = () => {
                     />
                     <div className="ps-4">
                       <h5 className="text-uppercase text-light">
-                        Tanya Gangwar's
+                        Tanya Gangwar
                       </h5>
                       <span className="text-uppercase text-secondary">
-                        College Student
+                        Clothing Brand Owner
                       </span>
                     </div>
                   </div>
