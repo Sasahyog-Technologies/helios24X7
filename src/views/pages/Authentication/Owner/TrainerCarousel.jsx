@@ -74,10 +74,10 @@ const TrainerCarousel = () => {
                           src={item?.profile?.url}
                         />
                         <div className="team-overlay">
-                          <div className="d-flex align-items-center justify-content-start">
+                          <div className="d-flex align-items-center justify-content-center">
                             <a
-                              className="btn btn-light btn-square rounded-circle mx-1 d-flex align-items-center justify-content-between"
-                              href="#"
+                              className="btn btn-light btn-square rounded-circle d-flex align-items-center justify-content-center"
+                              href={item?.social_link}
                             >
                               <i className="la la-instagram" />
                             </a>

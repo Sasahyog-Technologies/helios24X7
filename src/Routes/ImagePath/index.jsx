@@ -21,7 +21,6 @@ export { default as lp11 } from "../../assets/img/testimonial-2.jpg";
 export { default as lp12 } from "../../assets/img/testimonial-2.jpg";
 export { default as stlogo } from "../../assets/img/st2.png";
 export { default as helios_banner } from "../../assets/img/helios-banner.jpg";
-
 export { default as lp13 } from "../../assets/img/rope-boy.png";
 
 export { default as headerlogo } from "../../assets/img/logo.svg";
@@ -164,4 +163,6 @@ export { default as avatar12 } from "../../assets/img/avatar/avatar-12.jpg";
 export { default as avatar14 } from "../../assets/img/avatar/avatar-14.jpg";
 export { default as avatar15 } from "../../assets/img/avatar/avatar-15.jpg";
 export { default as avatar17 } from "../../assets/img/avatar/avatar-17.jpg";
+export { default as tagUserIcon } from "../../assets/img/icons/tag-user-icon.svg";
+
 export { default as hlogo } from "../../assets/Helios Logos/2.png";
