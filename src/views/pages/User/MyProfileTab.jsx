@@ -19,6 +19,7 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts";
+import { DaysSinceLastUpdate } from "../../../utils/daysSinceLastUpdatedAt";
 
 const chatLines = [
   {
@@ -101,16 +102,21 @@ const MyProfileTab = ({
                 <div className="card-body">
                   <h3 className="card-title">
                     Body Details
-                    <Link
-                      to="#"
-                      className="edit-icon"
-                      data-bs-toggle="modal"
-                      data-bs-target="#edit_body_details"
-                    >
-                      <i className="fa fa-pencil" />
-                    </Link>
+                    {DaysSinceLastUpdate(bodyData?.createdAt) > 7 ? (
+                      <Link
+                        to="#"
+                        className="edit-icon"
+                        data-bs-toggle="modal"
+                        data-bs-target="#edit_body_details"
+                      >
+                        <i className="fa fa-pencil" />
+                      </Link>
+                    ) : (
+                      <p className="text-sm">{`Last Updated ${DaysSinceLastUpdate(
+                        bodyData?.createdAt
+                      )} ago`}</p>
+                    )}
                   </h3>
-
                   <ul className="personal-info">
                     <ListItem
                       title={"Weight"}

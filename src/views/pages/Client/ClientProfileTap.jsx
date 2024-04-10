@@ -21,6 +21,7 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { DaysSinceLastUpdate } from "../../../utils/daysSinceLastUpdatedAt";
 
 const chatLines = [
   {
@@ -103,14 +104,18 @@ const ClientProfileTab = ({
                 <div className="card-body">
                   <h3 className="card-title mb-2">
                     Body Details
-                    <Link
-                      to="#"
-                      className="edit-icon"
-                      data-bs-toggle="modal"
-                      data-bs-target="#edit_body_details"
-                    >
-                      <i className="fa fa-pencil" />
-                    </Link>
+                    {DaysSinceLastUpdate(bodyData?.createdAt) > 7 ? (
+                      <Link
+                        to="#"
+                        className="edit-icon"
+                        data-bs-toggle="modal"
+                        data-bs-target="#edit_body_details"
+                      >
+                        <i className="fa fa-pencil" />
+                      </Link>
+                    ) : (
+                    <p className="text-sm">{`Last Updated ${DaysSinceLastUpdate(bodyData?.createdAt)} ago`}</p>
+                    )}
                   </h3>
 
                   <p className="mb-3 text-xs text-gray">
