@@ -5,7 +5,7 @@ import request from "../../../../../sdk/functions";
 
 const filterer = (data) => {
   const monthIndex = new Date().getMonth() + 1;
-  const j = data.filter((user) => {
+  const j = data?.filter((user) => {
     const bdayMonth = new Date(user?.birthdate).getMonth() + 1;
     console.log(bdayMonth);
     return monthIndex === bdayMonth;
@@ -26,8 +26,6 @@ const InvoiceTable = () => {
         },
       }),
   });
-
-  filterer(data);
 
   const columns = [
     {
@@ -55,17 +53,19 @@ const InvoiceTable = () => {
         <div className="card-header">
           <h3 className="card-title mb-0">This Month Birthdates</h3>
         </div>
-        <div className="card-body">
-          <div className="table-responsive">
-            <Table
-              isLoading={isLoading}
-              dataSource={filterer(data)}
-              columns={columns}
-              pagination={false}
-              rowKey={(record) => record.id}
-            />
+        {!isLoading && (
+          <div className="card-body">
+            <div className="table-responsive">
+              <Table
+                isLoading={isLoading}
+                dataSource={filterer(data)}
+                columns={columns}
+                pagination={false}
+                rowKey={(record) => record.id}
+              />
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
