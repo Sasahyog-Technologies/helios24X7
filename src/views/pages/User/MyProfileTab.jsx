@@ -81,7 +81,6 @@ const MyProfileTab = ({
   ptp,
   userId,
   ptpLoading,
-  bodyDetails,
   subscription,
   bodyTrackings,
   subscriptionLoading,
@@ -115,39 +114,39 @@ const MyProfileTab = ({
                   <ul className="personal-info">
                     <ListItem
                       title={"Weight"}
-                      text={bodyDetails?.weight ?? "unspecified"}
+                      text={bodyData?.weight ?? "unspecified"}
                     />
                     <ListItem
                       title={"Height"}
-                      text={bodyDetails?.height ?? "unspecified"}
+                      text={bodyData?.height ?? "unspecified"}
                     />
                     <ListItem
                       title={"BMR"}
-                      text={bodyDetails?.bmr ?? "unspecified"}
+                      text={bodyData?.bmr ?? "unspecified"}
                     />
                     <ListItem
                       title={"HIP"}
-                      text={bodyDetails?.hip ?? "unspecified"}
+                      text={bodyData?.hip ?? "unspecified"}
                     />
                     <ListItem
                       title={"Neck"}
-                      text={bodyDetails?.neck ?? "unspecified"}
+                      text={bodyData?.neck ?? "unspecified"}
                     />
                     <ListItem
                       title={"Weist"}
-                      text={bodyDetails?.weist ?? "unspecified"}
+                      text={bodyData?.weist ?? "unspecified"}
                     />
                     <ListItem
                       title={"Calf"}
-                      text={bodyDetails?.calf ?? "unspecified"}
+                      text={bodyData?.calf ?? "unspecified"}
                     />
                     <ListItem
                       title={"Chest"}
-                      text={bodyDetails?.chest ?? "unspecified"}
+                      text={bodyData?.chest ?? "unspecified"}
                     />
                     <ListItem
                       title={"Biceps"}
-                      text={bodyDetails?.biceps ?? "unspecified"}
+                      text={bodyData?.biceps ?? "unspecified"}
                     />
                   </ul>
                 </div>
