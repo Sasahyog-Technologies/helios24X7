@@ -12,7 +12,7 @@ import PlanCarousel from "./PlanCarousel";
 import TrainerCarousel from "./TrainerCarousel";
 import { useQuery } from "@tanstack/react-query";
 import request from "../../../../sdk/functions";
-import { lp7, lp8, lp9, lp1 } from "../../../../Routes/ImagePath";
+import { lp7, lp8, lp9, lp1, lp13 } from "../../../../Routes/ImagePath";
 import { helios_banner, hlogo } from "../../../../Routes/ImagePath";
 
 const OwnerLogin = () => {
@@ -293,67 +293,6 @@ const OwnerLogin = () => {
                 fitness in Bareilly.
               </p>
               <AboutUs />
-              {/* <div className="rounded bg-dark p-5">
-                <ul className="nav nav-pills d-flex gap-2 flex-sm-row flex-column justify-content-between mb-3">
-                  <li className="nav-item w-50 d-none d-sm-flex">
-                    <a
-                      className="nav-link text-uppercase text-center w-100 active"
-                      data-bs-toggle="pill"
-                      href="#pills-1"
-                    >
-                      About Us
-                    </a>
-                  </li>
-                  <li className="nav-item w-100 d-flex d-sm-none">
-                    <a
-                      className="nav-link text-uppercase text-center w-100 active"
-                      data-bs-toggle="pill"
-                      href="#pills-1"
-                    >
-                      About Us
-                    </a>
-                  </li>
-                  <li className="nav-item w-50 d-none d-sm-flex">
-                    <a
-                      className="nav-link text-uppercase text-center w-100"
-                      data-bs-toggle="pill"
-                      href="#pills-2"
-                    >
-                      Why Choose Us
-                    </a>
-                  </li>
-                  <li className="nav-item w-100 d-flex d-sm-none">
-                    <a
-                      className="nav-link text-uppercase text-center w-100"
-                      data-bs-toggle="pill"
-                      href="#pills-2"
-                    >
-                      Why Choose Us
-                    </a>
-                  </li>
-                </ul>
-                <div className="tab-content">
-                  <div className="tab-pane fade show active" id="pills-1">
-                    <p className="text-secondary mb-0">
-                      Helios 24X7 isn't just a gym; it's a lifestyle. Step into
-                      a world where fitness knows no bounds, where the pursuit
-                      of excellence is a 24/7 endeavor. With our commitment to
-                      providing unparalleled service, cutting-edge equipment,
-                      and a vibrant atmosphere, Helios 24X7 stands as the
-                      pinnacle of fitness in Bareilly.
-                    </p>
-                  </div>
-                  <div className="tab-pane fade" id="pills-2">
-                    <p className="text-secondary mb-0">
-                      + 24/7 Access <br />
-                      + International Standard Equipment <br />
-                      + Elite Trainers <br />
-                      + Cutting-Edge Technology <br />
-                      + Vibrant Community Atmosphere <br />
-                    </p>
-                  </div>
-                </div>
-              </div> */}
             </div>
           </div>
         </div>
@@ -511,7 +450,7 @@ const OwnerLogin = () => {
             <div className="col-lg-6" style={{ minHeight: "500px" }}>
               <div className="position-relative h-100">
                 <img
-                  src={lp7}
+                  src={lp13}
                   alt="client"
                   style={{ objectFit: "cover" }}
                   className="position-absolute w-100 h-100"
