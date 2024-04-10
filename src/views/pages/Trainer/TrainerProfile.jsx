@@ -8,6 +8,7 @@ import Loading from "../../../components/Loading";
 import ClientAvatar from "../Client/ClientAvatar";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 import TrianerEditPopup from "../../../components/modelpopup/Trainer/TrainerEditPopup";
+import TraineesListOwner from "./TraineesListOwner";
 const TrainerProfile = () => {
   const path = window.location.pathname;
   const userId = path.split("/")[path.split("/").length - 1];
@@ -143,6 +144,8 @@ const TrainerProfile = () => {
                     ptp={clientPTPData}
                   />
                   <AttendenceClient /> */}
+
+                  <TraineesListOwner trainerId={userId} />
                 </>
               ) : (
                 <>

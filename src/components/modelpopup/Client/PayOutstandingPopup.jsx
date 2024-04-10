@@ -1,8 +1,8 @@
 import toast from "react-hot-toast";
-import { useForm,Controller } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import request from "../../../sdk/functions";
 import { Refresh } from "../../../utils/refresh";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { InvoiceNumberGenerator } from "../../../utils/invoiceNumberGenerate";
 import Select from "react-select";
 import { paymentTypeOptions } from "../../../utils";
@@ -11,16 +11,20 @@ const formDataDefaultValues = {
   paid: "",
   outstanding: 0,
   paymentType: "",
+  outstandingPrice: 0,
 };
 
 const PayOutstanding = ({ subscription }) => {
   const [loading, setLoading] = useState(false);
 
-  const { register, handleSubmit,control,setValue } = useForm({
+  const { register, handleSubmit, control, setValue, getValues } = useForm({
     defaultValues: formDataDefaultValues,
   });
 
   const onSubmit = async (data) => {
+    if (parseInt(data.paid) > parseInt(data.outstandingPrice)) {
+      return toast.error("Amount is greater than plan price");
+    }
     try {
       setLoading(true);
       await request.update("subscription", subscription?.id, {
@@ -62,7 +66,10 @@ const PayOutstanding = ({ subscription }) => {
       setLoading(false);
     }
   };
-
+  useEffect(() => {
+    setValue("outstanding", subscription?.outstanding);
+    setValue("outstandingPrice", subscription?.outstanding);
+  }, [subscription]);
   return (
     <>
       <div
@@ -91,13 +98,24 @@ const PayOutstanding = ({ subscription }) => {
                       <label className="col-form-label">
                         Paid <span className="text-danger">*</span>
                       </label>
-                      <input
-                        className="form-control"
-                        type="number"
-                        required
-                        {...register("paid", {
-                          required: "This input is required.",
-                        })}
+                      <Controller
+                        name="paid"
+                        control={control}
+                        render={({ onChange, value, ref }) => (
+                          <input
+                            className="form-control"
+                            value={value}
+                            type="number"
+                            required
+                            onChange={(e) => {
+                              setValue("paid", e.target.value);
+                              setValue(
+                                "outstanding",
+                                getValues("outstandingPrice") - e.target.value
+                              );
+                            }}
+                          />
+                        )}
                       />
                     </div>
                   </div>
@@ -110,7 +128,7 @@ const PayOutstanding = ({ subscription }) => {
                       <input
                         className="form-control"
                         type="number"
-                        required
+                        disabled
                         {...register("outstanding")}
                       />
                     </div>
@@ -137,7 +155,6 @@ const PayOutstanding = ({ subscription }) => {
                             required
                           />
                         )}
-                        rules={{ required: true }}
                       />
                     </div>
                   </div>

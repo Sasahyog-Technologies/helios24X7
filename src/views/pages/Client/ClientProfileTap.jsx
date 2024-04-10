@@ -365,7 +365,7 @@ const PersonalTrainingStatus = ({
                 data-bs-target="#add_ptp"
                 className="btn btn-info"
               >
-                Create Personal Trainer
+                Get Personal Training
               </Link>
             </div>
           </>

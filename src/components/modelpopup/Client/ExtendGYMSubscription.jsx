@@ -15,6 +15,7 @@ const formDataDefaultValues = {
   outstanding: 0,
   duration: "",
   paymentType: "",
+  planPrice: 0,
 };
 
 const ExtendGYMSubscriptionPopup = ({ userId, activeGYMPlanEndDate }) => {
@@ -30,6 +31,7 @@ const ExtendGYMSubscriptionPopup = ({ userId, activeGYMPlanEndDate }) => {
     handleSubmit,
     control,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm({
     defaultValues: formDataDefaultValues,
@@ -37,6 +39,8 @@ const ExtendGYMSubscriptionPopup = ({ userId, activeGYMPlanEndDate }) => {
 
   const onSubmit = async (data) => {
     //if (!activePlanEndDate) return null;
+    if (parseInt(data.paid) > parseInt(data.planPrice))
+      return toast.error("Amount is greater than plan price");
     const planDuration = plans.find((pt) => pt.id == data.plan)?.attributes
       .duration;
     const endDate = calculateEndDate(activeGYMPlanEndDate, planDuration);
@@ -93,6 +97,7 @@ const ExtendGYMSubscriptionPopup = ({ userId, activeGYMPlanEndDate }) => {
       let plansArr = plans?.data?.map((plan) => ({
         value: plan.id,
         label: plan.attributes.title,
+        price: plan.attributes.price,
       }));
       setPlanOptions(plansArr);
     };
@@ -127,11 +132,25 @@ const ExtendGYMSubscriptionPopup = ({ userId, activeGYMPlanEndDate }) => {
                       <label className="col-form-label">
                         Paid <span className="text-danger">*</span>
                       </label>
-                      <input
-                        className="form-control"
-                        type="number"
-                        required
-                        {...register("paid")}
+                      <Controller
+                        name="paid"
+                        control={control}
+                        render={({ onChange, value, ref }) => (
+                          <input
+                            className="form-control"
+                            value={value}
+                            type="number"
+                            required
+                            onChange={(e) => {
+                              setValue("paid", e.target.value);
+                              setValue(
+                                "outstanding",
+                                getValues("planPrice") - e.target.value
+                              );
+                            }}
+                          />
+                        )}
+                        rules={{ required: true }}
                       />
                     </div>
                   </div>
@@ -165,7 +184,14 @@ const ExtendGYMSubscriptionPopup = ({ userId, activeGYMPlanEndDate }) => {
                             options={planOptions}
                             placeholder="Select"
                             value={planOptions.find((c) => c.value === value)}
-                            onChange={(val) => setValue("plan", val.value)}
+                            onChange={(val) => {
+                              setValue("plan", val.value);
+                              setValue("planPrice", parseInt(val.price));
+                              setValue(
+                                "outstanding",
+                                getValues("planPrice") - getValues("paid")
+                              );
+                            }}
                             required
                           />
                         )}
@@ -202,6 +228,7 @@ const ExtendGYMSubscriptionPopup = ({ userId, activeGYMPlanEndDate }) => {
                     <div className="input-block mb-3">
                       <label className="col-form-label">Outstanding</label>
                       <input
+                        disabled
                         className="form-control"
                         type="number"
                         {...register("outstanding")}

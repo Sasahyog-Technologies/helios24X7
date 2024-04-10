@@ -15,6 +15,7 @@ const formDataDefaultValues = {
   paid: "",
   outstanding: 0,
   paymentType: "",
+  planPrice: 0,
 };
 
 const CreateSubscriptionPopup = ({ userId }) => {
@@ -28,12 +29,16 @@ const CreateSubscriptionPopup = ({ userId }) => {
     handleSubmit,
     control,
     setValue,
+    getValues,
     formState: { errors },
   } = useForm({
     defaultValues: formDataDefaultValues,
   });
 
   const onSubmit = async (data) => {
+    if (parseInt(data.paid) > parseInt(data.planPrice)) {
+      return toast.error("Amount is greater than plan price");
+    }
     try {
       setLoading(true);
       const planDuration = plans.find((pt) => pt.id == data.plan)?.attributes
@@ -89,6 +94,7 @@ const CreateSubscriptionPopup = ({ userId }) => {
       let plansArr = plans?.data?.map((plan) => ({
         value: plan.id,
         label: plan.attributes.title,
+        price: plan.attributes.price,
       }));
       setPlanOptions(plansArr);
     };
@@ -124,13 +130,24 @@ const CreateSubscriptionPopup = ({ userId }) => {
                       <label className="col-form-label">
                         Paid <span className="text-danger">*</span>
                       </label>
-                      <input
-                        className="form-control"
-                        type="number"
-                        required
-                        {...register("paid", {
-                          required: "This input is required.",
-                        })}
+                      <Controller
+                        name="paid"
+                        control={control}
+                        render={({ onChange, value, ref }) => (
+                          <input
+                            className="form-control"
+                            value={value}
+                            type="number"
+                            required
+                            onChange={(e) => {
+                              setValue("paid", e.target.value);
+                              setValue(
+                                "outstanding",
+                                getValues("planPrice") - e.target.value
+                              );
+                            }}
+                          />
+                        )}
                       />
                     </div>
                   </div>
@@ -154,16 +171,6 @@ const CreateSubscriptionPopup = ({ userId }) => {
 
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
-                      <label className="col-form-label">Outstanding</label>
-                      <input
-                        className="form-control"
-                        type="number"
-                        {...register("outstanding")}
-                      />
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
                       <label className="col-form-label">
                         Plan<span className="text-danger">*</span>
                       </label>
@@ -175,11 +182,29 @@ const CreateSubscriptionPopup = ({ userId }) => {
                             options={planOptions}
                             placeholder="Select"
                             value={planOptions.find((c) => c.value === value)}
-                            onChange={(val) => setValue("plan", val.value)}
+                            onChange={(val) => {
+                              setValue("plan", val.value);
+                              setValue("planPrice", parseInt(val.price));
+                              setValue(
+                                "outstanding",
+                                getValues("planPrice") - getValues("paid")
+                              );
+                            }}
                             required
                           />
                         )}
                         rules={{ required: true }}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-sm-6">
+                    <div className="input-block mb-3">
+                      <label className="col-form-label">Outstanding</label>
+                      <input
+                        className="form-control"
+                        type="number"
+                        disabled
+                        {...register("outstanding")}
                       />
                     </div>
                   </div>
