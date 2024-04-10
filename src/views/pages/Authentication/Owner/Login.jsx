@@ -149,12 +149,6 @@ const OwnerLogin = () => {
                   id="navbarCollapse"
                 >
                   <div className="navbar-nav mr-auto py-0">
-                    <a href="/login" className="nav-item nav-link">
-                      Login
-                    </a>
-                    <a href="#footer" className="nav-item nav-link">
-                      Join Our Gym
-                    </a>
                     <a href="#about" className="nav-item nav-link">
                       About Us
                     </a>
@@ -175,7 +169,7 @@ const OwnerLogin = () => {
                     href="/login"
                     className="btn btn-primary py-md-3 px-md-5 d-none d-lg-block"
                   >
-                    Join Us
+                    Member Login
                   </a>
                 </div>
               </nav>
@@ -214,10 +208,10 @@ const OwnerLogin = () => {
                         href="/login"
                         className="btn btn-primary py-md-3 px-md-5"
                       >
-                        Join Us
+                        Member Login
                       </a>
                       <a href="#footer" class="btn btn-light py-md-3 px-md-5">
-                        Contact Us
+                        join our gym
                       </a>
                     </div>
                   </div>
@@ -246,10 +240,10 @@ const OwnerLogin = () => {
                         href="/login"
                         className="btn btn-primary py-md-3 px-md-5"
                       >
-                        Join Us
+                        Member Login
                       </a>
                       <a href="#footer" class="btn btn-light py-md-3 px-md-5">
-                        Contact Us
+                        Join our Gym
                       </a>
                     </div>
                   </div>
@@ -587,7 +581,7 @@ const OwnerLogin = () => {
               <div className="d-flex flex-column align-items-center justify-content-center text-center h-100 bg-primary p-3">
                 <h4 className="text-uppercase text-white mb-4">Helios24X7</h4>
                 <h6 className="text-uppercase text-white mb-4">
-                  Subscribe Helios24X7
+                  Drop your number and we will call you back!
                 </h6>
 
                 <form onSubmit={handleWalkinCreate} style={{ width: "70%" }}>
