@@ -149,11 +149,26 @@ const OwnerLogin = () => {
                   id="navbarCollapse"
                 >
                   <div className="navbar-nav mr-auto py-0">
+                    <a href="/login" className="nav-item nav-link">
+                      Login
+                    </a>
+                    <a href="#footer" className="nav-item nav-link">
+                      Join Our Gym
+                    </a>
+                    <a href="#about" className="nav-item nav-link">
+                      About Us
+                    </a>
                     <a href="#trainers" className="nav-item nav-link">
                       Trainers
                     </a>
                     <a href="#plans" className="nav-item nav-link">
                       Plans
+                    </a>
+                    <a href="#sessions" className="nav-item nav-link">
+                      Upcoming Sessions
+                    </a>
+                    <a href="#footer" className="nav-item nav-link">
+                      Contact Us
                     </a>
                   </div>
                   <a
@@ -263,7 +278,7 @@ const OwnerLogin = () => {
         </div>
         {/* Carousel End */}
         {/* About Start */}
-        <div className="container-fluid p-4">
+        <div id="about" className="container-fluid p-4">
           <div className="row gx-5">
             <div
               className="col-lg-5 mb-5 mb-lg-0"

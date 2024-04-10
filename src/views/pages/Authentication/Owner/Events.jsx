@@ -52,7 +52,7 @@ const Events = () => {
   });
 
   return (
-    <div className="container-fluid p-5">
+    <div id="sessions" className="container-fluid p-5">
       <div className="mb-5 text-center">
         <h5 className="text-primary text-uppercase">Activities</h5>
         <h1 className="display-3 text-uppercase mb-0">Events & Sessions</h1>
