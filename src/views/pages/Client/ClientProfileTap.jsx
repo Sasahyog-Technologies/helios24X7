@@ -278,7 +278,7 @@ const PersonalTrainingStatus = ({
                   />
                 </ul>
                 <hr />
-                {ptp?.subscription?.length && (
+                {ptp?.subscription?.length ? (
                   <>
                     <div className="mt-4">
                       <h4>
@@ -310,8 +310,10 @@ const PersonalTrainingStatus = ({
                       </ul>
                     </div>
                   </>
+                ) : (
+                  ""
                 )}
-                {ptp?.subscription?.length && (
+                {ptp?.subscription?.length ? (
                   <>
                     {!isPaymentOutStanding ? (
                       <>
@@ -332,9 +334,11 @@ const PersonalTrainingStatus = ({
                       ""
                     )}
                   </>
+                ) : (
+                  ""
                 )}
 
-                {!ptp?.subscription?.length && (
+                {!ptp?.subscription?.length ? (
                   <Link
                     to="#"
                     data-bs-toggle="modal"
@@ -343,6 +347,8 @@ const PersonalTrainingStatus = ({
                   >
                     Purchase Membership
                   </Link>
+                ) : (
+                  ""
                 )}
               </div>
             </div>

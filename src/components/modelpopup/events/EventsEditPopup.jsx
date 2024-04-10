@@ -205,7 +205,6 @@ const EventEditPopup = ({ eventId }) => {
                         <div className="input-block mb-3">
                           <label className="col-form-label">Image</label>
                           <input
-                            required
                             type="file"
                             accept="image/*"
                             className="form-control"
