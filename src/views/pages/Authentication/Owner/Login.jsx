@@ -24,6 +24,7 @@ import { resetFunctionwithlogin } from "../../../../components/ResetFunction";
 
 import request from "../../../../sdk/functions";
 import "../../../../assets/css/lp.css";
+import AboutUs from "./About";
 
 import { lp1, lp2, lp3 } from "../../../../Routes/ImagePath";
 import { useQuery } from "@tanstack/react-query";
@@ -308,7 +309,8 @@ const OwnerLogin = () => {
                 atmosphere, Helios 24X7 stands as the pinnacle of
                 fitness in Bareilly.
               </p>
-              <div className="rounded bg-dark p-5">
+              <AboutUs />
+              {/* <div className="rounded bg-dark p-5">
                 <ul className="nav nav-pills d-flex gap-2 flex-sm-row flex-column justify-content-between mb-3">
                   <li className="nav-item w-50 d-none d-sm-flex">
                     <a
@@ -368,7 +370,7 @@ const OwnerLogin = () => {
                     </p>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>
@@ -526,9 +528,10 @@ const OwnerLogin = () => {
             <div className="col-lg-6" style={{ minHeight: "500px" }}>
               <div className="position-relative h-100">
                 <img
-                  className="position-absolute w-100 h-100"
                   src={lp7}
+                  alt="client"
                   style={{ objectFit: "cover" }}
+                  className="position-absolute w-100 h-100"
                 />
               </div>
             </div>
