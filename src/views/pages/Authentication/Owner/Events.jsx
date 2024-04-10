@@ -12,7 +12,6 @@ function getSevenDaysList() {
   for (let i = 0; i < 7; i++) {
     const date = new Date(currentDate);
     date.setDate(currentDate.getDate() + i);
-    date.setHours(0, 0, 0, 0);
     daysList.push(date);
   }
 
