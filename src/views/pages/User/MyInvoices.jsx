@@ -16,6 +16,17 @@ const MyInvoices = () => {
 
   const columns = [
     {
+      title: "Date",
+      dataIndex: "invoice_date",
+      render: (text, record) => (
+        <span className="w-100 text-capitalize">
+          <Link to={`/client/invoice-details/${record.id}`}>
+            {text ? format(new Date(text), "dd/MM/yyyy") : ""}
+          </Link>
+        </span>
+      ),
+    },
+    {
       title: "Amount",
       dataIndex: "amount",
       render: (text, record) => (
@@ -36,17 +47,6 @@ const MyInvoices = () => {
       ),
     },
 
-    {
-      title: "Invoice Date",
-      dataIndex: "invoice_date",
-      render: (text, record) => (
-        <span className="w-100 text-capitalize">
-          <Link to={`/client/invoice-details/${record.id}`}>
-            {text ? format(new Date(text), "dd/MM/yyyy") : ""}
-          </Link>
-        </span>
-      ),
-    },
     {
       title: "Invoice Number",
       dataIndex: "invoice_number",
@@ -162,7 +162,7 @@ const MyInvoices = () => {
         <div className="content container-fluid">
           {/* Page Header */}
           <Breadcrumbs
-            maintitle="Invoices"
+            maintitle="My Invoices"
             title="Dashboard"
             subtitle="Invoices"
           />

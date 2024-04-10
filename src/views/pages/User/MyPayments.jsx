@@ -14,6 +14,13 @@ const MyPayments = () => {
 
   const columns = [
     {
+      title: "Date",
+      dataIndex: "payment_date",
+      render: (text, record) => (
+        <span>{text ? format(new Date(text), "dd/MM/yyyy") : ""}</span>
+      ),
+    },
+    {
       title: "Amount",
       dataIndex: "amount",
       render: (text, record) => (
@@ -30,14 +37,14 @@ const MyPayments = () => {
         <span className="w-100">{text ? text : "0"}</span>
       ),
     },
-
     {
-      title: "Payment Date",
-      dataIndex: "payment_date",
+      title: "Payment Type",
+      dataIndex: "payment_type",
       render: (text, record) => (
-        <span>{text ? format(new Date(text), "dd/MM/yyyy") : ""}</span>
+        <span className="w-100">{text}</span>
       ),
     },
+
     {
       title: "Status",
       dataIndex: "status",
@@ -188,7 +195,7 @@ const MyPayments = () => {
         <div className="content container-fluid">
           {/* Page Header */}
           <Breadcrumbs
-            maintitle="Payments"
+            maintitle="My Payments"
             title="Dashboard"
             subtitle="Payments"
           />
