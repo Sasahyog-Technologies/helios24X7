@@ -29,7 +29,7 @@ const AboutUs = () => {
               selected === "choose" && "active"
             )}
           >
-            Why Choose Us
+            Why Us
           </p>
         </li>
       </ul>
