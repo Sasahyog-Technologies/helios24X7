@@ -11,11 +11,14 @@ import ClientAvatar from "../Client/ClientAvatar";
 import Loading from "../../../components/Loading";
 import { useSession } from "../../../Hook/useSession";
 import Breadcrumbs from "../../../components/Breadcrumbs";
+
 const MyProfile = () => {
   const { getUserDataToCookie } = useSession();
   const session = getUserDataToCookie();
   const user = session?.user;
   const userId = user?.id;
+
+  // console.log(user);
 
   const { data: clientData, isLoading: userLoading } = useQuery({
     queryKey: ["client-profile-data"],
@@ -106,7 +109,7 @@ const MyProfile = () => {
             name="Add New"
           />
           <SystemAlert />
-          <MyStatus userId={userId} />
+          {user.type === "client" && <MyStatus userId={userId} />}
           {userLoading ? (
             <>
               <Loading />
@@ -204,7 +207,7 @@ const MyProfile = () => {
                 </>
               ) : (
                 <>
-                  <div>Cleint Not Found</div>
+                  <div>Client Not Found</div>
                 </>
               )}
             </>
