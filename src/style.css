@@ -283,3 +283,31 @@
 .pricing.pricing-info .title a {
   color: #01a5db;
 }
+
+/* Subscription Alerts by deepak */
+
+.s-alert {
+  border-left: 2px red solid;
+  background: rgba(255, 0, 0, 0.214);
+  padding: 15px;
+  color: red;
+  display: flex;
+  gap: 10px;
+}
+
+.s-alert-title {
+  font-size: 11px;
+}
+
+.s2-alert {
+  border-left: 2px rgb(255, 166, 0) solid;
+  background: rgba(255, 166, 0, 0.209);
+  padding: 15px;
+  color: rgb(255, 145, 0);
+  display: flex;
+  gap: 10px;
+}
+
+.s2-alert-title {
+  font-size: 11px;
+}
