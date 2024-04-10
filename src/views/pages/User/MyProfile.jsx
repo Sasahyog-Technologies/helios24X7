@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import React from "react";
 import { format } from "date-fns";
+import MyStatus from "./MyStatus";
 import { Link } from "react-router-dom";
 import MyProfileTab from "./MyProfileTab";
 import request from "../../../sdk/functions";
@@ -10,7 +11,6 @@ import ClientAvatar from "../Client/ClientAvatar";
 import Loading from "../../../components/Loading";
 import { useSession } from "../../../Hook/useSession";
 import Breadcrumbs from "../../../components/Breadcrumbs";
-
 const MyProfile = () => {
   const { getUserDataToCookie } = useSession();
   const session = getUserDataToCookie();
@@ -105,9 +105,8 @@ const MyProfile = () => {
             modal="#add_indicator"
             name="Add New"
           />
-
           <SystemAlert />
-
+          <MyStatus userId={userId} />
           {userLoading ? (
             <>
               <Loading />
