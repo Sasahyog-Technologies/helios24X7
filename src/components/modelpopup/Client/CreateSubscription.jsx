@@ -36,7 +36,9 @@ const CreateSubscriptionPopup = ({ userId }) => {
   });
 
   const onSubmit = async (data) => {
-    if (parseInt(data.paid) > parseInt(data.planPrice))
+    if (parseInt(data.paid) > parseInt(data.planPrice)) {
+      return toast.error("Amount is greater than plan price");
+    }
     try {
       setLoading(true);
       const planDuration = plans.find((pt) => pt.id == data.plan)?.attributes
