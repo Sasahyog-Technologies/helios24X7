@@ -104,7 +104,8 @@ const ClientProfileTab = ({
                 <div className="card-body">
                   <h3 className="card-title mb-2">
                     Body Details
-                    {DaysSinceLastUpdate(bodyData?.createdAt) > 7 ? (
+                    {DaysSinceLastUpdate(bodyData?.createdAt) > 7 ||
+                    !bodyData?.createdAt ? (
                       <Link
                         to="#"
                         className="edit-icon"
@@ -114,7 +115,9 @@ const ClientProfileTab = ({
                         <i className="fa fa-pencil" />
                       </Link>
                     ) : (
-                    <p className="text-sm">{`Last Updated ${DaysSinceLastUpdate(bodyData?.createdAt)} ago`}</p>
+                      <p className="text-sm">{`Last Updated ${DaysSinceLastUpdate(
+                        bodyData?.createdAt
+                      )} ago`}</p>
                     )}
                   </h3>
 

@@ -1,4 +1,5 @@
 export function DaysSinceLastUpdate(lastUpdatedTimestamp) {
+  
   const now = new Date().getTime();
   const lastUpdatedAt = new Date(lastUpdatedTimestamp).getTime();
   const difference = now - lastUpdatedAt;
