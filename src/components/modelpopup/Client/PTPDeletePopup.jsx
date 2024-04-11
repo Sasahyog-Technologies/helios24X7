@@ -1,17 +1,15 @@
-import { useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
-import toast from "react-hot-toast";
 import request from "../../../sdk/functions";
-const TrianerDeletePopup = ({ userId }) => {
+import toast from "react-hot-toast";
+const PTPDeletePopup = ({ ptpId, refetch }) => {
   const [loading, setLoading] = useState(false);
-  const queryClient = useQueryClient();
   const removeHandler = async () => {
     try {
       setLoading(true);
-      const data = await request.remove("users", userId);
-      document.getElementById("trainer-delete-force-close").click();
-      queryClient?.invalidateQueries({ queryKey: ["trainer-list"] });
-      toast.success("Trainer deleted");
+      await request.remove("ptp", ptpId);
+      toast.success("PTP Deleted");
+      document.getElementById("ptp-delete-force-close").click();
+      refetch();
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);
@@ -20,20 +18,20 @@ const TrianerDeletePopup = ({ userId }) => {
     }
   };
   return (
-    <div id="delete_trainer" className="modal custom-modal fade" role="dialog">
+    <div id="delete_ptp" className="modal custom-modal fade" role="dialog">
       <div className="modal-dialog modal-dialog-centered modal-lg">
         <div className="modal-content">
           <div className="modal-header">
             <div>
-              <h5 className="modal-title">Delete Trainer</h5>
-              <p>You really want to delete this trainer</p>
+              <h5 className="modal-title">Delete Ptp</h5>
+              <p>You really want to delete this ptp</p>
             </div>
             <button
+              id="ptp-delete-force-close"
               type="button"
               className="btn-close"
               data-bs-dismiss="modal"
               aria-label="Close"
-              id="trainer-delete-force-close"
             >
               <span aria-hidden="true">×</span>
             </button>
@@ -67,4 +65,4 @@ const TrianerDeletePopup = ({ userId }) => {
   );
 };
 
-export default TrianerDeletePopup;
+export default PTPDeletePopup;

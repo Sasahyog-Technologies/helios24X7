@@ -52,7 +52,7 @@ const TrainerAddPopup = () => {
         gender: data.gender,
         social_link: data.social_link,
       });
-      document.getElementById("force-close").click();
+      document.getElementById("trainer-add-force-close").click();
       queryClient?.invalidateQueries({ queryKey: ["trainer-list"] });
       toast.success("Trainer Created");
     } catch (error) {
@@ -83,7 +83,7 @@ const TrainerAddPopup = () => {
             <div className="modal-header">
               <h5 className="modal-title">Add Trainer</h5>
               <button
-                id="force-close"
+                id="trainer-add-force-close"
                 type="button"
                 className="btn-close"
                 data-bs-dismiss="modal"
