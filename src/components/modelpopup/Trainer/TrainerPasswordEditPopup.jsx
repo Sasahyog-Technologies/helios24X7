@@ -1,9 +1,8 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 import request from "../../../sdk/functions";
-import { Refresh } from "../../../utils/refresh";
 import Loading from "../../Loading";
 
 const userDefaultValues = {
@@ -15,6 +14,7 @@ const TrainerPasswordEditPopup = ({ userId }) => {
   const [userLoading, setUserLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [branchOptions, setBranchOptions] = useState([]);
+  const queryClient = useQueryClient();
   const { register, handleSubmit, reset, control, setValue } = useForm({
     defaultValues: userDefaultValues,
   });
@@ -50,7 +50,8 @@ const TrainerPasswordEditPopup = ({ userId }) => {
         password: data.password,
       });
       toast.success("client password updated");
-      Refresh();
+      document.getElementById("trainer-edit-password-force-close").click();
+      queryClient?.invalidateQueries({ queryKey: ["trainer-list"] });
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);
@@ -65,7 +66,11 @@ const TrainerPasswordEditPopup = ({ userId }) => {
 
   return (
     <>
-      <div id="edit_trainer_password" className="modal custom-modal fade" role="dialog">
+      <div
+        id="edit_trainer_password"
+        className="modal custom-modal fade"
+        role="dialog"
+      >
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content">
             <div className="modal-header">
@@ -75,6 +80,7 @@ const TrainerPasswordEditPopup = ({ userId }) => {
                 className="btn-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
+                id="trainer-edit-password-force-close"
               >
                 <span aria-hidden="true">×</span>
               </button>

@@ -1,11 +1,10 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import toast from "react-hot-toast";
+import Select from "react-select";
 import request from "../../../sdk/functions";
 import Loading from "../../Loading";
-import Select from "react-select";
-import { Refresh } from "../../../utils/refresh";
 const userDefaultValues = {
   firstname: "",
   lastname: "",
@@ -18,6 +17,7 @@ const TrianerEditPopup = ({ userId }) => {
   const [userLoading, setUserLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [branchOptions, setBranchOptions] = useState([]);
+  const queryClient = useQueryClient();
   const { register, handleSubmit, reset, control, setValue } = useForm({
     defaultValues: userDefaultValues,
   });
@@ -56,7 +56,8 @@ const TrianerEditPopup = ({ userId }) => {
         lastname: data.lastname,
         branch: data?.branch,
       });
-      Refresh();
+      document.getElementById("trainer-edit-force-close").click();
+      queryClient?.invalidateQueries({ queryKey: ["trainer-list"] });
       toast.success("Trainer Updated");
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
@@ -94,6 +95,7 @@ const TrianerEditPopup = ({ userId }) => {
                 className="btn-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
+                id="trainer-edit-force-close"
               >
                 <span aria-hidden="true">×</span>
               </button>

@@ -1,16 +1,17 @@
+import { useQueryClient } from "@tanstack/react-query";
 import React, { useState } from "react";
-import request from "../../../sdk/functions";
 import toast from "react-hot-toast";
-import { Refresh } from "../../../utils/refresh";
+import request from "../../../sdk/functions";
 const TrianerDeletePopup = ({ userId }) => {
   const [loading, setLoading] = useState(false);
+  const queryClient = useQueryClient();
   const removeHandler = async () => {
     try {
       setLoading(true);
       const data = await request.remove("users", userId);
-      //  console.log(data);
+      document.getElementById("trainer-delete-force-close").click();
+      queryClient?.invalidateQueries({ queryKey: ["trainer-list"] });
       toast.success("Trainer deleted");
-      Refresh();
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);
@@ -32,6 +33,7 @@ const TrianerDeletePopup = ({ userId }) => {
               className="btn-close"
               data-bs-dismiss="modal"
               aria-label="Close"
+              id="trainer-delete-force-close"
             >
               <span aria-hidden="true">×</span>
             </button>

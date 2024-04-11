@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -15,6 +15,7 @@ const ClientEditPasswordPopup = ({ userId }) => {
   const [userLoading, setUserLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [branchOptions, setBranchOptions] = useState([]);
+  const queryClient = useQueryClient();
   const { register, handleSubmit, reset, control, setValue } = useForm({
     defaultValues: userDefaultValues,
   });
@@ -50,7 +51,8 @@ const ClientEditPasswordPopup = ({ userId }) => {
         password: data.password,
       });
       toast.success("client password updated");
-      Refresh();
+      document.getElementById("client-password-edit-force-close").click();
+      queryClient.invalidateQueries({ queryKey: ["client-list"] });
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);
@@ -65,7 +67,11 @@ const ClientEditPasswordPopup = ({ userId }) => {
 
   return (
     <>
-      <div id="edit_client_password" className="modal custom-modal fade" role="dialog">
+      <div
+        id="edit_client_password"
+        className="modal custom-modal fade"
+        role="dialog"
+      >
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content">
             <div className="modal-header">
@@ -75,6 +81,7 @@ const ClientEditPasswordPopup = ({ userId }) => {
                 className="btn-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
+                id="client-password-edit-force-close"
               >
                 <span aria-hidden="true">×</span>
               </button>
