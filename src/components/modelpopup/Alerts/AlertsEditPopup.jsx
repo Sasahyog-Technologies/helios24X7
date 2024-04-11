@@ -11,7 +11,7 @@ const AlertDefaultValues = {
   link: "",
 };
 
-const AlertsEditPopup = ({ alertId }) => {
+const AlertsEditPopup = ({ alertId, refetch }) => {
   const [AlertLoading, setAlertLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [startDate, setStartDate] = useState(null);
@@ -19,7 +19,7 @@ const AlertsEditPopup = ({ alertId }) => {
   const { register, handleSubmit, reset } = useForm({
     defaultValues: AlertDefaultValues,
   });
-  const { isLoading: alertIsLoading, refetch } = useQuery({
+  const { isLoading: alertIsLoading, refetch: refetchOwn } = useQuery({
     queryKey: ["alert-data"],
     queryFn: async () => {
       setAlertLoading(true);
@@ -45,8 +45,9 @@ const AlertsEditPopup = ({ alertId }) => {
       await request.update("alert", alertId, {
         data: { ...dt, start: startDate, end: endDate },
       });
+      document.getElementById("alert-edit-force-close").click();
+      refetch();
       toast.success("Alert updated");
-      Refresh();
     } catch (error) {
       toast.error(error?.response?.data?.error?.message, { mobile: 4000 });
       console.log(error);
@@ -56,7 +57,7 @@ const AlertsEditPopup = ({ alertId }) => {
   };
 
   useEffect(() => {
-    refetch();
+    refetchOwn();
   }, [alertId, refetch, reset]);
 
   return (
@@ -67,6 +68,7 @@ const AlertsEditPopup = ({ alertId }) => {
             <div className="modal-header">
               <h5 className="modal-title">Edit Alert</h5>
               <button
+                id="alert-edit-force-close"
                 type="button"
                 className="btn-close"
                 data-bs-dismiss="modal"

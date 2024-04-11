@@ -266,9 +266,9 @@ const AlertsList = () => {
           </div>
         </div>
 
-        <AlertsAddPopup />
-        <AlertsEditPopup alertId={alertId} />
-        <AlertsDeletePopup alertId={alertId} />
+        <AlertsAddPopup refetch={refetch} />
+        <AlertsEditPopup refetch={refetch} alertId={alertId} />
+        <AlertsDeletePopup refetch={refetch} alertId={alertId} />
       </div>
     </div>
   );

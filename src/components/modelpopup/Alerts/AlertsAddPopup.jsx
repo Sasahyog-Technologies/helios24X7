@@ -14,10 +14,9 @@ const formDataDefaultValues = {
 
 const AlertsAddPopup = ({ refetch }) => {
   const [loading, setLoading] = useState(false);
-  //const [branchOptions, setBranchOptions] = useState([]);
   const [startDate, setStartDate] = useState(new Date().toISOString());
   const [endDate, setEndDate] = useState(null);
-  const { register, handleSubmit, control, setValue, getValues } = useForm({
+  const { register, handleSubmit } = useForm({
     defaultValues: formDataDefaultValues,
   });
 
@@ -32,8 +31,8 @@ const AlertsAddPopup = ({ refetch }) => {
           end: endDate,
         },
       });
-      // refetch();
-      Refresh();
+      document.getElementById("fc").click();
+      refetch();
       toast.success("Alert Created");
     } catch (error) {
       toast.error(error.response.data.error.message, { start: 4000 });
@@ -51,6 +50,7 @@ const AlertsAddPopup = ({ refetch }) => {
             <div className="modal-header">
               <h5 className="modal-title">Add Alert</h5>
               <button
+                id="fc"
                 type="button"
                 aria-label="Close"
                 className="btn-close"
