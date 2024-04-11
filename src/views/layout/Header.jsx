@@ -160,10 +160,18 @@ const Header = (props) => {
             <Link className="dropdown-item" to={`/${user.type}/my-profile`}>
               My Profile
             </Link>
-            <button className="dropdown-item btn" onClick={logoutHandler}>
+            <button
+              className="dropdown-item btn"
+              style={{ textTransform: "capitalize" }}
+              onClick={logoutHandler}
+            >
               Logout
             </button>
-            <Link className="dropdown-item" to={`tel:8218603083`} target="_blank">
+            <Link
+              className="dropdown-item"
+              to={`tel:8218603083`}
+              target="_blank"
+            >
               Contact Gym
             </Link>
           </div>
@@ -181,15 +189,22 @@ const Header = (props) => {
           <i className="fa fa-ellipsis-v" />
         </Link>
         <div className="dropdown-menu dropdown-menu-end dropdown-menu-right">
-          <Link className="dropdown-item" to="/client/my-profile">
+          <Link className="dropdown-item" to={`/${user.type}/my-profile`}>
             My Profile
           </Link>
           {/*     <Link className="dropdown-item" to="/settings/companysetting">
             Settings
           </Link> */}
-          <button className="dropdown-item btn" onClick={logoutHandler}>
+          <button
+            className="dropdown-item btn"
+            style={{ textTransform: "capitalize" }}
+            onClick={logoutHandler}
+          >
             Logout
           </button>
+          <Link className="dropdown-item" to={`tel:8218603083`} target="_blank">
+            Contact Gym
+          </Link>
         </div>
       </div>
       {/* /Mobile Menu */}
