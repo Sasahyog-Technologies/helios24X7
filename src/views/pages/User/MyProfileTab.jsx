@@ -102,7 +102,8 @@ const MyProfileTab = ({
                 <div className="card-body">
                   <h3 className="card-title">
                     Body Details
-                    {DaysSinceLastUpdate(bodyData?.createdAt) > 7 ? (
+                    {DaysSinceLastUpdate(bodyData?.createdAt) > 7 ||
+                    !bodyData?.createdAt ? (
                       <Link
                         to="#"
                         className="edit-icon"
