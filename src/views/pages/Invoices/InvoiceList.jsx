@@ -330,11 +330,8 @@ const InvoiceList = () => {
           </div>
         </div>
         {/* /Page Content */}
-
-        {/*   <InvoiceDeletePopup InvoiceId={invoiceId}  />
-        <InvoiceEditPopup InvoiceId={invoiceId} /> */}
-        <InvoiceDeletePopup invoiceId={invoiceId} />
-        <InvoiceEditPopup invoiceId={invoiceId} />
+        <InvoiceDeletePopup refetch={refetch} invoiceId={invoiceId} />
+        <InvoiceEditPopup refetch={refetch} invoiceId={invoiceId} />
       </div>
     </div>
   );

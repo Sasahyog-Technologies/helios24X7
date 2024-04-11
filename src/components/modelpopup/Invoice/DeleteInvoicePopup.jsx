@@ -1,16 +1,15 @@
 import React, { useState } from "react";
 import request from "../../../sdk/functions";
 import toast from "react-hot-toast";
-import { Refresh } from "../../../utils/refresh";
-const InvoiceDeletePopup = ({ invoiceId }) => {
+const InvoiceDeletePopup = ({ invoiceId, refetch }) => {
   const [loading, setLoading] = useState(false);
   const removeHandler = async () => {
     try {
       setLoading(true);
-      const data = await request.remove("invoice", invoiceId);
-      //  console.log(data);
-      toast.success("Invoice deleted");
-      Refresh();
+      await request.remove("invoice", invoiceId);
+      toast.success("Invoice Deleted");
+      document.getElementById("invoice-delete-force-close").click();
+      refetch();
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);
@@ -28,6 +27,7 @@ const InvoiceDeletePopup = ({ invoiceId }) => {
               <p>You really want to delete this Invoice</p>
             </div>
             <button
+              id="invoice-delete-force-close"
               type="button"
               className="btn-close"
               data-bs-dismiss="modal"
