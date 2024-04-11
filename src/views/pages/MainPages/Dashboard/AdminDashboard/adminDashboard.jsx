@@ -3,8 +3,9 @@ import Charts from "./charts";
 import InvoiceTable from "./invoiceTable";
 import { useQuery } from "@tanstack/react-query";
 import request from "../../../../../sdk/functions";
-import Breadcrumbs from "../../../../../components/Breadcrumbs";
 import Loading from "../../../../../components/Loading";
+import Breadcrumbs from "../../../../../components/Breadcrumbs";
+
 const AdminDashboard = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["admin-report"],
@@ -77,7 +78,7 @@ const AdminDashboard = () => {
           return (
             accumulator +
             parseInt(
-              currentArray.attributes?.plan?.data?.attributes?.price ?? 0
+              currentArray?.attributes?.plan?.data?.attributes?.price ?? 0
             )
           );
         },
@@ -100,10 +101,6 @@ const AdminDashboard = () => {
     refetchOnWindowFocus: false,
   });
 
-  if (isLoading) {
-    return <Loading />;
-  }
-
   return (
     <div className="main-wrapper">
       <div className="page-wrapper">
@@ -111,58 +108,62 @@ const AdminDashboard = () => {
           {/* Page Header */}
           <Breadcrumbs maintitle="Welcome Admin!" title="Dashboard" />
           {/* /Page Header */}
+          {isLoading && <Loading />}
+          {!isLoading && (
+            <>
+              <div className="row">
+                <Chip
+                  title={"Clients"}
+                  variable={data?.clients}
+                  icon={"dash-widget-icon fa fa-user"}
+                />
 
-          <div className="row">
-            <Chip
-              title={"Clients"}
-              variable={data?.clients}
-              icon={"dash-widget-icon fa fa-user"}
-            />
+                <Chip
+                  title={"Trainers"}
+                  variable={data?.trainers}
+                  icon={"dash-widget-icon fa fa-gem"}
+                />
 
-            <Chip
-              title={"Trainers"}
-              variable={data?.trainers}
-              icon={"dash-widget-icon fa fa-gem"}
-            />
+                <Chip
+                  title={"Branches"}
+                  variable={data?.branches}
+                  icon={"dash-widget-icon fa fa-cubes"}
+                />
 
-            <Chip
-              title={"Branches"}
-              variable={data?.branches}
-              icon={"dash-widget-icon fa fa-cubes"}
-            />
+                <Chip
+                  title={"Subscription"}
+                  variable={data?.subscriptions}
+                  icon={"dash-widget-icon fa fa-cubes"}
+                />
 
-            <Chip
-              title={"Subscription"}
-              variable={data?.subscriptions}
-              icon={"dash-widget-icon fa fa-cubes"}
-            />
+                <Chip
+                  title={"Total Revenue"}
+                  variable={data?.total_revanue}
+                  icon={"dash-widget-icon fa fa-gem"}
+                />
 
-            <Chip
-              title={"Total Revenue"}
-              variable={data?.total_revanue}
-              icon={"dash-widget-icon fa fa-gem"}
-            />
+                <Chip
+                  title={"Invoices"}
+                  variable={data?.invoices}
+                  icon={"dash-widget-icon fa fa-cubes"}
+                />
 
-            <Chip
-              title={"Invoices"}
-              variable={data?.invoices}
-              icon={"dash-widget-icon fa fa-cubes"}
-            />
+                <Chip
+                  title={"Gym Subscription"}
+                  variable={data?.gym_subscription}
+                  icon={"dash-widget-icon fa fa-cubes"}
+                />
 
-            <Chip
-              title={"Gym Subscription"}
-              variable={data?.gym_subscription}
-              icon={"dash-widget-icon fa fa-cubes"}
-            />
-
-            <Chip
-              title={"Trainer Subscription"}
-              variable={data?.trainer_subscription}
-              icon={"dash-widget-icon fa fa-cubes"}
-            />
-          </div>
-          <Charts />
-          <InvoiceTable />
+                <Chip
+                  title={"Trainer Subscription"}
+                  variable={data?.trainer_subscription}
+                  icon={"dash-widget-icon fa fa-cubes"}
+                />
+              </div>
+              <Charts />
+              <InvoiceTable />
+            </>
+          )}
         </div>
       </div>
     </div>
