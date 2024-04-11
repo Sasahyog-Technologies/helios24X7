@@ -88,6 +88,10 @@ const Sidebar = () => {
     setSubmenudrop(!submenuDrop);
   };
 
+  const toggleMobileNavbar = () => {
+    document.body.classList.toggle("slide-nav");
+  };
+
   return (
     <div
       className={`sidebar ${isSidebarExpanded ? "" : "hidden"}`}
@@ -131,8 +135,11 @@ const Sidebar = () => {
                               key={menuIndex + 1}
                               className={pathname == menu.route ? "active" : ""}
                             >
-                              <Link to={menu.route}>
-                                {/* {menu.icon} */}
+                              {/* THIS IS WHAT IS  */}
+                              <Link
+                                onClick={toggleMobileNavbar}
+                                to={menu.route}
+                              >
                                 <i className={menu?.icon} />
                                 <span>{t(menu.menuValue)}</span>
                               </Link>
