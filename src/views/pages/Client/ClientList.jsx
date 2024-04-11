@@ -332,7 +332,7 @@ const ClientList = () => {
           </div>
         </div>
         {/* /Page Content */}
-        <ClientAddPopup refetch={refetch} />
+        <ClientAddPopup />
         <ClientEditPopup userId={userId} />
         <ClientDeletePopup userId={userId} />
         <ClientPasswordEditPopup userId={userId} />
