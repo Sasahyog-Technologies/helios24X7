@@ -12,21 +12,20 @@ import { payementStatusOptions } from "../../../utils";
 const paymentDefaultValues = {
   username: "",
   subscription_type: "",
-  label: "",
   amount: "",
   status: "",
   outstanding: "",
 };
 
-const PaymentEditPopup = ({ paymentId }) => {
+const PaymentEditPopup = ({ paymentId, refetch }) => {
   const [paymentLoading, setpaymentLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [paymentDate, setPaymentDate] = useState(null);
   const { register, handleSubmit, reset, control, setValue } = useForm({
     defaultValues: paymentDefaultValues,
   });
-  const { data: paymentData, refetch } = useQuery({
-    queryKey: ["payment-data"],
+  const { data: paymentData } = useQuery({
+    queryKey: ["payment-data", paymentId],
     queryFn: async () => {
       setpaymentLoading(true);
       if (paymentId) {
@@ -36,8 +35,8 @@ const PaymentEditPopup = ({ paymentId }) => {
         reset({
           amount: res.data.attributes.amount,
           status: res.data.attributes.status,
-          outstanding: res.data.attributes.outstanding,
           label: res.data.attributes.label,
+          outstanding: res.data.attributes.outstanding,
           username: `${res.data.attributes.user.data.attributes.firstname} ${res.data.attributes.user.data.attributes.lastname}`,
           subscription_type: `${res.data.attributes?.subscription?.data?.attributes?.type
             ?.split("-")
@@ -61,18 +60,15 @@ const PaymentEditPopup = ({ paymentId }) => {
         data: { outstanding, status },
       });
       toast.success("Payment updated");
-      Refresh();
+      document.getElementById("payment-edit-force-close").click();
+      refetch();
     } catch (error) {
-      toast.error(error.response.data.error.message, { duration: 4000 });
+      toast.error(error?.response?.data?.error?.message, { duration: 4000 });
       console.log(error);
     } finally {
       setSubmitLoading(false);
     }
   };
-
-  useEffect(() => {
-    refetch();
-  }, [paymentId, refetch, reset]);
 
   return (
     <>
@@ -82,6 +78,7 @@ const PaymentEditPopup = ({ paymentId }) => {
             <div className="modal-header">
               <h5 className="modal-title">Edit Payment</h5>
               <button
+                id="payment-edit-force-close"
                 type="button"
                 className="btn-close"
                 data-bs-dismiss="modal"
@@ -111,22 +108,6 @@ const PaymentEditPopup = ({ paymentId }) => {
                             required
                             disabled
                             {...register("username", {
-                              required: "This input is required.",
-                            })}
-                          />
-                        </div>
-                      </div>
-                      <div className="col-sm-6">
-                        <div className="input-block mb-3">
-                          <label className="col-form-label">
-                            Label <span className="text-danger">*</span>
-                          </label>
-                          <input
-                            className="form-control"
-                            type="text"
-                            required
-                            disabled
-                            {...register("label", {
                               required: "This input is required.",
                             })}
                           />

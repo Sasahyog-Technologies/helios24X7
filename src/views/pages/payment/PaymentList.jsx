@@ -329,8 +329,8 @@ const PaymentList = () => {
         </div>
         {/* /Page Content */}
 
-        <PaymentDeletePopup paymentId={paymentsId} />
-        <PaymentEditPopup paymentId={paymentsId} />
+        <PaymentDeletePopup refetch={refetch} paymentId={paymentsId} />
+        <PaymentEditPopup refetch={refetch} paymentId={paymentsId} />
       </div>
     </div>
   );
