@@ -17,7 +17,7 @@ const planDefaultValues = {
   seleted: "",
 };
 
-const PlanEditPopup = ({ planId }) => {
+const PlanEditPopup = ({ planId, refetch }) => {
   const [planLoading, setplanLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [branchOptions, setBranchOptions] = useState([]);
@@ -33,16 +33,11 @@ const PlanEditPopup = ({ planId }) => {
     },
   ];
 
-  const { register, handleSubmit, reset, control, setValue } =
-    useForm({
-      defaultValues: planDefaultValues,
-    });
-  const {
-    data: planData,
-    isLoading,
-    refetch,
-  } = useQuery({
-    queryKey: ["plan-data"],
+  const { register, handleSubmit, reset, control, setValue } = useForm({
+    defaultValues: planDefaultValues,
+  });
+  const { data: planData, isLoading } = useQuery({
+    queryKey: ["plan-data", planId],
     queryFn: async () => {
       setplanLoading(true);
       if (planId) {
@@ -73,8 +68,9 @@ const PlanEditPopup = ({ planId }) => {
       await request.update("plan", planId, {
         data: { ...dt },
       });
-      toast.success("plan updated");
-      Refresh();
+      toast.success("Plan Created");
+      document.getElementById("plan-edit-force-close").click();
+      refetch();
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);
@@ -82,10 +78,6 @@ const PlanEditPopup = ({ planId }) => {
       setSubmitLoading(false);
     }
   };
-
-  useEffect(() => {
-    refetch();
-  }, [planId, refetch, reset]);
 
   useQuery({
     queryKey: ["fetch-branches"],
@@ -107,6 +99,7 @@ const PlanEditPopup = ({ planId }) => {
             <div className="modal-header">
               <h5 className="modal-title">Edit Plan</h5>
               <button
+                id="plan-edit-force-close"
                 type="button"
                 className="btn-close"
                 data-bs-dismiss="modal"

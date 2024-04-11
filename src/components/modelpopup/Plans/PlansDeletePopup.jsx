@@ -2,14 +2,15 @@ import toast from "react-hot-toast";
 import React, { useState } from "react";
 import request from "../../../sdk/functions";
 import { Refresh } from "../../../utils/refresh";
-const PlansDeletePopup = ({ planId }) => {
+const PlansDeletePopup = ({ planId, refetch }) => {
   const [loading, setLoading] = useState(false);
   const removeHandler = async () => {
     try {
       setLoading(true);
       await request.remove("plan", planId);
-      toast.success("Plan deleted");
-      Refresh();
+      toast.success("Plan Deleted");
+      document.getElementById("plan-delete-force-close").click();
+      refetch();
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);
@@ -27,6 +28,7 @@ const PlansDeletePopup = ({ planId }) => {
               <p>You really want to delete this plan</p>
             </div>
             <button
+              id="plan-delete-force-close"
               type="button"
               className="btn-close"
               data-bs-dismiss="modal"

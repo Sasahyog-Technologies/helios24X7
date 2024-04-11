@@ -271,8 +271,8 @@ const PlansList = () => {
         </div>
         {/* /Page Content */}
         <PlansAddPopup refetch={refetch} />
-        <PlanEditPopup planId={planId} />
-        <PlansDeletePopup planId={planId} />
+        <PlanEditPopup refetch={refetch} planId={planId} />
+        <PlansDeletePopup refetch={refetch} planId={planId} />
       </div>
     </div>
   );
