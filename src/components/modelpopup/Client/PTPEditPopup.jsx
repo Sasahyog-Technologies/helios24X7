@@ -16,7 +16,7 @@ const formDataDefaultValues = {
   trainer: "",
 };
 
-const PtpEditPopup = ({ ptpId }) => {
+const PtpEditPopup = ({ ptpId, refetch }) => {
   const [loading, setLoading] = useState(false);
   const [trainerOptions, setTrainerOptions] = useState([]);
   const [sessionFrom, setSessionFrom] = useState("00:00:00");
@@ -36,10 +36,10 @@ const PtpEditPopup = ({ ptpId }) => {
   const {
     data: ptpData,
     isLoading: ptpIsLoading,
-    refetch,
+
     isRefetching,
   } = useQuery({
-    queryKey: ["ptp-data"],
+    queryKey: ["ptp-data", ptpId],
     queryFn: async () => {
       if (ptpId) {
         const data = await request.findOne("ptp", ptpId, {
@@ -69,10 +69,9 @@ const PtpEditPopup = ({ ptpId }) => {
           session_to: sessionTo,
         },
       });
-
-      console.log(data);
-      toast.success("PTP updated");
-      Refresh();
+      toast.success("PTP Updated");
+      document.getElementById("ptp-edit-force-close").click();
+      refetch();
     } catch (error) {
       // toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);
@@ -98,10 +97,6 @@ const PtpEditPopup = ({ ptpId }) => {
     },
   });
 
-  useEffect(() => {
-    refetch();
-  }, [ptpId, refetch, reset]);
-
   return (
     <>
       <div id="edit_ptp" className="modal custom-modal fade" role="dialog">
@@ -111,6 +106,7 @@ const PtpEditPopup = ({ ptpId }) => {
               <h5 className="modal-paid">Edit PTP</h5>
 
               <button
+                id="ptp-edit-force-close"
                 type="button"
                 className="btn-close"
                 data-bs-dismiss="modal"

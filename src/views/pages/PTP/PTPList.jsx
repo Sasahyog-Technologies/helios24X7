@@ -256,7 +256,7 @@ const PTPList = () => {
           </div>
         </div>
       </div>
-      <PtpEditPopup ptpId={ptpId} />
+      <PtpEditPopup refetch={refetch} ptpId={ptpId} />
     </div>
   );
 };
