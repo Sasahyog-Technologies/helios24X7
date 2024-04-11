@@ -4,7 +4,7 @@ import InvoiceTable from "./invoiceTable";
 import { useQuery } from "@tanstack/react-query";
 import request from "../../../../../sdk/functions";
 import Breadcrumbs from "../../../../../components/Breadcrumbs";
-
+import Loading from "../../../../../components/Loading";
 const AdminDashboard = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["admin-report"],
@@ -41,25 +41,21 @@ const AdminDashboard = () => {
       });
 
       const gym_subscription = await request.findMany("payment", {
-        populate: {
+        populate: ["subscription"],
+        filters: {
           subscription: {
-            filters: {
-              type: "gym-subscription",
-            },
+            type: "gym-subscription",
           },
         },
-        feilds: ["amount"],
       });
 
       const trainer_subscription = await request.findMany("payment", {
-        populate: {
+        populate: ["subscription"],
+        filters: {
           subscription: {
-            filters: {
-              type: "trainer-subscription",
-            },
+            type: "trainer-subscription",
           },
         },
-        feilds: ["amount"],
       });
 
       const gym_subscription_count = gym_subscription?.data?.reduce(
@@ -100,7 +96,13 @@ const AdminDashboard = () => {
         trainer_subscription: trainer_subscription_count,
       };
     },
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
+
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <div className="main-wrapper">
@@ -134,12 +136,6 @@ const AdminDashboard = () => {
               variable={data?.subscriptions}
               icon={"dash-widget-icon fa fa-cubes"}
             />
-
-            {/* <Chip
-              title={"Walk-Ins"}
-              variable={data?.walkin}
-              icon={"dash-widget-icon fa fa-user"}
-            /> */}
 
             <Chip
               title={"Total Revenue"}
