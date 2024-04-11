@@ -102,15 +102,15 @@ const TraineesListOwner = ({ trainerId }) => {
             $or: [
               {
                 firstname: {
-                  $containsi: query.search.split(" ")[0],
+                  $containsi: query?.search?.split(" ")[0],
                 },
                 lastname: {
-                  $containsi: query.search.split(" ")[1] || "",
+                  $containsi: query?.search?.split(" ")[1] || "",
                 },
               },
               {
                 mobile: {
-                  $containsi: query.search,
+                  $containsi: query?.search,
                 },
               },
             ],

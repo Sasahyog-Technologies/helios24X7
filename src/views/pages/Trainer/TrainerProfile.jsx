@@ -11,8 +11,7 @@ import TrianerEditPopup from "../../../components/modelpopup/Trainer/TrainerEdit
 import TraineesListOwner from "./TraineesListOwner";
 const TrainerProfile = () => {
   const path = window.location.pathname;
-  const userId = path.split("/")[path.split("/").length - 1];
-
+  const userId = path?.split("/")[path?.split("/").length - 1];
   const { data: trainerData, isLoading: userLoading } = useQuery({
     queryKey: ["trainer-profile-data"],
     queryFn: async () => {
