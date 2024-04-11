@@ -297,9 +297,9 @@ const EventsList = () => {
         </div>
         {/* /Page Content */}
 
-        <EventEditPopup eventId={eventId} />
-        <EventsAddPopup />
-        <EventsDeletePopup eventId={eventId} />
+        <EventEditPopup refetch={refetch} eventId={eventId} />
+        <EventsAddPopup refetch={refetch} />
+        <EventsDeletePopup refetch={refetch} eventId={eventId} />
       </div>
     </div>
   );

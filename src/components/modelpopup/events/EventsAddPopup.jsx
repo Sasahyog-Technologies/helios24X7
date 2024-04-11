@@ -14,7 +14,7 @@ const formDataDefaultValues = {
   description: "",
 };
 
-const EventsAddPopup = () => {
+const EventsAddPopup = ({ refetch }) => {
   const [file, setFile] = useState();
   const [loading, setLoading] = useState(false);
   const handleImageChange = (e) => {
@@ -29,9 +29,9 @@ const EventsAddPopup = () => {
   });
 
   const onSubmit = async (data) => {
+    console.log(data);
     try {
       setLoading(true);
-
       // Create Event
       const event = await request.create("event", {
         data: {
@@ -57,8 +57,9 @@ const EventsAddPopup = () => {
           body: formData,
         }
       );
-      toast.success("event created");
-      Refresh();
+      toast.success("Event updated");
+      document.getElementById("event-adddd-force-close").click();
+      refetch();
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);
@@ -75,6 +76,7 @@ const EventsAddPopup = () => {
             <div className="modal-header">
               <h5 className="modal-title">Add Events</h5>
               <button
+                id="event-adddd-force-close"
                 type="button"
                 className="btn-close"
                 data-bs-dismiss="modal"
