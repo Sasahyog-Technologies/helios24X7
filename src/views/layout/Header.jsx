@@ -145,7 +145,7 @@ const Header = (props) => {
             onClick={handleProfile}
           >
             {" "}
-            <UserProfile userId={user.id} />
+            <UserProfile userId={user?.id} />
             {/* <span className="user-img me-1">
               <img src={Avatar_02} alt="img" />
               <span className="status online" />
@@ -157,7 +157,7 @@ const Header = (props) => {
               profile ? "show" : ""
             }`}
           >
-            <Link className="dropdown-item" to={`/${user.type}/my-profile`}>
+            <Link className="dropdown-item" to={`/${user?.type}/my-profile`}>
               My Profile
             </Link>
             <button
@@ -189,7 +189,7 @@ const Header = (props) => {
           <i className="fa fa-ellipsis-v" />
         </Link>
         <div className="dropdown-menu dropdown-menu-end dropdown-menu-right">
-          <Link className="dropdown-item" to={`/${user.type}/my-profile`}>
+          <Link className="dropdown-item" to={`/${user?.type}/my-profile`}>
             My Profile
           </Link>
           {/*     <Link className="dropdown-item" to="/settings/companysetting">
