@@ -3,6 +3,7 @@ import Charts from "./charts";
 import InvoiceTable from "./invoiceTable";
 import { useQuery } from "@tanstack/react-query";
 import request from "../../../../../sdk/functions";
+import Loading from "../../../../../components/Loading";
 import Breadcrumbs from "../../../../../components/Breadcrumbs";
 
 const AdminDashboard = () => {
@@ -41,25 +42,21 @@ const AdminDashboard = () => {
       });
 
       const gym_subscription = await request.findMany("payment", {
-        populate: {
+        populate: ["subscription"],
+        filters: {
           subscription: {
-            filters: {
-              type: "gym-subscription",
-            },
+            type: "gym-subscription",
           },
         },
-        feilds: ["amount"],
       });
 
       const trainer_subscription = await request.findMany("payment", {
-        populate: {
+        populate: ["subscription"],
+        filters: {
           subscription: {
-            filters: {
-              type: "trainer-subscription",
-            },
+            type: "trainer-subscription",
           },
         },
-        feilds: ["amount"],
       });
 
       const gym_subscription_count = gym_subscription?.data?.reduce(
@@ -81,7 +78,7 @@ const AdminDashboard = () => {
           return (
             accumulator +
             parseInt(
-              currentArray.attributes?.plan?.data?.attributes?.price ?? 0
+              currentArray?.attributes?.plan?.data?.attributes?.price ?? 0
             )
           );
         },
@@ -100,6 +97,8 @@ const AdminDashboard = () => {
         trainer_subscription: trainer_subscription_count,
       };
     },
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
   });
 
   return (
@@ -109,64 +108,62 @@ const AdminDashboard = () => {
           {/* Page Header */}
           <Breadcrumbs maintitle="Welcome Admin!" title="Dashboard" />
           {/* /Page Header */}
+          {isLoading && <Loading />}
+          {!isLoading && (
+            <>
+              <div className="row">
+                <Chip
+                  title={"Clients"}
+                  variable={data?.clients}
+                  icon={"dash-widget-icon fa fa-user"}
+                />
 
-          <div className="row">
-            <Chip
-              title={"Clients"}
-              variable={data?.clients}
-              icon={"dash-widget-icon fa fa-user"}
-            />
+                <Chip
+                  title={"Trainers"}
+                  variable={data?.trainers}
+                  icon={"dash-widget-icon fa fa-gem"}
+                />
 
-            <Chip
-              title={"Trainers"}
-              variable={data?.trainers}
-              icon={"dash-widget-icon fa fa-gem"}
-            />
+                <Chip
+                  title={"Branches"}
+                  variable={data?.branches}
+                  icon={"dash-widget-icon fa fa-cubes"}
+                />
 
-            <Chip
-              title={"Branches"}
-              variable={data?.branches}
-              icon={"dash-widget-icon fa fa-cubes"}
-            />
+                <Chip
+                  title={"Subscription"}
+                  variable={data?.subscriptions}
+                  icon={"dash-widget-icon fa fa-cubes"}
+                />
 
-            <Chip
-              title={"Subscription"}
-              variable={data?.subscriptions}
-              icon={"dash-widget-icon fa fa-cubes"}
-            />
+                <Chip
+                  title={"Total Revenue"}
+                  variable={data?.total_revanue}
+                  icon={"dash-widget-icon fa fa-gem"}
+                />
 
-            {/* <Chip
-              title={"Walk-Ins"}
-              variable={data?.walkin}
-              icon={"dash-widget-icon fa fa-user"}
-            /> */}
+                <Chip
+                  title={"Invoices"}
+                  variable={data?.invoices}
+                  icon={"dash-widget-icon fa fa-cubes"}
+                />
 
-            <Chip
-              title={"Total Revenue"}
-              variable={data?.total_revanue}
-              icon={"dash-widget-icon fa fa-gem"}
-            />
+                <Chip
+                  title={"Gym Subscription"}
+                  variable={data?.gym_subscription}
+                  icon={"dash-widget-icon fa fa-cubes"}
+                />
 
-            <Chip
-              title={"Invoices"}
-              variable={data?.invoices}
-              icon={"dash-widget-icon fa fa-cubes"}
-            />
-
-            <Chip
-              title={"Gym Subscription"}
-              variable={data?.gym_subscription}
-              icon={"dash-widget-icon fa fa-cubes"}
-            />
-
-            <Chip
-              title={"Trainer Subscription"}
-              variable={data?.trainer_subscription}
-              icon={"dash-widget-icon fa fa-cubes"}
-            />
-          </div>
-          <Charts />
-          <InvoiceTable />
+                <Chip
+                  title={"Trainer Subscription"}
+                  variable={data?.trainer_subscription}
+                  icon={"dash-widget-icon fa fa-cubes"}
+                />
+              </div>
+              <Charts />
+              <InvoiceTable />
+            </>
+          )}
         </div>
       </div>
     </div>
