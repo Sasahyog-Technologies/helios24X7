@@ -40,7 +40,7 @@ const Charts = () => {
         filters: {
           createdAt: {
             $gte: new Date(last7Days.at(0)),
-            // $lte: new Date(last7Days.at(6)),
+            $lte: new Date(last7Days.at(6)),
           },
         },
       });
