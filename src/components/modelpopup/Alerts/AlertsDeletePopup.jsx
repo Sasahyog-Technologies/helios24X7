@@ -1,16 +1,16 @@
+import toast from "react-hot-toast";
 import React, { useState } from "react";
 import request from "../../../sdk/functions";
-import toast from "react-hot-toast";
-import { Refresh } from "../../../utils/refresh";
-const AlertsDeletePopup = ({ alertId }) => {
+
+const AlertsDeletePopup = ({ alertId, refetch }) => {
   const [loading, setLoading] = useState(false);
   const removeHandler = async () => {
     try {
       setLoading(true);
-      const data = await request.remove("alert", alertId);
-      //  console.log(data);
+      await request.remove("alert", alertId);
       toast.success("Alert deleted");
-      Refresh();
+      document.getElementById("alert-delete-force-close").click();
+      refetch();
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);
@@ -28,6 +28,7 @@ const AlertsDeletePopup = ({ alertId }) => {
               <p>You really want to delete this alert</p>
             </div>
             <button
+              id="alert-delete-force-close"
               type="button"
               className="btn-close"
               data-bs-dismiss="modal"

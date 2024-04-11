@@ -16,7 +16,6 @@ const formDataDefaultValues = {
 
 const WalkinsAddPopup = ({ refetch }) => {
   const [loading, setLoading] = useState(false);
-  //const [branchOptions, setBranchOptions] = useState([]);
   const { register, handleSubmit, control, setValue } = useForm({
     defaultValues: formDataDefaultValues,
   });
@@ -32,9 +31,9 @@ const WalkinsAddPopup = ({ refetch }) => {
           reffered_by,
         },
       });
-      // refetch();
-      Refresh();
       toast.success("Walkin Created");
+      document.getElementById("walkin-add-force-close").click();
+      refetch();
     } catch (error) {
       toast.error(error.response.data.error.message, { mobile: 4000 });
       console.log(error);
@@ -42,17 +41,6 @@ const WalkinsAddPopup = ({ refetch }) => {
       setLoading(false);
     }
   };
-  /*   useQuery({
-    queryKey: ["fetch-branch"],
-    queryFn: async () => {
-      let branches = await request.findMany("branch");
-      let branchesArr = branches?.data?.map((branch) => ({
-        value: branch.id,
-        label: branch.attributes.name,
-      }));
-      setBranchOptions(branchesArr);
-    },
-  }); */
 
   return (
     <>
@@ -62,6 +50,7 @@ const WalkinsAddPopup = ({ refetch }) => {
             <div className="modal-header">
               <h5 className="modal-firstname">Add walkin</h5>
               <button
+                id="walkin-add-force-close"
                 type="button"
                 aria-label="Close"
                 className="btn-close"

@@ -1,11 +1,10 @@
-import { ErrorMessage } from "@hookform/error-message";
-import React, { useEffect, useState } from "react";
-import DatePicker from "react-datepicker";
-import { Controller, useForm } from "react-hook-form";
-import toast from "react-hot-toast";
 import Select from "react-select";
+import toast from "react-hot-toast";
+import DatePicker from "react-datepicker";
 import request from "../../../sdk/functions";
-import { Refresh } from "../../../utils/refresh";
+import React, { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
+import { Controller, useForm } from "react-hook-form";
 
 const formDataDefaultValues = {
   firstname: "",
@@ -21,23 +20,17 @@ const formDataDefaultValues = {
 };
 
 const TrainerAddPopup = () => {
-  const [startDate, setStartDate] = useState(Date.now());
+  const queryClient = useQueryClient();
+  const [loading, setLoading] = useState(false);
   const [birthDate, setBirthDate] = useState(null);
   const [branchOptions, setBranchOptions] = useState([]);
-  const [loading, setLoading] = useState(false);
   const genderOptions = [
     { value: "male", label: "Male" },
     { value: "female", label: "Female" },
     { value: "other", label: "Other" },
   ];
 
-  const {
-    register,
-    handleSubmit,
-    control,
-    setValue,
-    formState: { errors },
-  } = useForm({
+  const { register, handleSubmit, control, setValue } = useForm({
     defaultValues: formDataDefaultValues,
   });
 
@@ -59,9 +52,9 @@ const TrainerAddPopup = () => {
         gender: data.gender,
         social_link: data.social_link,
       });
-      //console.log(createRes);
+      document.getElementById("force-close").click();
+      queryClient?.invalidateQueries({ queryKey: ["trainer-list"] });
       toast.success("Trainer Created");
-      Refresh();
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);
@@ -90,6 +83,7 @@ const TrainerAddPopup = () => {
             <div className="modal-header">
               <h5 className="modal-title">Add Trainer</h5>
               <button
+                id="force-close"
                 type="button"
                 className="btn-close"
                 data-bs-dismiss="modal"
@@ -159,23 +153,6 @@ const TrainerAddPopup = () => {
                           />
                         )}
                       />
-                    </div>
-                  </div>
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">
-                        Joining Date <span className="text-danger">*</span>
-                      </label>
-                      <div className="cal-icon">
-                        <DatePicker
-                          selected={startDate}
-                          onChange={(date) => setStartDate(date)}
-                          className="form-control floating datetimepicker"
-                          type="date"
-                          required
-                          dateFormat="dd-MM-yyyy"
-                        />
-                      </div>
                     </div>
                   </div>
                   <div className="col-sm-6">

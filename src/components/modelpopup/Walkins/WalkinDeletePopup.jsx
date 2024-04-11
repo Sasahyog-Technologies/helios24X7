@@ -2,14 +2,15 @@ import toast from "react-hot-toast";
 import React, { useState } from "react";
 import request from "../../../sdk/functions";
 import { Refresh } from "../../../utils/refresh";
-const WalkinsDeletePopup = ({ WalkinId }) => {
+const WalkinsDeletePopup = ({ WalkinId, refetch }) => {
   const [loading, setLoading] = useState(false);
   const removeHandler = async () => {
     try {
       setLoading(true);
       await request.remove("walkin", WalkinId);
       toast.success("Walkin deleted");
-      Refresh();
+      document.getElementById("walkin-delete-force-close").click();
+      refetch();
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);
@@ -31,6 +32,7 @@ const WalkinsDeletePopup = ({ WalkinId }) => {
               className="btn-close"
               data-bs-dismiss="modal"
               aria-label="Close"
+              id="walkin-delete-force-close"
             >
               <span aria-hidden="true">×</span>
             </button>

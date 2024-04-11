@@ -12,14 +12,14 @@ const WalkinDefaultValues = {
   reffered_by: "",
 };
 
-const WalkinEditPopup = ({ WalkinId }) => {
+const WalkinEditPopup = ({ WalkinId, refetch }) => {
   const [WalkinLoading, setWalkinLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   const { register, handleSubmit, reset } = useForm({
     defaultValues: WalkinDefaultValues,
   });
-  const { isLoading: userIsLoading, refetch } = useQuery({
-    queryKey: ["Walkin-data"],
+  const { isLoading: userIsLoading } = useQuery({
+    queryKey: ["Walkin-data", WalkinId],
     queryFn: async () => {
       setWalkinLoading(true);
       if (WalkinId) {
@@ -44,8 +44,10 @@ const WalkinEditPopup = ({ WalkinId }) => {
       await request.update("walkin", WalkinId, {
         data: { ...dt },
       });
-      toast.success("Walkin updated");
-      Refresh()
+
+      toast.success("Walkin Updated");
+      document.getElementById("walkin-edit-force-close").click();
+      refetch();
     } catch (error) {
       toast.error(error.response.data.error.message, { mobile: 4000 });
       console.log(error);
@@ -53,10 +55,6 @@ const WalkinEditPopup = ({ WalkinId }) => {
       setSubmitLoading(false);
     }
   };
-
-  useEffect(() => {
-    refetch();
-  }, [WalkinId, refetch, reset]);
 
   return (
     <>
@@ -66,6 +64,7 @@ const WalkinEditPopup = ({ WalkinId }) => {
             <div className="modal-header">
               <h5 className="modal-firstname">Edit Walkin</h5>
               <button
+                id="walkin-edit-force-close"
                 type="button"
                 className="btn-close"
                 data-bs-dismiss="modal"
