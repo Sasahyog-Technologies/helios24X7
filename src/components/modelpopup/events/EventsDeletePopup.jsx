@@ -37,7 +37,7 @@ const EventsDeletePopup = ({ eventId, refetch }) => {
             </button>
           </div>
           <div className="modal-body">
-            <div className="d-flex justify-content-start gap-5">
+            <div className="d-flex flex-md-row flex-column justify-content-start gap-md-5 gap-2">
               <button
                 className="btn btn-primary submit-btn"
                 // data-bs-dismiss="modal"
