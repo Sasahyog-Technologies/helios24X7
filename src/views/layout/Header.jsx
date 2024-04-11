@@ -130,14 +130,14 @@ const Header = (props) => {
         style={{
           height: "60px",
         }}
-        className="w-full d-flex d-lg-none justify-content-center align-items-center"
+        className="w-full d-flex d-sm-none justify-content-center align-items-center"
       >
         <img style={{ height: "50px", width: "120px" }} src={hlogo} alt="img" />
       </div>
       {/* Header Menu */}
       <ul className="nav user-menu">
         {/* /Message Notifications */}
-        <li className="nav-item dropdown has-arrow main-drop d-flex d-flex justify-content-center align-items-center h-100 pt-2 mr-4">
+        <li className="nav-item dropdown has-arrow main-drop d-flex pt-2 mr-4">
           <Link
             to="#"
             className="dropdown-toggle nav-link"
