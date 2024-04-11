@@ -10,6 +10,7 @@ import { render } from "@testing-library/react";
 import { FormatTime } from "../../../utils/timeFormater";
 import { useMediaQuery } from "usehooks-ts";
 import PtpEditPopup from "../../../components/modelpopup/Client/PTPEditPopup";
+import PTPDeletePopup from "../../../components/modelpopup/Client/PTPDeletePopup";
 
 const PTPList = () => {
   const [ptpId, setPtpId] = useState(null);
@@ -58,6 +59,15 @@ const PTPList = () => {
             >
               <i className="fa fa-pencil m-r-5" /> Edit
             </Link>
+            <Link
+              className="dropdown-item"
+              to="#"
+              data-bs-toggle="modal"
+              data-bs-target="#delete_ptp"
+              onClick={() => setPtpId(ptp?.id)}
+            >
+              <i className="fa fa-trash m-r-5" /> Delete
+            </Link>
           </div>
         </div>
       ),
@@ -93,6 +103,15 @@ const PTPList = () => {
                       onClick={() => setPtpId(record.id)}
                     >
                       <i className="fa fa-pencil m-r-5" /> Edit
+                    </Link>
+                    <Link
+                      className="dropdown-item"
+                      to="#"
+                      data-bs-toggle="modal"
+                      data-bs-target="#delete_ptp"
+                      onClick={() => setPtpId(record.id)}
+                    >
+                      <i className="fa fa-trash m-r-5" /> Delete
                     </Link>
                   </div>
                 </div>
@@ -257,6 +276,7 @@ const PTPList = () => {
         </div>
       </div>
       <PtpEditPopup refetch={refetch} ptpId={ptpId} />
+      <PTPDeletePopup refetch={refetch} ptpId={ptpId} />
     </div>
   );
 };
