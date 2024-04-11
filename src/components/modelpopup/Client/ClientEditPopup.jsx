@@ -1,11 +1,10 @@
-import Select from "react-select";
-import toast from "react-hot-toast";
-import Loading from "../../Loading";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import toast from "react-hot-toast";
+import Select from "react-select";
 import request from "../../../sdk/functions";
-import { Refresh } from "../../../utils/refresh";
-import { useQuery } from "@tanstack/react-query";
-import { useForm, Controller } from "react-hook-form";
+import Loading from "../../Loading";
 
 const userDefaultValues = {
   firstname: "",
@@ -19,6 +18,7 @@ const ClientEditPopup = ({ userId }) => {
   const [userLoading, setUserLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [branchOptions, setBranchOptions] = useState([]);
+  const queryClient = useQueryClient();
   const { register, handleSubmit, reset, control, setValue } = useForm({
     defaultValues: userDefaultValues,
   });
@@ -54,7 +54,8 @@ const ClientEditPopup = ({ userId }) => {
         firstname: data.firstname,
       });
       toast.success("client updated");
-      Refresh();
+      document.getElementById("client-edit-force-close").click();
+      queryClient.invalidateQueries({ queryKey: ["client-list"] });
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);
@@ -91,6 +92,7 @@ const ClientEditPopup = ({ userId }) => {
                 aria-label="Close"
                 className="btn-close"
                 data-bs-dismiss="modal"
+                id="client-edit-force-close"
               >
                 <span aria-hidden="true">×</span>
               </button>

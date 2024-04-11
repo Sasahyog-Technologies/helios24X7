@@ -1,17 +1,19 @@
 import React, { useState } from "react";
 import request from "../../../sdk/functions";
 import toast from "react-hot-toast";
-import { Refresh } from "../../../utils/refresh";
+import { useQueryClient } from "@tanstack/react-query";
 const ClientDeletePopup = ({ userId }) => {
   const [loading, setLoading] = useState(false);
+  const queryClient = useQueryClient();
   const removeHandler = async () => {
     try {
       setLoading(true);
       await request.remove("users", userId);
       toast.success("User deleted");
-      Refresh();
+      document.getElementById("client-delete-force-close").click();
+      queryClient.invalidateQueries({ queryKey: ["client-list"] });
     } catch (error) {
-      toast.error(error.response.data.error.message, { duration: 4000 });
+      toast.error(error?.response?.data?.error?.message, { duration: 4000 });
       console.log(error);
     } finally {
       setLoading(false);
@@ -31,6 +33,7 @@ const ClientDeletePopup = ({ userId }) => {
               className="btn-close"
               data-bs-dismiss="modal"
               aria-label="Close"
+              id="client-delete-force-close"
             >
               <span aria-hidden="true">×</span>
             </button>

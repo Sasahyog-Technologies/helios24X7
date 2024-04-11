@@ -8,6 +8,7 @@ import { paymentTypeOptions } from "../../../utils";
 import { Controller, useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import { InvoiceNumberGenerator } from "../../../utils/invoiceNumberGenerate";
+import { useQueryClient } from "@tanstack/react-query";
 
 function generatePassword(length = 8) {
   const charset =
@@ -47,7 +48,7 @@ const formDataDefaultValues = {
 };
 
 function calculateEndDate(startDate, durationInMonths) {
-  console.log(startDate);
+  //console.log(startDate);
   if (typeof startDate === "string") {
     startDate = new Date(startDate);
   }
@@ -57,13 +58,14 @@ function calculateEndDate(startDate, durationInMonths) {
   return p.toISOString();
 }
 
-const ClientAddPopup = ({ refetch }) => {
+const ClientAddPopup = () => {
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(false);
   const [birthDate, setBirthDate] = useState(null);
   const [planOptions, setPlanOptions] = useState([]);
   const [branchOptions, setBranchOptions] = useState([]);
   const [startDate, setStartDate] = useState(new Date().toISOString());
+  const queryClient = useQueryClient();
 
   const genderOptions = [
     { value: "male", label: "Male" },
@@ -140,7 +142,8 @@ const ClientAddPopup = ({ refetch }) => {
         },
       });
       toast.success("client created");
-      Refresh();
+      document.getElementById("client-add-force-close").click();
+      queryClient.invalidateQueries({ queryKey: ["client-list"] });
     } catch (error) {
       toast.error(error?.response?.data?.error?.message, { duration: 4000 });
       console.log(error);
@@ -178,6 +181,7 @@ const ClientAddPopup = ({ refetch }) => {
               <h5 className="modal-title">Add Client</h5>
               <button
                 type="button"
+                id="client-add-force-close"
                 className="btn-close"
                 data-bs-dismiss="modal"
                 aria-label="Close"
