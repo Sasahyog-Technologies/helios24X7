@@ -2,14 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 import { Table } from "antd";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import Breadcrumbs from "../../../components/Breadcrumbs";
 import request from "../../../sdk/functions";
+import { useMediaQuery } from "usehooks-ts";
 import WalkinsListFilter from "./WalkinsListFilter";
+import { useSession } from "../../../Hook/useSession";
+import Breadcrumbs from "../../../components/Breadcrumbs";
 import WalkinsAddPopup from "../../../components/modelpopup/Walkins/WalkinsAddPopup";
 import WalkinsDeletePopup from "../../../components/modelpopup/Walkins/WalkinDeletePopup";
 import WalkinEditPopup from "../../../components/modelpopup/Walkins/WalkinEditPopup";
-import { useMediaQuery } from "usehooks-ts";
-import { useSession } from "../../../Hook/useSession";
 
 const WalkinsList = () => {
   const [walkinId, setwalkinId] = useState(null);
@@ -264,9 +264,9 @@ const WalkinsList = () => {
         {/*      
         <walkinEditPopup walkinId={walkinId} />
       */}
-        <WalkinsAddPopup />
-        <WalkinsDeletePopup WalkinId={walkinId} />
-        <WalkinEditPopup WalkinId={walkinId} />
+        <WalkinsAddPopup refetch={refetch} />
+        <WalkinsDeletePopup refetch={refetch} WalkinId={walkinId} />
+        <WalkinEditPopup refetch={refetch} WalkinId={walkinId} />
       </div>
     </div>
   );
