@@ -355,9 +355,12 @@ const MembershipList = () => {
             </div>
           </div>
         </div>
-        <PayOutstanding subscription={membership} />
-        <MembershipDeletePopup membershipId={subscriptionId} />
-        <MembershipEditPopup membershipId={subscriptionId} />
+        <PayOutstanding refetch={refetch} subscription={membership} />
+        <MembershipDeletePopup
+          refetch={refetch}
+          membershipId={subscriptionId}
+        />
+        <MembershipEditPopup refetch={refetch} membershipId={subscriptionId} />
       </div>
     </div>
   );

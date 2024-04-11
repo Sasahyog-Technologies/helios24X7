@@ -14,7 +14,7 @@ const formDataDefaultValues = {
   outstandingPrice: 0,
 };
 
-const PayOutstanding = ({ subscription }) => {
+const PayOutstanding = ({ subscription, refetch }) => {
   const [loading, setLoading] = useState(false);
 
   const { register, handleSubmit, control, setValue, getValues } = useForm({
@@ -57,8 +57,9 @@ const PayOutstanding = ({ subscription }) => {
           outstanding: data.outstanding || null,
         },
       });
-      toast.success("Subscription created");
-      Refresh();
+      toast.success("Outstanding Updated");
+      document.getElementById("outstanding-edit-force-close").click();
+      refetch();
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);
@@ -82,6 +83,7 @@ const PayOutstanding = ({ subscription }) => {
             <div className="modal-header">
               <h5 className="modal-paid">Pay Outstanding Balance</h5>
               <button
+                id="outstanding-edit-force-close"
                 type="button"
                 className="btn-close"
                 data-bs-dismiss="modal"

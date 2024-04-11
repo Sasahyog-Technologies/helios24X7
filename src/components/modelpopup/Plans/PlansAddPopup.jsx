@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useForm,Controller } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import toast from "react-hot-toast";
 import Select from "react-select";
 import request from "../../../sdk/functions";
@@ -12,17 +12,17 @@ const formDataDefaultValues = {
   price: "",
   duration: "",
   description: "",
-  branch:""
+  branch: "",
 };
 
 const PlansAddPopup = ({ refetch }) => {
   const [loading, setLoading] = useState(false);
   const [branchOptions, setBranchOptions] = useState([]);
-  const { register, handleSubmit,control,setValue } = useForm({
+  const { register, handleSubmit, control, setValue } = useForm({
     defaultValues: formDataDefaultValues,
   });
 
-  const onSubmit = async ({ title, price, duration, description,branch }) => {
+  const onSubmit = async ({ title, price, duration, description, branch }) => {
     try {
       setLoading(true);
       await request.create("plan", {
@@ -31,12 +31,12 @@ const PlansAddPopup = ({ refetch }) => {
           price: price,
           desc: description,
           duration: duration,
-          branch:branch
+          branch: branch,
         },
       });
-     // refetch();
-      Refresh()
       toast.success("Plan Created");
+      document.getElementById("plan-add-force-close").click();
+      refetch();
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);
@@ -44,6 +44,7 @@ const PlansAddPopup = ({ refetch }) => {
       setLoading(false);
     }
   };
+
   useQuery({
     queryKey: ["fetch-branch"],
     queryFn: async () => {
@@ -64,6 +65,7 @@ const PlansAddPopup = ({ refetch }) => {
             <div className="modal-header">
               <h5 className="modal-title">Add Plan</h5>
               <button
+                id="plan-add-force-close"
                 type="button"
                 aria-label="Close"
                 className="btn-close"
@@ -161,9 +163,9 @@ const PlansAddPopup = ({ refetch }) => {
                 <div className="submit-section">
                   <button
                     type="submit"
-                   // aria-label="Close"
+                    // aria-label="Close"
                     disabled={loading}
-                 //   data-bs-dismiss="modal"
+                    //   data-bs-dismiss="modal"
                     className="btn btn-primary submit-btn"
                   >
                     {loading ? " Submitting..." : " Submit"}

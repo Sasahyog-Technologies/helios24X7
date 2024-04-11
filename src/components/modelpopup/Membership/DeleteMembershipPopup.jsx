@@ -2,15 +2,15 @@ import React, { useState } from "react";
 import request from "../../../sdk/functions";
 import toast from "react-hot-toast";
 import { Refresh } from "../../../utils/refresh";
-const MembershipDeletePopup = ({ membershipId }) => {
+const MembershipDeletePopup = ({ membershipId, refetch }) => {
   const [loading, setLoading] = useState(false);
   const removeHandler = async () => {
     try {
       setLoading(true);
-      const data = await request.remove("subscription", membershipId);
-      //  console.log(data);
+      await request.remove("subscription", membershipId);
       toast.success("Membership deleted");
-      Refresh();
+      document.getElementById("mem-delete-force-close").click();
+      refetch();
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);
@@ -19,7 +19,11 @@ const MembershipDeletePopup = ({ membershipId }) => {
     }
   };
   return (
-    <div id="delete_subscription" className="modal custom-modal fade" role="dialog">
+    <div
+      id="delete_subscription"
+      className="modal custom-modal fade"
+      role="dialog"
+    >
       <div className="modal-dialog modal-dialog-centered modal-lg">
         <div className="modal-content">
           <div className="modal-header">
@@ -28,6 +32,7 @@ const MembershipDeletePopup = ({ membershipId }) => {
               <p>You really want to delete this Membership</p>
             </div>
             <button
+              id="mem-delete-force-close"
               type="button"
               className="btn-close"
               data-bs-dismiss="modal"
@@ -37,7 +42,7 @@ const MembershipDeletePopup = ({ membershipId }) => {
             </button>
           </div>
           <div className="modal-body">
-            <div className="d-flex justify-content-start gap-5">
+            <div className="d-flex flex-md-row flex-column  justify-content-start gap-md-5 gap-2">
               <button
                 className="btn btn-primary submit-btn"
                 // data-bs-dismiss="modal"

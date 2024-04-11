@@ -1,16 +1,15 @@
 import React, { useState } from "react";
 import request from "../../../sdk/functions";
 import toast from "react-hot-toast";
-import { Refresh } from "../../../utils/refresh";
-const EventsDeletePopup = ({ eventId }) => {
+const EventsDeletePopup = ({ eventId, refetch }) => {
   const [loading, setLoading] = useState(false);
   const removeHandler = async () => {
     try {
       setLoading(true);
-      const data = await request.remove("event", eventId);
-      //  console.log(data);
+      await request.remove("event", eventId);
       toast.success("event deleted");
-      Refresh();
+      document.getElementById("event-delete-force-close").click();
+      refetch();
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
       console.log(error);
@@ -28,6 +27,7 @@ const EventsDeletePopup = ({ eventId }) => {
               <p>You really want to delete this event</p>
             </div>
             <button
+              id="event-delete-force-close"
               type="button"
               className="btn-close"
               data-bs-dismiss="modal"
@@ -37,7 +37,7 @@ const EventsDeletePopup = ({ eventId }) => {
             </button>
           </div>
           <div className="modal-body">
-            <div className="d-flex justify-content-start gap-5">
+            <div className="d-flex flex-md-row flex-column justify-content-start gap-md-5 gap-2">
               <button
                 className="btn btn-primary submit-btn"
                 // data-bs-dismiss="modal"

@@ -15,7 +15,7 @@ const userDefaultValues = {
   category: "",
 };
 
-const EventEditPopup = ({ eventId }) => {
+const EventEditPopup = ({ eventId, refetch }) => {
   const [userLoading, setUserLoading] = useState(false);
   const [submitLoading, setSubmitLoading] = useState(false);
   const [startDate, setStartDate] = useState();
@@ -31,8 +31,8 @@ const EventEditPopup = ({ eventId }) => {
   const { register, handleSubmit, reset, control, setValue } = useForm({
     defaultValues: userDefaultValues,
   });
-  const { data: eventData, refetch } = useQuery({
-    queryKey: ["event-data"],
+  const { data: eventData } = useQuery({
+    queryKey: ["event-data", eventId],
     queryFn: async () => {
       setUserLoading(true);
       if (eventId) {
@@ -72,7 +72,8 @@ const EventEditPopup = ({ eventId }) => {
         }
       );
       toast.success("Event updated");
-      Refresh();
+      document.getElementById("event-edit-force-close").click();
+      refetch();
     } catch (error) {
       toast.error(
         error?.response?.data?.error?.message || "Something Went Wrong",
@@ -84,10 +85,6 @@ const EventEditPopup = ({ eventId }) => {
     }
   };
 
-  useEffect(() => {
-    refetch();
-  }, [eventId, refetch, reset]);
-
   return (
     <>
       <div id="edit_event" className="modal custom-modal fade" role="dialog">
@@ -96,6 +93,7 @@ const EventEditPopup = ({ eventId }) => {
             <div className="modal-header">
               <h5 className="modal-title">Edit Event</h5>
               <button
+                id="event-edit-force-close"
                 type="button"
                 className="btn-close"
                 data-bs-dismiss="modal"
