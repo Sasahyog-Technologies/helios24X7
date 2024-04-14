@@ -2,13 +2,52 @@ import Select from "react-select";
 import toast from "react-hot-toast";
 import DatePicker from "react-datepicker";
 import request from "../../../sdk/functions";
-import { Refresh } from "../../../utils/refresh";
 import React, { useEffect, useState } from "react";
 import { paymentTypeOptions } from "../../../utils";
 import { Controller, useForm } from "react-hook-form";
 import { ErrorMessage } from "@hookform/error-message";
 import { InvoiceNumberGenerator } from "../../../utils/invoiceNumberGenerate";
 import { useQueryClient } from "@tanstack/react-query";
+
+const SendWhatsappNotification = async ({ mobile, password }) => {
+  await fetch("https://graph.facebook.com/v19.0/309147725609522/messages", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization:
+        "Bearer EAATd1LnPQs8BOZBeZAEDHUXY8CXxDi2sZCcZBEN4lhLlQx4QOa0B8OdQJsZB2vTyRJhDHAMZAZCmolqZC69IGAhAD9gXeyUfFEj7DkEPRpMQ5M1bHtx1vE4LwzwE8dQN6MoYZAnO5OI47oUQZCZBEAS7YJHvnSilg2fO7UaWpM2nFhRZBBhYfuhwjunMtDjH1CZACZAUbQ",
+    },
+    body: JSON.stringify({
+      messaging_product: "whatsapp",
+      recipient_type: "individual",
+      to: `91${mobile}`,
+      type: "template",
+      template: {
+        name: "membershipconfirmed",
+        language: {
+          code: "en",
+        },
+        components: [
+          {
+            type: "body",
+            parameters: [
+              {
+                type: "text",
+                text: mobile,
+              },
+              {
+                type: "text",
+                text: password,
+              },
+            ],
+          },
+        ],
+      },
+    }),
+  });
+};
+
+// Call the function to send the template message
 
 function generatePassword(length = 8) {
   const charset =
@@ -91,7 +130,11 @@ const ClientAddPopup = () => {
       return toast.error("Amount is greater than plan price");
     try {
       setLoading(true);
-      const planDuration = plans.find((pt) => pt.id == data.plan)?.attributes
+      SendWhatsappNotification({
+        mobile: data.mobile,
+        password: data.password,
+      });
+      const planDuration = plans.find((pt) => pt.id === data.plan)?.attributes
         .duration;
 
       let createRes = await request.create("register", {
