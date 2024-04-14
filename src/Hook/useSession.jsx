@@ -10,7 +10,10 @@ export const useSession = () => {
 
   const setUserInfoToCookies = (user) => {
     const encodedData = encodeURIComponent(JSON.stringify(user));
-    setCookie("userSession", encodedData, { path: "/" });
+    setCookie("userSession", encodedData, {
+      path: "/",
+      expires: expirationDate,
+    });
   };
 
   const getUserDataToCookie = () => {

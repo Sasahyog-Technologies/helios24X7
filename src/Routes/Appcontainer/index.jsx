@@ -234,7 +234,7 @@ const AppContainer = () => {
       path: "form-basic-inputs",
       element: <BasicInputs />,
     },
-/*     {
+    /*     {
       id: 2,
       path: "admin-dashboard",
       element: <AdminDashboard />,
@@ -1355,6 +1355,7 @@ const AppContainer = () => {
 
   /*  owner route procect */
   const OwnerProtectedRoute = ({ children }) => {
+    if (!user) return <Navigate replace={true} to="/" />;
     if (user || user?.jwt) {
       if (user?.user.type === "owner" || user?.user.type === "manager") {
         return children;
@@ -1366,6 +1367,7 @@ const AppContainer = () => {
 
   /* trainer route protect  */
   const TrainerProtectedRoute = ({ children }) => {
+    if (!user) return <Navigate replace={true} to="/" />;
     if (user || user?.jwt) {
       if (user?.user.type === "trainer") {
         return children;
@@ -1377,6 +1379,7 @@ const AppContainer = () => {
 
   /* client route protect  */
   const ClientProtectedRoute = ({ children }) => {
+    if (!user) return <Navigate replace={true} to="/" />;
     if (user || user?.jwt || user?.user?.id) {
       if (user?.user.type === "client") {
         return children;
