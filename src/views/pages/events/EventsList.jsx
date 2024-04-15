@@ -12,6 +12,7 @@ import { format } from "date-fns";
 import { Image } from "antd";
 import { useMediaQuery } from "usehooks-ts";
 import { useSession } from "../../../Hook/useSession";
+import useOwnerManager from "../../../Hook/useOwnerManager";
 
 const EventsList = () => {
   const [eventId, seteventId] = useState(null);
@@ -19,6 +20,8 @@ const EventsList = () => {
   const isWebDevice = useMediaQuery("(min-width:700px)");
   const { getUserDataToCookie } = useSession();
   const loggedInUser = getUserDataToCookie()?.user;
+
+  const { isOwner, isOwnerManager } = useOwnerManager();
 
   const handleImageChange = (e) => {
     if (e.target.files && e.target.files.length > 0) {
@@ -68,46 +71,48 @@ const EventsList = () => {
         </span>
       ),
     },
-    {
-      title: "Action",
-      render: (event) => (
-        <div className="dropdown dropdown-action text-end">
-          <Link
-            to="#"
-            className="action-icon dropdown-toggle"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <i className="material-icons">more_vert</i>
-          </Link>
-
-          <div className="dropdown-menu dropdown-menu-right">
-            <Link
-              className="dropdown-item"
-              to="#"
-              data-bs-toggle="modal"
-              data-bs-target="#edit_event"
-              onClick={() => seteventId(event.id)}
-            >
-              <i className="fa fa-pencil m-r-5" /> Edit
-            </Link>
-            {loggedInUser?.type === "owner" ? (
+    isOwnerManager
+      ? {
+          title: "Action",
+          render: (event) => (
+            <div className="dropdown dropdown-action text-end">
               <Link
-                className="dropdown-item"
                 to="#"
-                data-bs-toggle="modal"
-                data-bs-target="#delete_event"
-                onClick={() => seteventId(event.id)}
+                className="action-icon dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
               >
-                <i className="fa fa-trash m-r-5" /> Delete
+                <i className="material-icons">more_vert</i>
               </Link>
-            ) : (
-              ""
-            )}
-          </div>
-        </div>
-      ),
-    },
+
+              <div className="dropdown-menu dropdown-menu-right">
+                <Link
+                  className="dropdown-item"
+                  to="#"
+                  data-bs-toggle="modal"
+                  data-bs-target="#edit_event"
+                  onClick={() => seteventId(event.id)}
+                >
+                  <i className="fa fa-pencil m-r-5" /> Edit
+                </Link>
+                {isOwner ? (
+                  <Link
+                    className="dropdown-item"
+                    to="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#delete_event"
+                    onClick={() => seteventId(event.id)}
+                  >
+                    <i className="fa fa-trash m-r-5" /> Delete
+                  </Link>
+                ) : (
+                  ""
+                )}
+              </div>
+            </div>
+          ),
+        }
+      : {},
   ];
 
   /* --------------------------------------------------------------------------- */
@@ -117,46 +122,50 @@ const EventsList = () => {
       render: (record, key, index) => {
         return (
           <div>
-            <div className="d-flex justify-content-between">
-              {<div className="fw-bold fs-6"></div>}
-              <div
-                className="dropdown dropdown-action text-end" /* style={{zIndex:100}} */
-              >
-                <Link
-                  to="#"
-                  className="action-icon dropdown-toggle"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
+            {isOwnerManager ? (
+              <div className="d-flex justify-content-between">
+                {<div className="fw-bold fs-6"></div>}
+                <div
+                  className="dropdown dropdown-action text-end" /* style={{zIndex:100}} */
                 >
-                  <i className="material-icons">more_vert</i>
-                </Link>
-
-                <div className="dropdown-menu dropdown-menu-right">
                   <Link
-                    className="dropdown-item"
                     to="#"
-                    data-bs-toggle="modal"
-                    data-bs-target="#edit_event"
-                    onClick={() => seteventId(record.id)}
+                    className="action-icon dropdown-toggle"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
                   >
-                    <i className="fa fa-pencil m-r-5" /> Edit
+                    <i className="material-icons">more_vert</i>
                   </Link>
-                  {loggedInUser?.type === "owner" ? (
+
+                  <div className="dropdown-menu dropdown-menu-right">
                     <Link
                       className="dropdown-item"
                       to="#"
                       data-bs-toggle="modal"
-                      data-bs-target="#delete_event"
+                      data-bs-target="#edit_event"
                       onClick={() => seteventId(record.id)}
                     >
-                      <i className="fa fa-trash m-r-5" /> Delete
+                      <i className="fa fa-pencil m-r-5" /> Edit
                     </Link>
-                  ) : (
-                    ""
-                  )}
+                    {isOwner ? (
+                      <Link
+                        className="dropdown-item"
+                        to="#"
+                        data-bs-toggle="modal"
+                        data-bs-target="#delete_event"
+                        onClick={() => seteventId(record.id)}
+                      >
+                        <i className="fa fa-trash m-r-5" /> Delete
+                      </Link>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              ""
+            )}
 
             <div>
               <div className="d-flex justify-content-between">
@@ -269,6 +278,7 @@ const EventsList = () => {
             name="Add Event"
             Linkname="/event"
             Linkname1="/events-list"
+            isOwnerManager={isOwnerManager}
           />
           {/* /Page Header */}
           <EventsListFilter

@@ -314,7 +314,7 @@ const Breadcrumbs = (props) => {
       </div>
     );
   } else if (
-  /*   -----------------------------------------------------------   */
+    /*   -----------------------------------------------------------   */
     location.pathname === "/owner/client-list" ||
     location.pathname === "/owner/plans-list" ||
     location.pathname === "/owner/event-list" ||
@@ -334,14 +334,18 @@ const Breadcrumbs = (props) => {
           </ul>
         </div>
         <div className="col-auto float-end ms-auto">
-          <Link
-            to="#"
-            className="btn add-btn"
-            data-bs-toggle="modal"
-            data-bs-target={props.modal}
-          >
-            <i className="fa fa-plus" /> {props.name}
-          </Link>
+          {props.isOwnerManager ? (
+            <Link
+              to="#"
+              className="btn add-btn"
+              data-bs-toggle="modal"
+              data-bs-target={props.modal}
+            >
+              <i className="fa fa-plus" /> {props.name}
+            </Link>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     );

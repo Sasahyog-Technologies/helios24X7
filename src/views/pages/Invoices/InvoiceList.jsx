@@ -3,19 +3,18 @@ import { Table } from "antd";
 import { format } from "date-fns";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useMediaQuery } from "usehooks-ts";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 import InvoiceDeletePopup from "../../../components/modelpopup/Invoice/DeleteInvoicePopup";
 import InvoiceEditPopup from "../../../components/modelpopup/Invoice/EditInvoicePopup";
+import useOwnerManager from "../../../Hook/useOwnerManager";
 import request from "../../../sdk/functions";
 import InvoiceListFilter from "./InvoiceListFilter";
-import { useMediaQuery } from "usehooks-ts";
-import { useSession } from "../../../Hook/useSession";
 
 const InvoiceList = () => {
   const [invoiceId, setinvoiceId] = useState(null);
   const isWebDevice = useMediaQuery("(min-width:700px)");
-  const { getUserDataToCookie } = useSession();
-  const loggedInUser = getUserDataToCookie()?.user;
+  const { isOwner, isOwnerManager } = useOwnerManager();
 
   const columns = [
     {
@@ -78,47 +77,49 @@ const InvoiceList = () => {
         </span>
       ),
     },
-    {
-      title: "Action",
-      render: (user) => (
-        <div className="dropdown dropdown-action text-end">
-          <Link
-            to="#"
-            className="action-icon dropdown-toggle"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <i className="material-icons">more_vert</i>
-          </Link>
-
-          <div className="dropdown-menu dropdown-menu-right">
-            <Link
-              className="dropdown-item"
-              to="#"
-              data-bs-toggle="modal"
-              data-bs-target="#edit_invoice"
-              onClick={() => setinvoiceId(user.id)}
-            >
-              <i className="fa fa-pencil m-r-5" /> Edit
-            </Link>
-
-            {loggedInUser?.type === "owner" ? (
+    isOwnerManager
+      ? {
+          title: "Action",
+          render: (user) => (
+            <div className="dropdown dropdown-action text-end">
               <Link
-                className="dropdown-item"
                 to="#"
-                data-bs-toggle="modal"
-                data-bs-target="#delete_invoice"
-                onClick={() => setinvoiceId(user.id)}
+                className="action-icon dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
               >
-                <i className="fa fa-trash m-r-5" /> Delete
+                <i className="material-icons">more_vert</i>
               </Link>
-            ) : (
-              ""
-            )}
-          </div>
-        </div>
-      ),
-    },
+
+              <div className="dropdown-menu dropdown-menu-right">
+                <Link
+                  className="dropdown-item"
+                  to="#"
+                  data-bs-toggle="modal"
+                  data-bs-target="#edit_invoice"
+                  onClick={() => setinvoiceId(user.id)}
+                >
+                  <i className="fa fa-pencil m-r-5" /> Edit
+                </Link>
+
+                {isOwner ? (
+                  <Link
+                    className="dropdown-item"
+                    to="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#delete_invoice"
+                    onClick={() => setinvoiceId(user.id)}
+                  >
+                    <i className="fa fa-trash m-r-5" /> Delete
+                  </Link>
+                ) : (
+                  ""
+                )}
+              </div>
+            </div>
+          ),
+        }
+      : {},
   ];
 
   /* --------------------------------------------------------------------------- */
@@ -128,46 +129,50 @@ const InvoiceList = () => {
       render: (record, key, index) => {
         return (
           <div>
-            <div className="d-flex justify-content-between">
-              {<div className="fw-bold fs-6"></div>}
-              <div
-                className="dropdown dropdown-action text-end" /* style={{zIndex:100}} */
-              >
-                <Link
-                  to="#"
-                  className="action-icon dropdown-toggle"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
+            {isOwnerManager ? (
+              <div className="d-flex justify-content-between">
+                {<div className="fw-bold fs-6"></div>}
+                <div
+                  className="dropdown dropdown-action text-end" /* style={{zIndex:100}} */
                 >
-                  <i className="material-icons">more_vert</i>
-                </Link>
-
-                <div className="dropdown-menu dropdown-menu-right">
                   <Link
-                    className="dropdown-item"
                     to="#"
-                    data-bs-toggle="modal"
-                    data-bs-target="#edit_invoice"
-                    onClick={() => setinvoiceId(record.id)}
+                    className="action-icon dropdown-toggle"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
                   >
-                    <i className="fa fa-pencil m-r-5" /> Edit
+                    <i className="material-icons">more_vert</i>
                   </Link>
-                  {loggedInUser?.type === "owner" ? (
+
+                  <div className="dropdown-menu dropdown-menu-right">
                     <Link
                       className="dropdown-item"
                       to="#"
                       data-bs-toggle="modal"
-                      data-bs-target="#delete_invoice"
+                      data-bs-target="#edit_invoice"
                       onClick={() => setinvoiceId(record.id)}
                     >
-                      <i className="fa fa-trash m-r-5" /> Delete
+                      <i className="fa fa-pencil m-r-5" /> Edit
                     </Link>
-                  ) : (
-                    ""
-                  )}
+                    {isOwner ? (
+                      <Link
+                        className="dropdown-item"
+                        to="#"
+                        data-bs-toggle="modal"
+                        data-bs-target="#delete_invoice"
+                        onClick={() => setinvoiceId(record.id)}
+                      >
+                        <i className="fa fa-trash m-r-5" /> Delete
+                      </Link>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              ""
+            )}
 
             <div>
               <Link to={`/owner/invoice-details/${record.id}`}>
@@ -297,6 +302,7 @@ const InvoiceList = () => {
             maintitle="Invoices"
             title="Dashboard"
             subtitle="Invoices"
+            isOwnerManager={isOwnerManager}
           />
           {/* /Page Header */}
           <InvoiceListFilter

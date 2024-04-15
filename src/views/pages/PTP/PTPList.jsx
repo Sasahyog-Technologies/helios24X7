@@ -2,19 +2,19 @@ import { useQuery } from "@tanstack/react-query";
 import { Table } from "antd";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import Breadcrumbs from "../../../components/Breadcrumbs";
-import { useSession } from "../../../Hook/useSession";
-import request from "../../../sdk/functions";
-import PTPListFilter from "./PTPListFilter";
-import { render } from "@testing-library/react";
-import { FormatTime } from "../../../utils/timeFormater";
 import { useMediaQuery } from "usehooks-ts";
-import PtpEditPopup from "../../../components/modelpopup/Client/PTPEditPopup";
+import Breadcrumbs from "../../../components/Breadcrumbs";
 import PTPDeletePopup from "../../../components/modelpopup/Client/PTPDeletePopup";
+import PtpEditPopup from "../../../components/modelpopup/Client/PTPEditPopup";
+import useOwnerManager from "../../../Hook/useOwnerManager";
+import request from "../../../sdk/functions";
+import { FormatTime } from "../../../utils/timeFormater";
+import PTPListFilter from "./PTPListFilter";
 
 const PTPList = () => {
   const [ptpId, setPtpId] = useState(null);
   const isWebDevice = useMediaQuery("(min-width:700px)");
+  const { isOwner, isOwnerManager } = useOwnerManager();
   const columns = [
     {
       title: "Trainee",
@@ -36,42 +36,48 @@ const PTPList = () => {
       render: (session_to) => <span>{`${FormatTime(session_to)}`}</span>,
     },
 
-    {
-      title: "Action",
-      render: (ptp) => (
-        <div className="dropdown dropdown-action text-end">
-          <Link
-            to="#"
-            className="action-icon dropdown-toggle"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <i className="material-icons">more_vert</i>
-          </Link>
+    isOwnerManager
+      ? {
+          title: "Action",
+          render: (ptp) => (
+            <div className="dropdown dropdown-action text-end">
+              <Link
+                to="#"
+                className="action-icon dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <i className="material-icons">more_vert</i>
+              </Link>
 
-          <div className="dropdown-menu dropdown-menu-right">
-            <Link
-              className="dropdown-item"
-              to="#"
-              data-bs-toggle="modal"
-              data-bs-target="#edit_ptp"
-              onClick={() => setPtpId(ptp?.id)}
-            >
-              <i className="fa fa-pencil m-r-5" /> Edit
-            </Link>
-            <Link
-              className="dropdown-item"
-              to="#"
-              data-bs-toggle="modal"
-              data-bs-target="#delete_ptp"
-              onClick={() => setPtpId(ptp?.id)}
-            >
-              <i className="fa fa-trash m-r-5" /> Delete
-            </Link>
-          </div>
-        </div>
-      ),
-    },
+              <div className="dropdown-menu dropdown-menu-right">
+                <Link
+                  className="dropdown-item"
+                  to="#"
+                  data-bs-toggle="modal"
+                  data-bs-target="#edit_ptp"
+                  onClick={() => setPtpId(ptp?.id)}
+                >
+                  <i className="fa fa-pencil m-r-5" /> Edit
+                </Link>
+                {isOwner ? (
+                  <Link
+                    className="dropdown-item"
+                    to="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#delete_ptp"
+                    onClick={() => setPtpId(ptp?.id)}
+                  >
+                    <i className="fa fa-trash m-r-5" /> Delete
+                  </Link>
+                ) : (
+                  ""
+                )}
+              </div>
+            </div>
+          ),
+        }
+      : {},
   ];
 
   /* --------------------------------------------------------------------------- */
@@ -81,7 +87,7 @@ const PTPList = () => {
       render: (record, key, index) => {
         return (
           <div>
-            {
+            {isOwnerManager ? (
               <div className="d-flex justify-content-between">
                 {<div className="fw-bold fs-6"></div>}
                 <div className="dropdown dropdown-action text-end">
@@ -104,19 +110,25 @@ const PTPList = () => {
                     >
                       <i className="fa fa-pencil m-r-5" /> Edit
                     </Link>
-                    <Link
-                      className="dropdown-item"
-                      to="#"
-                      data-bs-toggle="modal"
-                      data-bs-target="#delete_ptp"
-                      onClick={() => setPtpId(record.id)}
-                    >
-                      <i className="fa fa-trash m-r-5" /> Delete
-                    </Link>
+                    {isOwner ? (
+                      <Link
+                        className="dropdown-item"
+                        to="#"
+                        data-bs-toggle="modal"
+                        data-bs-target="#delete_ptp"
+                        onClick={() => setPtpId(record.id)}
+                      >
+                        <i className="fa fa-trash m-r-5" /> Delete
+                      </Link>
+                    ) : (
+                      ""
+                    )}
                   </div>
                 </div>
               </div>
-            }
+            ) : (
+              ""
+            )}
 
             <div>
               <div className="d-flex justify-content-between">
@@ -252,6 +264,7 @@ const PTPList = () => {
             name="Add Plan"
             Linkname="/plan"
             Linkname1="/PTP-list"
+            isOwnerManager={isOwnerManager}
           />
           {/* /Page Header */}
           <PTPListFilter query={query} setQuery={setQuery} refetch={refetch} />

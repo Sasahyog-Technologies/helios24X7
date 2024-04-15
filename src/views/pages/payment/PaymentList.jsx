@@ -3,19 +3,18 @@ import { Table } from "antd";
 import { format } from "date-fns";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useMediaQuery } from "usehooks-ts";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 import PaymentDeletePopup from "../../../components/modelpopup/payment/DeletePaymentPopup";
 import PaymentEditPopup from "../../../components/modelpopup/payment/EditPaymentPopup";
+import useOwnerManager from "../../../Hook/useOwnerManager";
 import request from "../../../sdk/functions";
 import PaymentListFilter from "./PaymentListFilter";
-import { useMediaQuery } from "usehooks-ts";
-import { useSession } from "../../../Hook/useSession";
 
 const PaymentList = () => {
   const [paymentsId, setpaymentsId] = useState(null);
   const isWebDevice = useMediaQuery("(min-width:700px)");
-  const { getUserDataToCookie } = useSession();
-  const loggedInUser = getUserDataToCookie()?.user;
+  const { isOwner, isOwnerManager } = useOwnerManager();
 
   const columns = [
     {
@@ -60,49 +59,51 @@ const PaymentList = () => {
       dataIndex: "outstanding",
       render: (text, record) => <span>{text ? text : "0"}</span>,
     },
-    {
-      title: "Action",
-      render: (user) => (
-        <div
-          className="dropdown dropdown-action text-end" /* style={{zIndex:100}} */
-        >
-          <Link
-            to="#"
-            className="action-icon dropdown-toggle"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <i className="material-icons">more_vert</i>
-          </Link>
-
-          <div className="dropdown-menu dropdown-menu-right">
-            <Link
-              className="dropdown-item"
-              to="#"
-              data-bs-toggle="modal"
-              data-bs-target="#edit_payment"
-              onClick={() => setpaymentsId(user.id)}
+    isOwnerManager
+      ? {
+          title: "Action",
+          render: (user) => (
+            <div
+              className="dropdown dropdown-action text-end" /* style={{zIndex:100}} */
             >
-              <i className="fa fa-pencil m-r-5" /> Edit
-            </Link>
-
-            {loggedInUser?.type === "owner" ? (
               <Link
-                className="dropdown-item"
                 to="#"
-                data-bs-toggle="modal"
-                data-bs-target="#delete_payment"
-                onClick={() => setpaymentsId(user.id)}
+                className="action-icon dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
               >
-                <i className="fa fa-trash m-r-5" /> Delete
+                <i className="material-icons">more_vert</i>
               </Link>
-            ) : (
-              ""
-            )}
-          </div>
-        </div>
-      ),
-    },
+
+              <div className="dropdown-menu dropdown-menu-right">
+                <Link
+                  className="dropdown-item"
+                  to="#"
+                  data-bs-toggle="modal"
+                  data-bs-target="#edit_payment"
+                  onClick={() => setpaymentsId(user.id)}
+                >
+                  <i className="fa fa-pencil m-r-5" /> Edit
+                </Link>
+
+                {isOwner ? (
+                  <Link
+                    className="dropdown-item"
+                    to="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#delete_payment"
+                    onClick={() => setpaymentsId(user.id)}
+                  >
+                    <i className="fa fa-trash m-r-5" /> Delete
+                  </Link>
+                ) : (
+                  ""
+                )}
+              </div>
+            </div>
+          ),
+        }
+      : {},
   ];
 
   /* --------------------------------------------------------------------------- */
@@ -112,47 +113,51 @@ const PaymentList = () => {
       render: (record, key, index) => {
         return (
           <div>
-            <div className="d-flex justify-content-between">
-              {<div className="fw-bold fs-6"></div>}
-              <div
-                className="dropdown dropdown-action text-end" /* style={{zIndex:100}} */
-              >
-                <Link
-                  to="#"
-                  className="action-icon dropdown-toggle"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
+            {isOwnerManager ? (
+              <div className="d-flex justify-content-between">
+                {<div className="fw-bold fs-6"></div>}
+                <div
+                  className="dropdown dropdown-action text-end" /* style={{zIndex:100}} */
                 >
-                  <i className="material-icons">more_vert</i>
-                </Link>
-
-                <div className="dropdown-menu dropdown-menu-right">
                   <Link
-                    className="dropdown-item"
                     to="#"
-                    data-bs-toggle="modal"
-                    data-bs-target="#edit_payment"
-                    onClick={() => setpaymentsId(record.id)}
+                    className="action-icon dropdown-toggle"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
                   >
-                    <i className="fa fa-pencil m-r-5" /> Edit
+                    <i className="material-icons">more_vert</i>
                   </Link>
 
-                  {loggedInUser?.type === "owner" ? (
+                  <div className="dropdown-menu dropdown-menu-right">
                     <Link
                       className="dropdown-item"
                       to="#"
                       data-bs-toggle="modal"
-                      data-bs-target="#delete_payment"
+                      data-bs-target="#edit_payment"
                       onClick={() => setpaymentsId(record.id)}
                     >
-                      <i className="fa fa-trash m-r-5" /> Delete
+                      <i className="fa fa-pencil m-r-5" /> Edit
                     </Link>
-                  ) : (
-                    ""
-                  )}
+
+                    {isOwner ? (
+                      <Link
+                        className="dropdown-item"
+                        to="#"
+                        data-bs-toggle="modal"
+                        data-bs-target="#delete_payment"
+                        onClick={() => setpaymentsId(record.id)}
+                      >
+                        <i className="fa fa-trash m-r-5" /> Delete
+                      </Link>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              ""
+            )}
 
             <div>
               <div className="d-flex justify-content-between">
@@ -295,6 +300,7 @@ const PaymentList = () => {
             maintitle="Payments"
             title="Dashboard"
             subtitle="Payments"
+            isOwnerManager={isOwnerManager}
           />
           {/* /Page Header */}
           <PaymentListFilter
