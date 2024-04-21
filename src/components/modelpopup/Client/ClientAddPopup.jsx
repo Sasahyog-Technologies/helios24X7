@@ -296,7 +296,7 @@ const ClientAddPopup = () => {
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">
-                        Date of Birth <span className="text-danger">*</span>
+                        Date of Birth  
                       </label>
                       <div className="cal-icon">
                         <DatePicker
@@ -304,7 +304,6 @@ const ClientAddPopup = () => {
                           onChange={(date) => setBirthDate(date)}
                           className="form-control floating datetimepicker"
                           type="date"
-                          required={true}
                           dateFormat="dd-MM-yyyy"
                         />
                       </div>
