@@ -240,7 +240,12 @@ const InvoiceView = ({
                         <tr>
                           <th>Balance:</th>
                           <td className="text-end text-primary">
-                            <h5>₹{parseFloat(outstanding).toFixed(2)}</h5>
+                            <h5>
+                              ₹
+                              {outstanding
+                                ? parseFloat(outstanding).toFixed(2)
+                                : "0"}
+                            </h5>
                           </td>
                         </tr>
                       </tbody>
