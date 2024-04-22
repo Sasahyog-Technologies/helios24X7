@@ -63,6 +63,7 @@ const InvoiceDetials = () => {
               }
               invoiceNumber={invoiceId}
               amount={invoiceData?.amount}
+              discount={invoiceData?.discount}
               outstanding={invoiceData?.outstanding}
               invoice_date={invoiceData?.invoice_date}
               userMobile={invoiceData?.user?.data?.attributes?.mobile}

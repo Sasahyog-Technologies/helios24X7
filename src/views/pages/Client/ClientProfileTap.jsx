@@ -429,6 +429,7 @@ const GymMembershipStatus = ({ subscription, setActiveGYMPlanEndDate }) => {
                       )}`}
                     />
                     <ListItem title={"Paid"} text={subscription?.paid} />
+                    <ListItem title={"Discount"} text={subscription?.discount ? subscription?.discount :"0"} />
                     <ListItem
                       title={"Outstanding"}
                       text={subscription?.outstanding ?? 0}

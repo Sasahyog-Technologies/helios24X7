@@ -49,6 +49,11 @@ const MembershipList = () => {
       dataIndex: "paid",
     },
     {
+      title: "Discount",
+      dataIndex: "discount",
+      render: (text, record) => <span>{text ? text : "0"}</span>,
+    },
+    {
       title: "Outstanding",
       dataIndex: "outstanding",
       render: (text, record) => <span>{text ? text : "0"}</span>,
@@ -208,6 +213,10 @@ const MembershipList = () => {
               <div className="d-flex justify-content-between">
                 <span className="fw-bold fs-6">Paid </span>
                 <span> {record?.paid}</span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Discount </span>
+                <span> {record?.discount ? record?.discount : "0"}</span>
               </div>
               <div className="d-flex justify-content-between">
                 <span className="fw-bold fs-6">Outstanding </span>

@@ -7,6 +7,7 @@ const InvoiceView = ({
   end,
   start,
   amount,
+  discount,
   branchData,
   invoice_date,
   outstanding,
@@ -197,7 +198,9 @@ const InvoiceView = ({
                         </tr>
                         <tr>
                           <th>Discount: </th>
-                          <td className="text-end">0</td>
+                          <td className="text-end">
+                          ₹{discount ? discount : "0"}
+                          </td>
                         </tr>
                         <tr>
                           <th>SGST@9: </th>

@@ -84,6 +84,8 @@ const formDataDefaultValues = {
   neck: "",
   planPrice: 0,
   outstanding: 0,
+  discount: 0,
+  planPriceAfterDiscount: 0,
 };
 
 function calculateEndDate(startDate, durationInMonths) {
@@ -126,7 +128,7 @@ const ClientAddPopup = () => {
   const onSubmit = async (data) => {
     if (data.mobile.length > 10 || data.mobile.length < 10)
       return toast.error("Mobile must be at least 10");
-    if (parseInt(data.paid) > parseInt(data.planPrice))
+    if (parseInt(data.paid) > parseInt(data.planPriceAfterDiscount))
       return toast.error("Amount is greater than plan price");
     try {
       setLoading(true);
@@ -160,6 +162,7 @@ const ClientAddPopup = () => {
           outstanding: data.outstanding,
           payment_type: data.paymentType,
           end: calculateEndDate(startDate, planDuration),
+          discount: data.discount,
         },
       });
       let paymentRes = await request.create("payment", {
@@ -171,6 +174,7 @@ const ClientAddPopup = () => {
           subscription: subsRes.data.id,
           payment_type: data.paymentType,
           payment_date: new Date().toISOString(),
+          discount: data.discount,
         },
       });
       await request.create("invoice", {
@@ -182,6 +186,7 @@ const ClientAddPopup = () => {
           subscription: subsRes.data.id,
           invoice_number: InvoiceNumberGenerator(),
           invoice_date: new Date().toISOString(),
+          discount: data.discount,
         },
       });
       toast.success("client created");
@@ -295,9 +300,7 @@ const ClientAddPopup = () => {
                   </div>
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
-                      <label className="col-form-label">
-                        Date of Birth  
-                      </label>
+                      <label className="col-form-label">Date of Birth</label>
                       <div className="cal-icon">
                         <DatePicker
                           selected={birthDate}
@@ -409,8 +412,13 @@ const ClientAddPopup = () => {
                               setValue("plan", val.value);
                               setValue("planPrice", parseInt(val.price));
                               setValue(
+                                "planPriceAfterDiscount",
+                                parseInt(val.price) - getValues("discount")
+                              );
+                              setValue(
                                 "outstanding",
-                                getValues("planPrice") - getValues("paid")
+                                getValues("planPriceAfterDiscount") -
+                                  getValues("paid")
                               );
                             }}
                             required
@@ -440,12 +448,70 @@ const ClientAddPopup = () => {
                               setValue("paid", e.target.value);
                               setValue(
                                 "outstanding",
-                                getValues("planPrice") - e.target.value
+                                getValues("planPriceAfterDiscount") -
+                                  e.target.value
                               );
+                              /*      setValue(
+                                "outstanding",
+                                getValues("planPrice") - e.target.value
+                              ); */
                             }}
                           />
                         )}
                         rules={{ required: true }}
+                      />
+                    </div>
+                  </div>
+                  {/* ------------discount ------------------ */}
+                  <div className="col-sm-6">
+                    <div className="input-block mb-3">
+                      <label className="col-form-label">
+                        Discount <span className="text-danger">*</span>
+                      </label>
+                      <Controller
+                        name="discount"
+                        control={control}
+                        render={({ onChange, value, ref }) => (
+                          <input
+                            className="form-control"
+                            value={value}
+                            type="number"
+                            required
+                            onChange={(e) => {
+                              setValue("discount", e.target.value);
+                              setValue(
+                                "planPriceAfterDiscount",
+                                getValues("planPrice") - getValues("discount")
+                              );
+                              setValue(
+                                "outstanding",
+                                getValues("planPriceAfterDiscount") -
+                                  getValues("paid")
+                              );
+                              /*   setValue(
+                                "outstanding",
+                                getValues("planPrice") - e.target.value
+                              ); */
+                            }}
+                          />
+                        )}
+                        rules={{ required: true }}
+                      />
+                    </div>
+                  </div>
+                  {/* ------------ price after discount ------------------ */}
+                  <div className="col-sm-6">
+                    <div className="input-block mb-3">
+                      <label className="col-form-label">
+                        Plan Price After Discount{" "}
+                        <span className="text-danger">*</span>
+                      </label>
+                      <input
+                        className="form-control"
+                        type="number"
+                        required
+                        disabled
+                        {...register("planPriceAfterDiscount")}
                       />
                     </div>
                   </div>

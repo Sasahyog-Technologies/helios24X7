@@ -37,6 +37,12 @@ const PaymentList = () => {
       dataIndex: "amount",
       render: (text, record) => <span>{text}</span>,
     },
+
+    {
+      title: "Discount",
+      dataIndex: "discount",
+      render: (text, record) => <span>{text ? text : "0"}</span>,
+    },
     {
       title: "Payment Date",
       dataIndex: "payment_date",
@@ -171,6 +177,10 @@ const PaymentList = () => {
               <div className="d-flex justify-content-between">
                 <span className="fw-bold fs-6">Amount </span>
                 <span>{record?.amount}</span>
+              </div>
+              <div className="d-flex justify-content-between">
+                <span className="fw-bold fs-6">Discount </span>
+                <span>{record?.discount ? record?.discount : "0"}</span>
               </div>
               <div className="d-flex justify-content-between">
                 <span className="fw-bold fs-6">Payment Date </span>

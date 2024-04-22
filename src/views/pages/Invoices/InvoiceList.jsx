@@ -55,6 +55,17 @@ const InvoiceList = () => {
       ),
     },
     {
+      title: "Discount",
+      dataIndex: "discount",
+      render: (text, record) => (
+        <span>
+          <Link to={`/owner/invoice-details/${record.id}`}>
+            {text ? text : "0"}
+          </Link>
+        </span>
+      ),
+    },
+    {
       title: "Invoice Date",
       dataIndex: "invoice_date",
       render: (text, record) => (
@@ -191,6 +202,10 @@ const InvoiceList = () => {
                 <div className="d-flex justify-content-between">
                   <span className="fw-bold fs-6">Amount </span>
                   <span>{record?.amount}</span>
+                </div>
+                <div className="d-flex justify-content-between">
+                  <span className="fw-bold fs-6">Discount </span>
+                  <span>{record?.discount ? record?.discount : "0"}</span>
                 </div>
                 <div className="d-flex justify-content-between">
                   <span className="fw-bold fs-6">Payment Date </span>
