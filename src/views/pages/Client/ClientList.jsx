@@ -1,24 +1,23 @@
+import { useQuery } from "@tanstack/react-query";
 import { Table } from "antd";
 import { format } from "date-fns";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { useQuery } from "@tanstack/react-query";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 
+import { useMediaQuery } from "usehooks-ts";
 import ClientAddPopup from "../../../components/modelpopup/Client/ClientAddPopup";
 import ClientDeletePopup from "../../../components/modelpopup/Client/ClientDeletePopup";
 import ClientEditPopup from "../../../components/modelpopup/Client/ClientEditPopup";
 import ClientPasswordEditPopup from "../../../components/modelpopup/Client/ClientPasswordEditPopup";
+import useOwnerManager from "../../../Hook/useOwnerManager";
 import request from "../../../sdk/functions";
 import ClientListFilter from "./ClientListFilter";
-import { useMediaQuery } from "usehooks-ts";
-import { useSession } from "../../../Hook/useSession";
 
 const ClientList = () => {
   const [userId, setUserId] = useState(null);
   const isWebDevice = useMediaQuery("(min-width:700px)");
-  const { getUserDataToCookie } = useSession();
-  const loggedInUser = getUserDataToCookie()?.user;
+  const { isOwnerManager, isOwner } = useOwnerManager();
 
   const columns = [
     {
@@ -73,58 +72,60 @@ const ClientList = () => {
         </span>
       ),
     },
-    {
-      title: "Action",
-      render: (user) => (
-        <div
-          className="dropdown dropdown-action text-end" /* style={{zIndex:100}} */
-        >
-          <Link
-            to="#"
-            className="action-icon dropdown-toggle"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <i className="material-icons">more_vert</i>
-          </Link>
-
-          <div className="dropdown-menu dropdown-menu-right">
-            <Link
-              className="dropdown-item"
-              to="#"
-              data-bs-toggle="modal"
-              data-bs-target="#edit_client"
-              onClick={() => setUserId(user.id)}
+    isOwnerManager
+      ? {
+          title: "Action",
+          render: (user) => (
+            <div
+              className="dropdown dropdown-action text-end" /* style={{zIndex:100}} */
             >
-              <i className="fa fa-pencil m-r-5" /> Edit
-            </Link>
-            <Link
-              className="dropdown-item"
-              to="#"
-              data-bs-toggle="modal"
-              data-bs-target="#edit_client_password"
-              onClick={() => setUserId(user.id)}
-            >
-              <i className="fa fa-lock m-r-5" /> Edit Password
-            </Link>
-
-            {loggedInUser?.type === "owner" ? (
               <Link
-                className="dropdown-item"
                 to="#"
-                data-bs-toggle="modal"
-                data-bs-target="#delete_client"
-                onClick={() => setUserId(user.id)}
+                className="action-icon dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
               >
-                <i className="fa fa-trash m-r-5" /> Delete
+                <i className="material-icons">more_vert</i>
               </Link>
-            ) : (
-              ""
-            )}
-          </div>
-        </div>
-      ),
-    },
+
+              <div className="dropdown-menu dropdown-menu-right">
+                <Link
+                  className="dropdown-item"
+                  to="#"
+                  data-bs-toggle="modal"
+                  data-bs-target="#edit_client"
+                  onClick={() => setUserId(user.id)}
+                >
+                  <i className="fa fa-pencil m-r-5" /> Edit
+                </Link>
+                <Link
+                  className="dropdown-item"
+                  to="#"
+                  data-bs-toggle="modal"
+                  data-bs-target="#edit_client_password"
+                  onClick={() => setUserId(user.id)}
+                >
+                  <i className="fa fa-lock m-r-5" /> Edit Password
+                </Link>
+
+                {isOwner ? (
+                  <Link
+                    className="dropdown-item"
+                    to="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#delete_client"
+                    onClick={() => setUserId(user.id)}
+                  >
+                    <i className="fa fa-trash m-r-5" /> Delete
+                  </Link>
+                ) : (
+                  ""
+                )}
+              </div>
+            </div>
+          ),
+        }
+      : {},
   ];
 
   /* --------------------------------------------------------------------------- */
@@ -134,56 +135,60 @@ const ClientList = () => {
       render: (record, key, index) => {
         return (
           <div>
-            <div className="d-flex justify-content-between">
-              {<div className="fw-bold fs-6"></div>}
-              <div
-                className="dropdown dropdown-action text-end" /* style={{zIndex:100}} */
-              >
-                <Link
-                  to="#"
-                  className="action-icon dropdown-toggle"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
+            {isOwnerManager ? (
+              <div className="d-flex justify-content-between">
+                {<div className="fw-bold fs-6"></div>}
+                <div
+                  className="dropdown dropdown-action text-end" /* style={{zIndex:100}} */
                 >
-                  <i className="material-icons">more_vert</i>
-                </Link>
-
-                <div className="dropdown-menu dropdown-menu-right">
                   <Link
-                    className="dropdown-item"
                     to="#"
-                    data-bs-toggle="modal"
-                    data-bs-target="#edit_client"
-                    onClick={() => setUserId(record.id)}
+                    className="action-icon dropdown-toggle"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
                   >
-                    <i className="fa fa-pencil m-r-5" /> Edit
-                  </Link>
-                  <Link
-                    className="dropdown-item"
-                    to="#"
-                    data-bs-toggle="modal"
-                    data-bs-target="#edit_client_password"
-                    onClick={() => setUserId(record.id)}
-                  >
-                    <i className="fa fa-pencil m-r-5" /> Edit Password
+                    <i className="material-icons">more_vert</i>
                   </Link>
 
-                  {loggedInUser?.type === "owner" ? (
+                  <div className="dropdown-menu dropdown-menu-right">
                     <Link
                       className="dropdown-item"
                       to="#"
                       data-bs-toggle="modal"
-                      data-bs-target="#delete_client"
+                      data-bs-target="#edit_client"
                       onClick={() => setUserId(record.id)}
                     >
-                      <i className="fa fa-trash m-r-5" /> Delete
+                      <i className="fa fa-pencil m-r-5" /> Edit
                     </Link>
-                  ) : (
-                    ""
-                  )}
+                    <Link
+                      className="dropdown-item"
+                      to="#"
+                      data-bs-toggle="modal"
+                      data-bs-target="#edit_client_password"
+                      onClick={() => setUserId(record.id)}
+                    >
+                      <i className="fa fa-pencil m-r-5" /> Edit Password
+                    </Link>
+
+                    {isOwner ? (
+                      <Link
+                        className="dropdown-item"
+                        to="#"
+                        data-bs-toggle="modal"
+                        data-bs-target="#delete_client"
+                        onClick={() => setUserId(record.id)}
+                      >
+                        <i className="fa fa-trash m-r-5" /> Delete
+                      </Link>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              ""
+            )}
 
             <Link to={`/owner/client-profile/${record.id}`}>
               <div className="d-flex justify-content-between">
@@ -298,6 +303,7 @@ const ClientList = () => {
             name="Add Client"
             Linkname="/client"
             Linkname1="/client-list"
+            isOwnerManager={isOwnerManager}
           />
           {/* /Page Header */}
           <ClientListFilter

@@ -12,12 +12,13 @@ import request from "../../../sdk/functions";
 import TrainerListFilter from "./TrainerListFilter";
 import { useMediaQuery } from "usehooks-ts";
 import { useSession } from "../../../Hook/useSession";
+import useOwnerManager from "../../../Hook/useOwnerManager";
 
 const TrainerList = () => {
   const [userId, setUserId] = useState(null);
   const isWebDevice = useMediaQuery("(min-width:700px)");
-  const { getUserDataToCookie } = useSession();
-  const loggedInUser = getUserDataToCookie()?.user;
+  const { isOwnerManager, isOwner } = useOwnerManager();
+
   const columns = [
     {
       title: "First Name",
@@ -68,56 +69,58 @@ const TrainerList = () => {
         </span>
       ),
     },
-    {
-      title: "Action",
-      render: (user) => (
-        <div className="dropdown dropdown-action text-end">
-          <Link
-            to="#"
-            className="action-icon dropdown-toggle"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <i className="material-icons">more_vert</i>
-          </Link>
-
-          <div className="dropdown-menu dropdown-menu-right">
-            <Link
-              className="dropdown-item"
-              to="#"
-              data-bs-toggle="modal"
-              data-bs-target="#edit_trainer"
-              onClick={() => setUserId(user.id)}
-            >
-              <i className="fa fa-pencil m-r-5" /> Edit
-            </Link>
-            <Link
-              className="dropdown-item"
-              to="#"
-              data-bs-toggle="modal"
-              data-bs-target="#edit_trainer_password"
-              onClick={() => setUserId(user.id)}
-            >
-              <i className="fa fa-lock m-r-5" /> Edit Password
-            </Link>
-
-            {loggedInUser?.type === "owner" ? (
+    isOwnerManager
+      ? {
+          title: "Action",
+          render: (user) => (
+            <div className="dropdown dropdown-action text-end">
               <Link
-                className="dropdown-item"
                 to="#"
-                data-bs-toggle="modal"
-                data-bs-target="#delete_trainer"
-                onClick={() => setUserId(user.id)}
+                className="action-icon dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
               >
-                <i className="fa fa-trash m-r-5" /> Delete
+                <i className="material-icons">more_vert</i>
               </Link>
-            ) : (
-              ""
-            )}
-          </div>
-        </div>
-      ),
-    },
+
+              <div className="dropdown-menu dropdown-menu-right">
+                <Link
+                  className="dropdown-item"
+                  to="#"
+                  data-bs-toggle="modal"
+                  data-bs-target="#edit_trainer"
+                  onClick={() => setUserId(user.id)}
+                >
+                  <i className="fa fa-pencil m-r-5" /> Edit
+                </Link>
+                <Link
+                  className="dropdown-item"
+                  to="#"
+                  data-bs-toggle="modal"
+                  data-bs-target="#edit_trainer_password"
+                  onClick={() => setUserId(user.id)}
+                >
+                  <i className="fa fa-lock m-r-5" /> Edit Password
+                </Link>
+
+                {isOwner ? (
+                  <Link
+                    className="dropdown-item"
+                    to="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#delete_trainer"
+                    onClick={() => setUserId(user.id)}
+                  >
+                    <i className="fa fa-trash m-r-5" /> Delete
+                  </Link>
+                ) : (
+                  ""
+                )}
+              </div>
+            </div>
+          ),
+        }
+      : {},
   ];
 
   /* --------------------------------------------------------------------------- */
@@ -127,56 +130,60 @@ const TrainerList = () => {
       render: (record, key, index) => {
         return (
           <div>
-            <div className="d-flex justify-content-between">
-              {<div className="fw-bold fs-6"></div>}
-              <div
-                className="dropdown dropdown-action text-end" /* style={{zIndex:100}} */
-              >
-                <Link
-                  to="#"
-                  className="action-icon dropdown-toggle"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
+            {isOwnerManager ? (
+              <div className="d-flex justify-content-between">
+                {<div className="fw-bold fs-6"></div>}
+                <div
+                  className="dropdown dropdown-action text-end" /* style={{zIndex:100}} */
                 >
-                  <i className="material-icons">more_vert</i>
-                </Link>
-
-                <div className="dropdown-menu dropdown-menu-right">
                   <Link
-                    className="dropdown-item"
                     to="#"
-                    data-bs-toggle="modal"
-                    data-bs-target="#edit_trainer"
-                    onClick={() => setUserId(record.id)}
+                    className="action-icon dropdown-toggle"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
                   >
-                    <i className="fa fa-pencil m-r-5" /> Edit
-                  </Link>
-                  <Link
-                    className="dropdown-item"
-                    to="#"
-                    data-bs-toggle="modal"
-                    data-bs-target="#edit_trainer_password"
-                    onClick={() => setUserId(record.id)}
-                  >
-                    <i className="fa fa-pencil m-r-5" /> Edit Password
+                    <i className="material-icons">more_vert</i>
                   </Link>
 
-                  {loggedInUser?.type === "owner" ? (
+                  <div className="dropdown-menu dropdown-menu-right">
                     <Link
                       className="dropdown-item"
                       to="#"
                       data-bs-toggle="modal"
-                      data-bs-target="#delete_trainer"
+                      data-bs-target="#edit_trainer"
                       onClick={() => setUserId(record.id)}
                     >
-                      <i className="fa fa-trash m-r-5" /> Delete
+                      <i className="fa fa-pencil m-r-5" /> Edit
                     </Link>
-                  ) : (
-                    ""
-                  )}
+                    <Link
+                      className="dropdown-item"
+                      to="#"
+                      data-bs-toggle="modal"
+                      data-bs-target="#edit_trainer_password"
+                      onClick={() => setUserId(record.id)}
+                    >
+                      <i className="fa fa-pencil m-r-5" /> Edit Password
+                    </Link>
+
+                    {isOwner ? (
+                      <Link
+                        className="dropdown-item"
+                        to="#"
+                        data-bs-toggle="modal"
+                        data-bs-target="#delete_trainer"
+                        onClick={() => setUserId(record.id)}
+                      >
+                        <i className="fa fa-trash m-r-5" /> Delete
+                      </Link>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              ""
+            )}
 
             <Link to={`/owner/trainer-profile/${record.id}`}>
               <div className="d-flex justify-content-between">
@@ -292,6 +299,7 @@ const TrainerList = () => {
             name="Add Trainer"
             Linkname="/trainer"
             Linkname1="/trainer-list"
+            isOwnerManager={isOwnerManager}
           />
           {/* /Page Header */}
           <TrainerListFilter

@@ -1357,7 +1357,11 @@ const AppContainer = () => {
   const OwnerProtectedRoute = ({ children }) => {
     if (!user) return <Navigate replace={true} to="/" />;
     if (user || user?.jwt) {
-      if (user?.user.type === "owner" || user?.user.type === "manager") {
+      if (
+        user?.user.type === "owner" ||
+        user?.user.type === "manager" ||
+        user?.user.type === "viewer"
+      ) {
         return children;
       }
       return <Navigate to={"/"} replace={true} />;
@@ -1441,6 +1445,9 @@ const AppContainer = () => {
             ))}
           </Route>
           <Route path={"/manager"} element={<SidebarLayout />}>
+            <Route path={"my-profile"} element={<MyProfile />} />
+          </Route>
+          <Route path={"/viewer"} element={<SidebarLayout />}>
             <Route path={"my-profile"} element={<MyProfile />} />
           </Route>
 

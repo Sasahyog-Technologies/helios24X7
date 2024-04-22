@@ -2,20 +2,20 @@ import { useQuery } from "@tanstack/react-query";
 import { Table } from "antd";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useMediaQuery } from "usehooks-ts";
 import Breadcrumbs from "../../../components/Breadcrumbs";
 import PlansAddPopup from "../../../components/modelpopup/Plans/PlansAddPopup";
 import PlansDeletePopup from "../../../components/modelpopup/Plans/PlansDeletePopup";
 import PlanEditPopup from "../../../components/modelpopup/Plans/PlansEditPopup";
-import { useSession } from "../../../Hook/useSession";
+import useOwnerManager from "../../../Hook/useOwnerManager";
 import request from "../../../sdk/functions";
 import PlansListFilter from "./PlansListFilter";
-import { useMediaQuery } from "usehooks-ts";
 
 const PlansList = () => {
   const [planId, setPlanId] = useState(null);
   const isWebDevice = useMediaQuery("(min-width:700px)");
-  const { getUserDataToCookie } = useSession();
-  const loggedInUser = getUserDataToCookie()?.user;
+
+  const { isOwner, isOwnerManager } = useOwnerManager();
   const columns = [
     {
       title: "Title",
@@ -34,47 +34,48 @@ const PlansList = () => {
       title: "Branch",
       dataIndex: "branch",
     },
-
-    {
-      title: "Action",
-      render: (plan) => (
-        <div className="dropdown dropdown-action text-end">
-          <Link
-            to="#"
-            className="action-icon dropdown-toggle"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <i className="material-icons">more_vert</i>
-          </Link>
-
-          <div className="dropdown-menu dropdown-menu-right">
-            <Link
-              className="dropdown-item"
-              to="#"
-              data-bs-toggle="modal"
-              data-bs-target="#edit_plan"
-              onClick={() => setPlanId(plan.id)}
-            >
-              <i className="fa fa-pencil m-r-5" /> Edit
-            </Link>
-            {loggedInUser?.type === "owner" ? (
+    isOwnerManager
+      ? {
+          title: "Action",
+          render: (plan) => (
+            <div className="dropdown dropdown-action text-end">
               <Link
-                className="dropdown-item"
                 to="#"
-                data-bs-toggle="modal"
-                data-bs-target="#delete_plan"
-                onClick={() => setPlanId(plan.id)}
+                className="action-icon dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
               >
-                <i className="fa fa-trash m-r-5" /> Delete
+                <i className="material-icons">more_vert</i>
               </Link>
-            ) : (
-              ""
-            )}
-          </div>
-        </div>
-      ),
-    },
+
+              <div className="dropdown-menu dropdown-menu-right">
+                <Link
+                  className="dropdown-item"
+                  to="#"
+                  data-bs-toggle="modal"
+                  data-bs-target="#edit_plan"
+                  onClick={() => setPlanId(plan.id)}
+                >
+                  <i className="fa fa-pencil m-r-5" /> Edit
+                </Link>
+                {isOwner ? (
+                  <Link
+                    className="dropdown-item"
+                    to="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#delete_plan"
+                    onClick={() => setPlanId(plan.id)}
+                  >
+                    <i className="fa fa-trash m-r-5" /> Delete
+                  </Link>
+                ) : (
+                  ""
+                )}
+              </div>
+            </div>
+          ),
+        }
+      : {},
   ];
 
   /* --------------------------------------------------------------------------- */
@@ -84,47 +85,51 @@ const PlansList = () => {
       render: (record, key, index) => {
         return (
           <div>
-            <div className="d-flex justify-content-between">
-              {<div className="fw-bold fs-6"></div>}
-              <div
-                className="dropdown dropdown-action text-end" /* style={{zIndex:100}} */
-              >
-                <Link
-                  to="#"
-                  className="action-icon dropdown-toggle"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
+            {isOwnerManager ? (
+              <div className="d-flex justify-content-between">
+                {<div className="fw-bold fs-6"></div>}
+                <div
+                  className="dropdown dropdown-action text-end" /* style={{zIndex:100}} */
                 >
-                  <i className="material-icons">more_vert</i>
-                </Link>
-
-                <div className="dropdown-menu dropdown-menu-right">
                   <Link
-                    className="dropdown-item"
                     to="#"
-                    data-bs-toggle="modal"
-                    data-bs-target="#edit_plan"
-                    onClick={() => setPlanId(record.id)}
+                    className="action-icon dropdown-toggle"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
                   >
-                    <i className="fa fa-pencil m-r-5" /> Edit
+                    <i className="material-icons">more_vert</i>
                   </Link>
 
-                  {loggedInUser?.type === "owner" ? (
+                  <div className="dropdown-menu dropdown-menu-right">
                     <Link
                       className="dropdown-item"
                       to="#"
                       data-bs-toggle="modal"
-                      data-bs-target="#delete_plan"
+                      data-bs-target="#edit_plan"
                       onClick={() => setPlanId(record.id)}
                     >
-                      <i className="fa fa-trash m-r-5" /> Delete
+                      <i className="fa fa-pencil m-r-5" /> Edit
                     </Link>
-                  ) : (
-                    ""
-                  )}
+
+                    {isOwner ? (
+                      <Link
+                        className="dropdown-item"
+                        to="#"
+                        data-bs-toggle="modal"
+                        data-bs-target="#delete_plan"
+                        onClick={() => setPlanId(record.id)}
+                      >
+                        <i className="fa fa-trash m-r-5" /> Delete
+                      </Link>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            ) : (
+              ""
+            )}
 
             <div>
               <div className="d-flex justify-content-between">
@@ -243,6 +248,7 @@ const PlansList = () => {
             name="Add Plan"
             Linkname="/plan"
             Linkname1="/plans-list"
+            isOwnerManager={isOwnerManager}
           />
           {/* /Page Header */}
           <PlansListFilter

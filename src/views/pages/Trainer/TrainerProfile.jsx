@@ -93,10 +93,17 @@ const TrainerProfile = () => {
                                     <li>
                                       <div className="title">Birthday:</div>
                                       <div className="text">
-                                        {format(
-                                          new Date(trainerData.birthdate),
-                                          "dd MMM yyyy"
+                                      {trainerData?.birthdate ? (
+                                          <>
+                                            {format(
+                                              new Date(trainerData.birthdate),
+                                              "dd MMM yyyy"
+                                            )}
+                                          </>
+                                        ) : (
+                                          "BirthDate Not Available"
                                         )}
+                                      
                                       </div>
                                     </li>
                                     <li>

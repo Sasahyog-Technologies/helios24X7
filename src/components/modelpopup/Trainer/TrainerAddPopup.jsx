@@ -158,7 +158,7 @@ const TrainerAddPopup = () => {
                   <div className="col-sm-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">
-                        Date of Birth <span className="text-danger">*</span>
+                        Date of Birth  
                       </label>
                       <div className="cal-icon">
                         <DatePicker
@@ -166,7 +166,6 @@ const TrainerAddPopup = () => {
                           onChange={(date) => setBirthDate(date)}
                           className="form-control floating datetimepicker"
                           type="date"
-                          required
                           dateFormat="dd-MM-yyyy"
                         />
                       </div>

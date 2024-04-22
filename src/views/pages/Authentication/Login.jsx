@@ -10,6 +10,7 @@ const routes = {
   trainer: "/trainer/my-profile",
   client: "/client/my-profile",
   manager: "/manager/my-profile",
+  viewer:"/owner/client-list"
 };
 
 const TestLogin = () => {

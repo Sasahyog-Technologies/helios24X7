@@ -10,12 +10,14 @@ import Breadcrumbs from "../../../components/Breadcrumbs";
 import WalkinsAddPopup from "../../../components/modelpopup/Walkins/WalkinsAddPopup";
 import WalkinsDeletePopup from "../../../components/modelpopup/Walkins/WalkinDeletePopup";
 import WalkinEditPopup from "../../../components/modelpopup/Walkins/WalkinEditPopup";
+import useOwnerManager from "../../../Hook/useOwnerManager";
 
 const WalkinsList = () => {
   const [walkinId, setwalkinId] = useState(null);
   const isWebDevice = useMediaQuery("(min-width:700px)");
   const { getUserDataToCookie } = useSession();
   const loggedInUser = getUserDataToCookie()?.user;
+  const { isOwner, isOwnerManager } = useOwnerManager();
   const columns = [
     {
       title: "Firstname",
@@ -35,46 +37,48 @@ const WalkinsList = () => {
       dataIndex: "reffered_by",
     },
 
-    {
-      title: "Action",
-      render: (walkin) => (
-        <div className="dropdown dropdown-action text-end">
-          <Link
-            to="#"
-            className="action-icon dropdown-toggle"
-            data-bs-toggle="dropdown"
-            aria-expanded="false"
-          >
-            <i className="material-icons">more_vert</i>
-          </Link>
-
-          <div className="dropdown-menu dropdown-menu-right">
-            <Link
-              className="dropdown-item"
-              to="#"
-              data-bs-toggle="modal"
-              data-bs-target="#edit_walkin"
-              onClick={() => setwalkinId(walkin.id)}
-            >
-              <i className="fa fa-pencil m-r-5" /> Edit
-            </Link>
-            {loggedInUser?.type === "owner" ? (
+    isOwnerManager
+      ? {
+          title: "Action",
+          render: (walkin) => (
+            <div className="dropdown dropdown-action text-end">
               <Link
-                className="dropdown-item"
                 to="#"
-                data-bs-toggle="modal"
-                data-bs-target="#delete_walkin"
-                onClick={() => setwalkinId(walkin.id)}
+                className="action-icon dropdown-toggle"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
               >
-                <i className="fa fa-trash m-r-5" /> Delete
+                <i className="material-icons">more_vert</i>
               </Link>
-            ) : (
-              ""
-            )}
-          </div>
-        </div>
-      ),
-    },
+
+              <div className="dropdown-menu dropdown-menu-right">
+                <Link
+                  className="dropdown-item"
+                  to="#"
+                  data-bs-toggle="modal"
+                  data-bs-target="#edit_walkin"
+                  onClick={() => setwalkinId(walkin.id)}
+                >
+                  <i className="fa fa-pencil m-r-5" /> Edit
+                </Link>
+                {isOwner ? (
+                  <Link
+                    className="dropdown-item"
+                    to="#"
+                    data-bs-toggle="modal"
+                    data-bs-target="#delete_walkin"
+                    onClick={() => setwalkinId(walkin.id)}
+                  >
+                    <i className="fa fa-trash m-r-5" /> Delete
+                  </Link>
+                ) : (
+                  ""
+                )}
+              </div>
+            </div>
+          ),
+        }
+      : {},
   ];
 
   /* --------------------------------------------------------------------------- */
@@ -84,47 +88,50 @@ const WalkinsList = () => {
       render: (record, key, index) => {
         return (
           <div>
-            <div className="d-flex justify-content-between">
-              {<div className="fw-bold fs-6"></div>}
-              <div
-                className="dropdown dropdown-action text-end" /* style={{zIndex:100}} */
-              >
-                <Link
-                  to="#"
-                  className="action-icon dropdown-toggle"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
+            {isOwnerManager ? (
+              <div className="d-flex justify-content-between">
+                {<div className="fw-bold fs-6"></div>}
+                <div
+                  className="dropdown dropdown-action text-end" /* style={{zIndex:100}} */
                 >
-                  <i className="material-icons">more_vert</i>
-                </Link>
-
-                <div className="dropdown-menu dropdown-menu-right">
                   <Link
-                    className="dropdown-item"
                     to="#"
-                    data-bs-toggle="modal"
-                    data-bs-target="#edit_walkin"
-                    onClick={() => setwalkinId(record.id)}
+                    className="action-icon dropdown-toggle"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
                   >
-                    <i className="fa fa-pencil m-r-5" /> Edit
+                    <i className="material-icons">more_vert</i>
                   </Link>
-                  {loggedInUser?.type === "owner" ? (
+
+                  <div className="dropdown-menu dropdown-menu-right">
                     <Link
                       className="dropdown-item"
                       to="#"
                       data-bs-toggle="modal"
-                      data-bs-target="#delete_walkin"
+                      data-bs-target="#edit_walkin"
                       onClick={() => setwalkinId(record.id)}
                     >
-                      <i className="fa fa-trash m-r-5" /> Delete
+                      <i className="fa fa-pencil m-r-5" /> Edit
                     </Link>
-                  ) : (
-                    ""
-                  )}
+                    {isOwner ? (
+                      <Link
+                        className="dropdown-item"
+                        to="#"
+                        data-bs-toggle="modal"
+                        data-bs-target="#delete_walkin"
+                        onClick={() => setwalkinId(record.id)}
+                      >
+                        <i className="fa fa-trash m-r-5" /> Delete
+                      </Link>
+                    ) : (
+                      ""
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
-
+            ) : (
+              ""
+            )}
             <div>
               <div className="d-flex justify-content-between">
                 <span className="fw-bold fs-6">First Name</span>
@@ -234,6 +241,7 @@ const WalkinsList = () => {
             name="Add walkin"
             Linkname="/walkin"
             Linkname1="/walkins-list"
+            isOwnerManager={isOwnerManager}
           />
           {/* /Page Header */}
           <WalkinsListFilter

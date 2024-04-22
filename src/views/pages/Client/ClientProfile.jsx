@@ -98,6 +98,7 @@ const ClientProfile = () => {
       return null;
     },
   });
+ 
 
   return (
     <>
@@ -159,9 +160,15 @@ const ClientProfile = () => {
                                     <li>
                                       <div className="title">Birthday:</div>
                                       <div className="text">
-                                        {format(
-                                          new Date(clientData.birthdate),
-                                          "dd MMM yyyy"
+                                        {clientData?.birthdate ? (
+                                          <>
+                                            {format(
+                                              new Date(clientData.birthdate),
+                                              "dd MMM yyyy"
+                                            )}
+                                          </>
+                                        ) : (
+                                          "BirthDate Not Available"
                                         )}
                                       </div>
                                     </li>
