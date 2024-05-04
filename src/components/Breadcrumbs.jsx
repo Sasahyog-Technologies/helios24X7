@@ -320,6 +320,7 @@ const Breadcrumbs = (props) => {
     location.pathname === "/owner/event-list" ||
     location.pathname === "/owner/trainer-list" ||
     location.pathname === "/owner/walkins-list" ||
+    location.pathname === "/owner/product-list" ||
     location.pathname === "/owner/alerts-list"
   ) {
     addButton = (

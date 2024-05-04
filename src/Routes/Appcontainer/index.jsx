@@ -215,6 +215,7 @@ import WalkinsList from "../../views/pages/Walkins/WalkinsList.jsx";
 import MyTraineesList from "../../views/pages/Trainer/MyTraineesList.jsx";
 import MyInvoices from "../../views/pages/User/MyInvoices.jsx";
 import AlertsList from "../../views/pages/Alerts/AlertsList.jsx";
+import ProductsList from "../../views/pages/products/ProductList.jsx";
 
 const AppContainer = () => {
   useEffect(() => {
@@ -1245,6 +1246,11 @@ const AppContainer = () => {
       id: 14,
       path: "admin-dashboard",
       element: <AdminDashboard />,
+    },
+    {
+      id: 15,
+      path: "product-list",
+      element: <ProductsList />,
     },
   ];
 

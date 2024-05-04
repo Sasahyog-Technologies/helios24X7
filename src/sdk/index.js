@@ -1,5 +1,6 @@
 import axios from "axios";
 export const BASEURL =
+  //"http://localhost:1337/api";
   "https://helios24x7backend-production.up.railway.app/api";
 
 const strapiAxios = axios.create({

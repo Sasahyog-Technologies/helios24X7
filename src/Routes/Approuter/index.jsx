@@ -56,6 +56,7 @@ import OwnerLogin from "../../views/pages/Authentication/Owner/Login";
 import ManagerLogin from "../../views/pages/Authentication/Manager/Login";
 import TrainerLogin from "../../views/pages/Authentication/Trainer/Login";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import ProductListing from "../../views/pages/marketplace/productListing";
 const queryClient = new QueryClient();
 
 const ScrollToTop = () => {
@@ -83,6 +84,7 @@ const AppRouter = () => {
               {/* Authetication  Start */}
 
               <Route path="/" element={<OwnerLogin />} />
+              <Route path="/products" element={<ProductListing />} />
               <Route path="/login" element={<Login />} />
               <Route path="/auth/login/manager" element={<ManagerLogin />} />
               <Route path="/auth/login/trainer" element={<TrainerLogin />} />

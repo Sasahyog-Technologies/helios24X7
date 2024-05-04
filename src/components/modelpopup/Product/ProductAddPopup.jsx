@@ -1,20 +1,20 @@
-import Select from "react-select";
-import toast from "react-hot-toast";
 import React, { useState } from "react";
+import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import request from "../../../sdk/functions";
-import { useForm, Controller } from "react-hook-form";
-import { EventCategoryOptions } from "../../../utils/index";
-import { Refresh } from "../../../utils/refresh";
 
 const formDataDefaultValues = {
   title: "",
-  category: "",
-  end_date: "",
-  start_date: "",
+  subtitle: "",
   description: "",
+  slug: "",
+  price: "",
+  discountPrice: "",
+  quantity: "",
+  label: "",
 };
 
-const EventsAddPopup = ({ refetch }) => {
+const ProductsAddPopup = ({ refetch }) => {
   const [file, setFile] = useState();
   const [loading, setLoading] = useState(false);
   const handleImageChange = (e) => {
@@ -24,41 +24,54 @@ const EventsAddPopup = ({ refetch }) => {
     }
   };
 
-  const { register, handleSubmit, setValue, control } = useForm({
+  const { register, handleSubmit, setValue, control, reset } = useForm({
     defaultValues: formDataDefaultValues,
   });
 
   const onSubmit = async (data) => {
-    console.log(data);
     try {
       setLoading(true);
-      // Create Event
-      const event = await request.create("event", {
+      // Create product
+      const product = await request.create("product", {
         data: {
           title: data?.title,
-          desc: data?.description,
-          category: data?.category,
-          end: new Date(data?.end_date).toISOString(),
-          start: new Date(data?.start_date).toISOString(),
+          description: data?.description,
+          subtitle: data?.subtitle,
+          slug: data?.slug,
+          price: Number(data?.price),
+          discountPrice: Number(data?.discountPrice),
+          quantity: Number(data?.quantity),
+          label: data?.label,
         },
       });
 
       // Update Image
-      const eventId = event.data.id;
-      const formData = new FormData();
+      const productId = product?.data?.id;
+      /*   const formData = new FormData();
       formData.append("files", file);
-      formData.append("field", "media");
-      formData.append("refId", eventId);
-      formData.append("ref", "api::event.event");
+      formData.append("field", "thumbnail");
+      formData.append("refId", productId);
+      formData.append("ref", "api::product.product");
       await fetch(
-        "https://helios24x7backend-production.up.railway.app/api/upload",
+      "https://helios24x7backend-production.up.railway.app/api"; "https://helios24x7backend-production.up.railway.app/api/upload",
+        //"http://localhost:1337/api/upload",
         {
           method: "POST",
           body: formData,
         }
-      );
-      toast.success("Event added");
-      document.getElementById("event-add-force-close").click();
+      ); */
+      toast.success("product added");
+      reset({
+        title: "",
+        description: "",
+        subtitle: "",
+        slug: "",
+        price: "",
+        discountPrice: "",
+        quantity: "",
+        label: "",
+      });
+      document.getElementById("product-add-force-close").click();
       refetch();
     } catch (error) {
       toast.error(error.response.data.error.message, { duration: 4000 });
@@ -70,13 +83,13 @@ const EventsAddPopup = ({ refetch }) => {
 
   return (
     <>
-      <div id="add_event" className="modal custom-modal fade" role="dialog">
+      <div id="add_product" className="modal custom-modal fade" role="dialog">
         <div className="modal-dialog modal-dialog-centered modal-lg">
           <div className="modal-content">
             <div className="modal-header">
-              <h5 className="modal-title">Add Events</h5>
+              <h5 className="modal-title">Add Product</h5>
               <button
-                id="event-add-force-close"
+                id="product-add-force-close"
                 type="button"
                 className="btn-close"
                 data-bs-dismiss="modal"
@@ -114,48 +127,78 @@ const EventsAddPopup = ({ refetch }) => {
                     </div>
                   </div>
 
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">Start Date</label>
-                      <span className="text-danger">*</span>
-                      <input
-                        required
-                        className="form-control"
-                        type="date"
-                        {...register("start_date")}
-                      />
-                    </div>
-                  </div>
-
-                  <div className="col-sm-6">
-                    <div className="input-block mb-3">
-                      <label className="col-form-label">End Date</label>
-                      <input
-                        className="form-control"
-                        type="date"
-                        {...register("end_date")}
-                      />
-                    </div>
-                  </div>
-
                   <div className="col-md-6">
                     <div className="input-block mb-3">
                       <label className="col-form-label">
-                        Category <span className="text-danger">*</span>
+                        Subtitle <span className="text-danger">*</span>
                       </label>
-                      <Controller
-                        name="category"
-                        control={control}
-                        render={({ value }) => (
-                          <Select
-                            options={EventCategoryOptions}
-                            placeholder="Select"
-                            value={EventCategoryOptions.find(
-                              (c) => c.value === value
-                            )}
-                            onChange={(val) => setValue("category", val.value)}
-                          />
-                        )}
+                      <input
+                        className="form-control"
+                        type="text"
+                        required
+                        {...register("subtitle", {
+                          required: "This input is required.",
+                        })}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="input-block mb-3">
+                      <label className="col-form-label">
+                        Slug <span className="text-danger">*</span>
+                      </label>
+                      <input
+                        className="form-control"
+                        type="text"
+                        required
+                        {...register("slug", {
+                          required: "This input is required.",
+                        })}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="input-block mb-3">
+                      <label className="col-form-label">
+                        Price <span className="text-danger">*</span>
+                      </label>
+                      <input
+                        className="form-control"
+                        type="number"
+                        required
+                        {...register("price", {
+                          required: "This input is required.",
+                        })}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="input-block mb-3">
+                      <label className="col-form-label">
+                        Discount Price <span className="text-danger">*</span>
+                      </label>
+                      <input
+                        className="form-control"
+                        type="number"
+                        required
+                        {...register("discountPrice", {
+                          required: "This input is required.",
+                        })}
+                      />
+                    </div>
+                  </div>
+                  <div className="col-md-6">
+                    <div className="input-block mb-3">
+                      <label className="col-form-label">
+                        Quantity <span className="text-danger">*</span>
+                      </label>
+                      <input
+                        className="form-control"
+                        type="number"
+                        required
+                        {...register("quantity", {
+                          required: "This input is required.",
+                        })}
                       />
                     </div>
                   </div>
@@ -192,4 +235,4 @@ const EventsAddPopup = ({ refetch }) => {
   );
 };
 
-export default EventsAddPopup;
+export default ProductsAddPopup;

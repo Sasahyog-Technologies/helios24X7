@@ -81,6 +81,13 @@ const sidebarOwnerData = {
       route: "/owner/alerts-list",
       icon: "la la-bell",
     },
+    {
+      menuValue: "Products",
+      hasSubRoute: false,
+      showSubRoute: false,
+      route: "/owner/product-list",
+      icon: "la la-dashcube",
+    },
   ],
 };
 const sidebarUserData = {

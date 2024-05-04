@@ -12,4 +12,5 @@ export const routes = {
   walkin: "/walk-ins",
   alert: "/alerts",
   "body-tracking": "/body-trackings",
+  product: "/products",
 };
