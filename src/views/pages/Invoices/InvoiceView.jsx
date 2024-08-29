@@ -165,7 +165,7 @@ const InvoiceView = ({
                             background: "white",
                           }}
                         >
-                          ₹{planPrice ?? amount}
+                          ₹{((planPrice ?? amount) / 1.18).toFixed(2)}
                         </td>
                       </tr>
                     </tbody>
@@ -194,12 +194,14 @@ const InvoiceView = ({
                       <tbody>
                         <tr>
                           <th>Subtotal:</th>
-                          <td className="text-end">₹{planPrice ?? amount}</td>
+                          <td className="text-end">
+                            ₹{((planPrice ?? amount) / 1.18).toFixed(2)}
+                          </td>
                         </tr>
                         <tr>
                           <th>Discount: </th>
                           <td className="text-end">
-                          ₹{discount ? discount : "0"}
+                            ₹{discount ? discount : "0"}
                           </td>
                         </tr>
                         <tr>
@@ -207,7 +209,7 @@ const InvoiceView = ({
                           <td className="text-end">
                             ₹
                             {percentage(
-                              parseFloat(planPrice ?? amount),
+                              parseFloat((planPrice ?? amount) / 1.18),
                               9
                             ).toFixed(2)}
                           </td>
@@ -217,7 +219,7 @@ const InvoiceView = ({
                           <td className="text-end">
                             ₹
                             {percentage(
-                              parseFloat(planPrice ?? amount),
+                              parseFloat((planPrice ?? amount) / 1.18),
                               9
                             ).toFixed(2)}
                           </td>
@@ -228,8 +230,11 @@ const InvoiceView = ({
                             <h5>
                               ₹
                               {(
-                                parseFloat(planPrice ?? amount) +
-                                percentage(parseFloat(planPrice ?? amount), 18)
+                                parseFloat((planPrice ?? amount) / 1.18) +
+                                percentage(
+                                  parseFloat((planPrice ?? amount) / 1.18),
+                                  18
+                                )
                               ).toFixed(2)}
                             </h5>
                           </td>
