@@ -101,8 +101,8 @@ const InvoiceView = ({
                 }}
               >
                 <section>
-                  <h5>Invoice to:</h5>
-                  <ul className="">
+                  <span className="text-muted">Invoice to :</span>
+                  <ul className="list-unstyled invoice-payment-details">
                     <li>
                       <h5>
                         <strong>
@@ -110,18 +110,18 @@ const InvoiceView = ({
                         </strong>
                       </h5>
                     </li>
-                    <li>{userMobile}</li>
+                    <li className="mt-1">{userMobile}</li>
                   </ul>
                 </section>
                 <section>
                   <span className="text-muted">Payment Details:</span>
                   <ul className="list-unstyled invoice-payment-details">
                     <li>
-                      Payment Mode:{" "}
-                      <span className="uppercase">{paymentType}</span>
+                      <b>Payment Mode</b> :{" "}
+                      <span className="text-capitalize">{paymentType}</span>
                     </li>
                     <li>
-                      Received By: <span>Helios gym </span>
+                      <b>Received By</b> : <span>Helios gym </span>
                     </li>
                   </ul>
                 </section>
@@ -145,7 +145,13 @@ const InvoiceView = ({
                             <div className="font-weight-bold">
                               <b>{planName}</b>
                               {!trainerSubscription && (
-                                <p>
+                                <p
+                                  style={{
+                                    color: "gray",
+                                    fontWeight: "normal",
+                                    fontSize: "12px",
+                                  }}
+                                >
                                   {new Date(start).toDateString()} {" - "}
                                   {new Date(end).toDateString()}
                                 </p>
@@ -181,8 +187,37 @@ const InvoiceView = ({
                 <section
                   style={{
                     flex: "1",
+                    marginTop: "20px",
+                    paddingRight: "50px",
                   }}
-                ></section>
+                >
+                  <strong>Terms & Conditions:</strong>
+                  <ul
+                    style={{
+                      fontSize: "10px",
+                      color: "gray",
+                    }}
+                  >
+                    <br /> 1. Payment Terms: Payment is due within the timeframe
+                    specified by Helios Gym. Helios Gym reserves the right to
+                    suspend or terminate services for overdue accounts. <br />{" "}
+                    <br />
+                    2. Refund Policy: Payments made are non-refundable, except
+                    in cases where Helios Gym deems a refund appropriate. 3.
+                    Dispute Resolution: Any disputes regarding this invoice must
+                    be reported within <br /> <br />3 days of receipt. After
+                    this period, the invoice will be considered accurate and
+                    due.
+                    <br /> <br /> 4. Taxes: All applicable taxes are included in
+                    the invoice unless stated otherwise. <br /> <br /> 5.
+                    Liability: Helios Gym is not liable for any personal
+                    injuries or damages occurring on the premises, except where
+                    negligence is proven on our part. <br /> <br /> 6. Data
+                    Protection: Customer data will be handled in accordance with
+                    our privacy policy and will not be shared with third parties
+                    without consent, except as required by law.
+                  </ul>
+                </section>
 
                 <section
                   style={{
@@ -258,6 +293,17 @@ const InvoiceView = ({
                         </tr>
                       </tbody>
                     </table>
+                  </div>
+                  <div
+                    style={{
+                      marginTop: "150px",
+                      marginLeft: "90px",
+                      // display: "flex",
+                      // alignItems: "end",
+                      // justifyContent: "end",
+                    }}
+                  >
+                    <h5>Authorised Signature / Stamp</h5>
                   </div>
                 </section>
               </div>
