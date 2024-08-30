@@ -173,50 +173,62 @@ const PTPList = () => {
     branch: "",
   });
   const {
-    data: PTPData,
-    isLoading: PTPIsLoading,
     refetch,
     isRefetching,
+    data: PTPData,
+    isLoading: PTPIsLoading,
   } = useQuery({
     queryKey: ["ptp-list"],
     queryFn: async () => {
+      const [firstName, lastName] = query.search.split(" ").filter(Boolean);
       const data = await request.findMany("ptp", {
         populate: ["trainee", "trainer"],
         filters: {
-          trainer: {
-            $or: [
-              {
-                firstname: {
-                  $containsi: query.search.split(" ")[0],
-                },
-                lastname: {
-                  $containsi: query.search.split(" ")[1] || "",
-                },
+          $or: [
+            {
+              trainer: {
+                $or: [
+                  {
+                    firstname: {
+                      $containsi: firstName,
+                    },
+                  },
+                  {
+                    lastname: {
+                      $containsi: lastName || firstName,
+                    },
+                  },
+                  {
+                    mobile: {
+                      $containsi: firstName,
+                    },
+                  },
+                ],
               },
-              {
-                mobile: {
-                  $containsi: query.search,
-                },
+            },
+
+            {
+              trainee: {
+                $or: [
+                  {
+                    firstname: {
+                      $containsi: firstName,
+                    },
+                  },
+                  {
+                    lastname: {
+                      $containsi: lastName || firstName,
+                    },
+                  },
+                  {
+                    mobile: {
+                      $containsi: firstName,
+                    },
+                  },
+                ],
               },
-            ],
-          },
-          trainee: {
-            $or: [
-              {
-                firstname: {
-                  $containsi: query.search.split(" ")[0],
-                },
-                lastname: {
-                  $containsi: query.search.split(" ")[1] || "",
-                },
-              },
-              {
-                mobile: {
-                  $containsi: query.search,
-                },
-              },
-            ],
-          },
+            },
+          ],
         },
       });
       setTableParams({
