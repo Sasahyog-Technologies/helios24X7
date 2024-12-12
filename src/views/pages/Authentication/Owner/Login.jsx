@@ -8,7 +8,7 @@ import AboutUs from "./About";
 import Events from "./Events";
 import toast from "react-hot-toast";
 import React, { useState } from "react";
-import PlanCarousel from "./PlanCarousel";
+// import PlanCarousel from "./PlanCarousel";
 import TrainerCarousel from "./TrainerCarousel";
 import { useQuery } from "@tanstack/react-query";
 import request from "../../../../sdk/functions";
@@ -454,7 +454,7 @@ const OwnerLogin = () => {
           <TrainerCarousel />
         </div>
 
-        <PlanCarousel />
+        {/* <PlanCarousel /> */}
 
         {/* Team End */}
         {/* Testimonial Start */}
